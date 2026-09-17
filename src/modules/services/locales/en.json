@@ -1,0 +1,105 @@
+{
+  "title": "Service execution",
+  "loading": "Loading service execution…",
+  "onlyMine": "Only mine",
+  "signature": "{{readings}} readings · {{media}} photos · signed {{signature}}",
+  "external": "external",
+  "editMine": "Edit my service",
+  "role": {
+    "lead_analyst": "Lead analyst",
+    "assistant": "Assistant",
+    "supervisor": "Supervisor",
+    "client_witness": "Customer witness"
+  },
+  "entry": {
+    "background": "Background",
+    "observation": "Observations",
+    "failure_mode": "Failure mode",
+    "finding": "Findings",
+    "conclusion": "Conclusions",
+    "recommendation": "Recommendations",
+    "action_taken": "Actions taken",
+    "note": "Notes"
+  },
+  "lock": {
+    "issued": "The report has already been issued to the customer.",
+    "otherInspector": "This service was performed by {{who}}.",
+    "otherInspectorUnknown": "This service was performed by another inspector.",
+    "closed": "The visit is closed.",
+    "noPermission": "You cannot edit this visit."
+  },
+  "orders": {
+    "title": "Service orders",
+    "loading": "Loading orders…",
+    "subtitle": "Each order groups one round of visits. Open ones can still be edited by whoever performed them.",
+    "seeExecution": "See who performed them →",
+    "column": {
+      "code": "Code",
+      "technique": "Technique",
+      "window": "Window",
+      "lead": "Analyst",
+      "clientOrder": "Customer WO",
+      "visits": "Visits",
+      "open": "Open",
+      "status": "Status"
+    },
+    "status": {
+      "planned": "Planned",
+      "in_progress": "In progress",
+      "done": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "table": "Orders",
+    "empty": "No service orders",
+    "openHint": "visits whoever performed them can still edit",
+    "metric": {
+      "orders": "Orders",
+      "visits": "Visits",
+      "open": "Open",
+      "openHint": "pending closure"
+    }
+  },
+  "viewOnly": "View detail",
+  "side": {
+    "free_end": "free end",
+    "coupling_end": "coupling end",
+    "opposite_coupling": "opposite end",
+    "inboard": "inboard",
+    "outboard": "outboard"
+  },
+  "visit": {
+    "loading": "Loading the visit…",
+    "notFound": "Visit not found",
+    "notFoundBody": "It may have been removed, or it is outside your scope.",
+    "description": "{{area}} · {{group}}",
+    "back": "← Back to execution",
+    "readOnly": "This visit is read-only",
+    "readings": "Visit readings",
+    "readingsHint": "One row per point. On save the system re-applies the equipment's standard and recalculates the status.",
+    "column": {
+      "point": "Point"
+    },
+    "saved": "No changes",
+    "summary": "Visit details",
+    "field": {
+      "order": "Order",
+      "clientOrder": "Customer WO",
+      "technique": "Technique",
+      "date": "Date",
+      "instrument": "Instrument",
+      "availability": "Availability",
+      "performedBy": "Performed by"
+    },
+    "diary": "Equipment log",
+    "diaryHint": "Background, conclusions and recommendations, each line with its date and author.",
+    "noEntries": "No entries yet",
+    "thisVisit": "from this visit",
+    "entryPlaceholder": "Write what you observed…",
+    "addEntry": "Add to the log",
+    "saveCount_one": "Save 1 change",
+    "saveCount_other": "Save {{count}} changes"
+  },
+  "subtitle": "Every visit with who performed it and what they wrote. You can only edit your own while they are open.",
+  "empty": "No visits recorded",
+  "emptyBody": "They will appear once the first round is performed."
+}

@@ -1,0 +1,105 @@
+{
+  "title": "Ejecución de servicios",
+  "loading": "Cargando ejecución de servicios…",
+  "onlyMine": "Solo los míos",
+  "signature": "{{readings}} lecturas · {{media}} fotos · firma {{signature}}",
+  "external": "externo",
+  "editMine": "Editar mi servicio",
+  "role": {
+    "lead_analyst": "Inspector analista",
+    "assistant": "Asistente",
+    "supervisor": "Supervisor",
+    "client_witness": "Testigo del cliente"
+  },
+  "entry": {
+    "background": "Antecedentes",
+    "observation": "Observaciones",
+    "failure_mode": "Modo de falla",
+    "finding": "Hallazgos",
+    "conclusion": "Conclusiones",
+    "recommendation": "Recomendaciones",
+    "action_taken": "Acciones realizadas",
+    "note": "Notas"
+  },
+  "lock": {
+    "issued": "El reporte ya fue emitido al cliente.",
+    "otherInspector": "Este servicio lo ejecutó {{who}}.",
+    "otherInspectorUnknown": "Este servicio lo ejecutó otro inspector.",
+    "closed": "La visita está cerrada.",
+    "noPermission": "No tienes permiso para editar esta visita."
+  },
+  "orders": {
+    "title": "Órdenes de servicio",
+    "loading": "Cargando órdenes…",
+    "subtitle": "Cada orden agrupa las visitas de una ronda. Las abiertas todavía las puede editar quien las ejecutó.",
+    "seeExecution": "Ver quién las ejecutó →",
+    "column": {
+      "code": "Código",
+      "technique": "Técnica",
+      "window": "Ventana",
+      "lead": "Analista",
+      "clientOrder": "OT cliente",
+      "visits": "Visitas",
+      "open": "Abiertas",
+      "status": "Estado"
+    },
+    "status": {
+      "planned": "Programada",
+      "in_progress": "En ejecución",
+      "done": "Ejecutada",
+      "cancelled": "Anulada"
+    },
+    "table": "Órdenes",
+    "empty": "No hay órdenes de servicio",
+    "openHint": "visitas que todavía puede editar quien las ejecutó",
+    "metric": {
+      "orders": "Órdenes",
+      "visits": "Visitas",
+      "open": "Abiertas",
+      "openHint": "pendientes de cerrar"
+    }
+  },
+  "viewOnly": "Ver detalle",
+  "side": {
+    "free_end": "lado libre",
+    "coupling_end": "lado acople",
+    "opposite_coupling": "lado opuesto",
+    "inboard": "interior",
+    "outboard": "exterior"
+  },
+  "visit": {
+    "loading": "Cargando la visita…",
+    "notFound": "No se encontró la visita",
+    "notFoundBody": "Puede haberse eliminado, o no pertenece a tu alcance.",
+    "description": "{{area}} · {{group}}",
+    "back": "← Volver a ejecución",
+    "readOnly": "Esta visita es de solo lectura",
+    "readings": "Lecturas de la visita",
+    "readingsHint": "Una fila por punto. Al guardar, el sistema vuelve a aplicar la norma del equipo y recalcula el estado.",
+    "column": {
+      "point": "Punto"
+    },
+    "saved": "Sin cambios",
+    "summary": "Datos de la visita",
+    "field": {
+      "order": "Orden",
+      "clientOrder": "OT cliente",
+      "technique": "Técnica",
+      "date": "Fecha",
+      "instrument": "Instrumento",
+      "availability": "Disponibilidad",
+      "performedBy": "Ejecutado por"
+    },
+    "diary": "Diario del equipo",
+    "diaryHint": "Antecedentes, conclusiones y recomendaciones, cada línea con su fecha y su autor.",
+    "noEntries": "Todavía no hay anotaciones",
+    "thisVisit": "de esta visita",
+    "entryPlaceholder": "Escribe lo que observaste…",
+    "addEntry": "Agregar al diario",
+    "saveCount_one": "Guardar 1 cambio",
+    "saveCount_other": "Guardar {{count}} cambios"
+  },
+  "subtitle": "Cada visita con quien la ejecutó y lo que anotó. Solo puedes editar las tuyas mientras sigan abiertas.",
+  "empty": "No hay visitas registradas",
+  "emptyBody": "Aparecerán cuando se ejecute la primera ronda."
+}
