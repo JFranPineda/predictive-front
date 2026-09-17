@@ -1,0 +1,47 @@
+{
+  "name": "predictive-front",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "api:types": "openapi-typescript http://localhost:8000/api/schema/ -o src/types/api.d.ts"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
+    "@tanstack/react-table": "^8.20.5",
+    "@tanstack/react-virtual": "^3.10.9",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
+    "i18next": "^26.4.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.14",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.1.1",
+    "uplot": "^1.6.31"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.17.0",
+    "jsdom": "^25.0.1",
+    "openapi-typescript": "^7.4.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  }
+}
