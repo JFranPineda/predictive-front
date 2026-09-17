@@ -1,0 +1,36 @@
+{
+  "title": "Plant summary",
+  "subtitle": "An area takes the colour of the worst status it contains. What could not be measured is counted apart, never as operational.",
+  "loading": "Building the traffic light…",
+  "equipmentCount": "{{count}} eq.",
+  "measured": "{{percent}} measured",
+  "expand": "Expand",
+  "collapse": "Collapse",
+  "metric": {
+    "equipment": "Equipment",
+    "equipmentHint": "within the plan's scope",
+    "coverage": "Coverage",
+    "coverageHint": "produced a verdict in the last round"
+  },
+  "legend": {
+    "title": "How to read the colours",
+    "hint": "An area takes the WORST status it contains, not the average.",
+    "notMeasured": "produces no verdict, counted apart",
+    "coverage": "A green area with low coverage is a planning problem, not a healthy area."
+  },
+  "tree": {
+    "title": "Plant areas",
+    "hint": "Expand an area to see its sectors and machine trains.",
+    "column": {
+      "status": "Status",
+      "area": "Area / sector / train",
+      "split": "Breakdown",
+      "total": "Equipment",
+      "coverage": "Coverage"
+    }
+  },
+  "empty": {
+    "title": "No measurements yet",
+    "body": "Once the first round is recorded, the traffic light will appear here."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "title": "Informes de planta",
+  "subtitle": "El color de un área es el peor estado que contiene. Lo que no se pudo medir se cuenta aparte, nunca como operativo.",
+  "loading": "Calculando semáforo…",
+  "equipmentCount": "{{count}} eq.",
+  "measured": "{{percent}} medido",
+  "expand": "Expandir",
+  "collapse": "Contraer",
+  "metric": {
+    "equipment": "Equipos",
+    "equipmentHint": "en el alcance del plan",
+    "coverage": "Cobertura",
+    "coverageHint": "produjo veredicto en la última ronda"
+  },
+  "legend": {
+    "title": "Cómo leer los colores",
+    "hint": "El color de un área es el PEOR estado que contiene, no el promedio.",
+    "notMeasured": "no produce veredicto, se cuenta aparte",
+    "coverage": "Un área verde con cobertura baja es un problema de planificación, no de salud."
+  },
+  "tree": {
+    "title": "Áreas de la planta",
+    "hint": "Despliega un área para ver sus sectores y conjuntos.",
+    "column": {
+      "status": "Estado",
+      "area": "Área / sector / conjunto",
+      "split": "Reparto",
+      "total": "Equipos",
+      "coverage": "Cobertura"
+    }
+  },
+  "empty": {
+    "title": "Todavía no hay mediciones",
+    "body": "Cuando se registre la primera ronda, aquí aparecerá el semáforo por área."
+  }
+}
