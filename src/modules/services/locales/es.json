@@ -57,7 +57,8 @@
       "visits": "Visitas",
       "open": "Abiertas",
       "openHint": "pendientes de cerrar"
-    }
+    },
+    "cancel": "Anular"
   },
   "viewOnly": "Ver detalle",
   "side": {
@@ -101,5 +102,32 @@
   },
   "subtitle": "Cada visita con quien la ejecutó y lo que anotó. Solo puedes editar las tuyas mientras sigan abiertas.",
   "empty": "No hay visitas registradas",
-  "emptyBody": "Aparecerán cuando se ejecute la primera ronda."
+  "emptyBody": "Aparecerán cuando se ejecute la primera ronda.",
+  "closeVisit": "Cerrar visita",
+  "form": {
+    "genericError": "No se pudo guardar"
+  },
+  "visitForm": {
+    "new": "Nueva visita",
+    "title": "Nueva visita",
+    "hint": "Una visita registra lo que se midió en un equipo dentro de una orden. Se crean las lecturas vacías listas para llenar.",
+    "order": "Orden de servicio",
+    "orderHint": "La ronda a la que pertenece",
+    "equipment": "Equipo",
+    "search": "Buscar equipo",
+    "searchPlaceholder": "TAG o nombre",
+    "create": "Crear y abrir"
+  },
+  "orderForm": {
+    "new": "Nueva orden",
+    "title": "Nueva orden de servicio",
+    "hint": "Agrupa las visitas de una ronda. El código sigue la nomenclatura del cliente: MPd-AV-N°006-13.",
+    "plant": "Planta",
+    "technique": "Técnica",
+    "code": "Código",
+    "clientOrder": "OT del cliente",
+    "from": "Desde",
+    "to": "Hasta",
+    "create": "Crear orden"
+  }
 }

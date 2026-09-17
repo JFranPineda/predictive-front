@@ -57,7 +57,8 @@
       "visits": "Visits",
       "open": "Open",
       "openHint": "pending closure"
-    }
+    },
+    "cancel": "Cancel"
   },
   "viewOnly": "View detail",
   "side": {
@@ -101,5 +102,32 @@
   },
   "subtitle": "Every visit with who performed it and what they wrote. You can only edit your own while they are open.",
   "empty": "No visits recorded",
-  "emptyBody": "They will appear once the first round is performed."
+  "emptyBody": "They will appear once the first round is performed.",
+  "closeVisit": "Close visit",
+  "form": {
+    "genericError": "Could not save"
+  },
+  "visitForm": {
+    "new": "New visit",
+    "title": "New visit",
+    "hint": "A visit records what was measured on one equipment within an order. Empty readings are created ready to fill in.",
+    "order": "Service order",
+    "orderHint": "The round it belongs to",
+    "equipment": "Equipment",
+    "search": "Search equipment",
+    "searchPlaceholder": "TAG or name",
+    "create": "Create and open"
+  },
+  "orderForm": {
+    "new": "New order",
+    "title": "New service order",
+    "hint": "Groups the visits of a round. The code follows the customer's own naming: MPd-AV-N°006-13.",
+    "plant": "Plant",
+    "technique": "Technique",
+    "code": "Code",
+    "clientOrder": "Customer WO",
+    "from": "From",
+    "to": "To",
+    "create": "Create order"
+  }
 }

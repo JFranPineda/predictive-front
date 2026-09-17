@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
 import { formatDateTime } from '@app/i18n/format';
+import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -13,12 +14,22 @@ import { Spinner } from '@shared/ui/Spinner';
 
 import { groupEntries, lockReason, signature } from '../domain/authorship';
 import type { ServiceAuthorship } from '../domain/types';
-import { useAuthorshipQuery } from '../infrastructure/endpoints';
+import {
+  useAuthorshipQuery,
+  useDeleteVisitMutation,
+  useUpdateVisitMutation,
+} from '../infrastructure/endpoints';
+import { readServiceError } from './readServiceError';
+import { VisitFormModal } from './VisitFormModal';
 
 export default function AuthorshipPage() {
   const { t } = useTranslation(['services', 'common']);
   const [onlyMine, setOnlyMine] = useState(false);
   const currentUserId = useAppSelector((state) => state.session.userId);
+  const permissions = useAppSelector((state) => state.session.permissions);
+  const canCreate = permissions.includes('measurements.add_reading');
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { data, isLoading, isError } = useAuthorshipQuery(
     onlyMine && currentUserId ? { performed_by: currentUserId } : {},
   );
@@ -33,16 +44,25 @@ export default function AuthorshipPage() {
         title={t('title')}
         description={t('subtitle')}
         actions={
-          <label className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700">
-            <input
-              type="checkbox"
-              checked={onlyMine}
-              onChange={(event) => setOnlyMine(event.target.checked)}
-            />
-            {t('onlyMine')}
-          </label>
+          <>
+            <label className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700">
+              <input
+                type="checkbox"
+                checked={onlyMine}
+                onChange={(event) => setOnlyMine(event.target.checked)}
+              />
+              {t('onlyMine')}
+            </label>
+            {canCreate && (
+              <Button variant="primary" onClick={() => setCreating(true)}>
+                + {t('visitForm.new')}
+              </Button>
+            )}
+          </>
         }
       />
+
+      {error && <ErrorState title={error} />}
 
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
@@ -51,18 +71,44 @@ export default function AuthorshipPage() {
       ) : (
         <div className="space-y-4">
           {rows.map((visit) => (
-            <VisitCard key={visit.visit_id} visit={visit} currentUserId={currentUserId ?? -1} />
+            <VisitCard
+              key={visit.visit_id}
+              visit={visit}
+              currentUserId={currentUserId ?? -1}
+              onError={setError}
+            />
           ))}
         </div>
       )}
+
+      {creating && <VisitFormModal onClose={() => setCreating(false)} />}
     </Page>
   );
 }
 
-function VisitCard({ visit, currentUserId }: { visit: ServiceAuthorship; currentUserId: number }) {
-  const { t } = useTranslation('services');
+function VisitCard({
+  visit,
+  currentUserId,
+  onError,
+}: {
+  visit: ServiceAuthorship;
+  currentUserId: number;
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['services', 'common']);
+  const [updateVisit] = useUpdateVisitMutation();
+  const [deleteVisit] = useDeleteVisitMutation();
   const locked = lockReason(visit, currentUserId);
   const groups = groupEntries(visit.entries);
+
+  async function run(action: () => Promise<unknown>) {
+    onError(null);
+    try {
+      await action();
+    } catch (cause) {
+      onError(readServiceError(cause) ?? t('form.genericError'));
+    }
+  }
 
   return (
     <Card padded={false}>
@@ -134,9 +180,25 @@ function VisitCard({ visit, currentUserId }: { visit: ServiceAuthorship; current
             </Link>
           </span>
         ) : (
-          <Link to={`/services/visits/${visit.visit_id}`} className="font-medium text-sky-600">
-            {t('editMine')}
-          </Link>
+          <span className="flex items-center gap-3">
+            <Link to={`/services/visits/${visit.visit_id}`} className="font-medium text-sky-600">
+              {t('editMine')}
+            </Link>
+            <button
+              onClick={() => void run(() => updateVisit({ id: visit.visit_id, close: true }).unwrap())}
+              className="font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            >
+              {t('closeVisit')}
+            </button>
+            {visit.reading_count === 0 && (
+              <button
+                onClick={() => void run(() => deleteVisit(visit.visit_id).unwrap())}
+                className="font-medium text-red-600"
+              >
+                {t('common:action.delete')}
+              </button>
+            )}
+          </span>
         )}
       </footer>
     </Card>

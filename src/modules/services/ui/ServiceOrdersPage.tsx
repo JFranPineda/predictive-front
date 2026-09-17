@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+
+import { useAppSelector } from '@app/hooks';
+import { Button } from '@shared/ui/Button';
 
 import { formatDate } from '@app/i18n/format';
 import { Card } from '@shared/ui/Card';
@@ -12,7 +16,9 @@ import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
 import type { ServiceOrder } from '../domain/types';
-import { useServiceOrdersQuery } from '../infrastructure/endpoints';
+import { useCancelServiceOrderMutation, useServiceOrdersQuery } from '../infrastructure/endpoints';
+import { OrderFormModal } from './OrderFormModal';
+import { readServiceError } from './readServiceError';
 
 const STATUS_CLASS: Record<string, string> = {
   planned: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
@@ -24,6 +30,11 @@ const STATUS_CLASS: Record<string, string> = {
 export default function ServiceOrdersPage() {
   const { t } = useTranslation(['services', 'common']);
   const { data, isLoading, isError } = useServiceOrdersQuery({});
+  const permissions = useAppSelector((state) => state.session.permissions);
+  const canManage = permissions.includes('services.manage_order');
+  const [cancelOrder] = useCancelServiceOrderMutation();
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const rows = data?.results ?? [];
   const columns: Column<ServiceOrder>[] = [
@@ -77,6 +88,26 @@ export default function ServiceOrdersPage() {
         </span>
       ),
     },
+    {
+      key: 'actions',
+      header: '',
+      render: (row) =>
+        canManage && row.status !== 'cancelled' ? (
+          <button
+            onClick={async () => {
+              setError(null);
+              try {
+                await cancelOrder(row.id).unwrap();
+              } catch (cause) {
+                setError(readServiceError(cause) ?? t('form.genericError'));
+              }
+            }}
+            className="text-xs font-medium text-red-600"
+          >
+            {t('orders.cancel')}
+          </button>
+        ) : null,
+    },
   ];
 
   if (isLoading) return <Spinner label={t('orders.loading')} />;
@@ -87,14 +118,23 @@ export default function ServiceOrdersPage() {
         title={t('orders.title')}
         description={t('orders.subtitle')}
         actions={
-          <Link
-            to="/services/authorship"
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium dark:border-slate-700"
-          >
-            {t('orders.seeExecution')}
-          </Link>
+          <>
+            <Link
+              to="/services/authorship"
+              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium dark:border-slate-700"
+            >
+              {t('orders.seeExecution')}
+            </Link>
+            {canManage && (
+              <Button variant="primary" onClick={() => setCreating(true)}>
+                + {t('orderForm.new')}
+              </Button>
+            )}
+          </>
         }
       />
+
+      {error && <ErrorState title={error} />}
 
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
@@ -124,6 +164,8 @@ export default function ServiceOrdersPage() {
           </Card>
         </>
       )}
+
+      {creating && <OrderFormModal onClose={() => setCreating(false)} />}
     </Page>
   );
 }
