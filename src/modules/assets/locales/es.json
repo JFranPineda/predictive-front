@@ -40,5 +40,65 @@
   "table": {
     "title": "Listado",
     "hint": "TAG es el código del cliente; puede repetirse entre motor y bomba."
+  },
+  "new": "Nuevo equipo",
+  "structure": {
+    "title": "Estructura de planta",
+    "subtitle": "Se construye de arriba hacia abajo: planta → área → sector → conjunto rotativo. Los equipos cuelgan del conjunto.",
+    "plants": "Plantas",
+    "plantsHint": "El sitio físico del cliente",
+    "areas": "Áreas",
+    "areasHint": "Con su código, como en la hoja del cliente: 501 - PACKAGING CERVEZA",
+    "sectors": "Sectores",
+    "sectorsHint": "La agrupación dentro del área: KIT BOMBAS AGUA CRUDA",
+    "groups": "Conjuntos rotativos",
+    "groupsHint": "El tren de máquina que se alinea y se reporta junto",
+    "plant": "Planta",
+    "plantName": "Nombre de la planta",
+    "area": "Área",
+    "code": "Código",
+    "name": "Nombre",
+    "kind": "Tipo de conjunto",
+    "sectorId": "ID del sector",
+    "sectorIdHint": "Créalo arriba y usa el número que devuelve",
+    "areaCount": "{{count}} áreas",
+    "equipmentCount": "{{count}} equipos",
+    "noAreas": "Crea primero un área y un sector",
+    "readOnly": "Necesitas permiso para crear",
+    "sector": "Sector",
+    "noSectors": "Crea primero un sector"
+  },
+  "type": {
+    "motor": "Motor",
+    "pump": "Bomba",
+    "compressor": "Compresor",
+    "gearbox": "Reductor",
+    "fan": "Ventilador",
+    "blower": "Soplador",
+    "bearing_housing": "Chumacera",
+    "other": "Otro"
+  },
+  "form": {
+    "genericError": "No se pudo guardar",
+    "newEquipment": "Nuevo equipo",
+    "equipmentHint": "Un equipo cuelga de un conjunto rotativo. Si no existe todavía, créalo en Estructura de planta.",
+    "assetGroup": "Conjunto rotativo",
+    "assetGroupHint": "El tren de máquina: motor + bomba, motor + compresor…",
+    "name": "Nombre",
+    "clientTag": "TAG del cliente",
+    "clientTagHint": "Opcional. Puede repetirse entre motor y bomba; el código interno se genera solo.",
+    "equipmentType": "Tipo de equipo",
+    "frequency": "Frecuencia de monitoreo",
+    "points": "Puntos de medición",
+    "pointsHint": "Se crean 2 puntos con ejes H, V y A. El motor suele numerarse desde 1 y el conducido desde 3.",
+    "generatePoints": "Generar puntos automáticamente"
+  },
+  "kind": {
+    "motor_pump": "Motor-Bomba",
+    "motor_compressor": "Motor-Compresor",
+    "motor_gearbox": "Motor-Reductor",
+    "motor_fan": "Motor-Ventilador",
+    "motor_blower": "Motor-Soplador",
+    "standalone": "Equipo aislado"
   }
 }

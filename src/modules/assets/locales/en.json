@@ -40,5 +40,65 @@
   "table": {
     "title": "List",
     "hint": "TAG is the customer's code; it can repeat between motor and pump."
+  },
+  "new": "New equipment",
+  "structure": {
+    "title": "Plant structure",
+    "subtitle": "Built top-down: plant → area → sector → machine train. Equipment hangs off the train.",
+    "plants": "Plants",
+    "plantsHint": "The customer's physical site",
+    "areas": "Areas",
+    "areasHint": "With their code, as in the customer's sheet: 501 - PACKAGING CERVEZA",
+    "sectors": "Sectors",
+    "sectorsHint": "The grouping inside an area: KIT BOMBAS AGUA CRUDA",
+    "groups": "Machine trains",
+    "groupsHint": "What gets aligned and reported together",
+    "plant": "Plant",
+    "plantName": "Plant name",
+    "area": "Area",
+    "code": "Code",
+    "name": "Name",
+    "kind": "Train type",
+    "sectorId": "Sector id",
+    "sectorIdHint": "Create it above and use the number it returns",
+    "areaCount": "{{count}} areas",
+    "equipmentCount": "{{count}} equipment",
+    "noAreas": "Create an area and a sector first",
+    "readOnly": "You need permission to create",
+    "sector": "Sector",
+    "noSectors": "Create a sector first"
+  },
+  "type": {
+    "motor": "Motor",
+    "pump": "Pump",
+    "compressor": "Compressor",
+    "gearbox": "Gearbox",
+    "fan": "Fan",
+    "blower": "Blower",
+    "bearing_housing": "Bearing housing",
+    "other": "Other"
+  },
+  "form": {
+    "genericError": "Could not save",
+    "newEquipment": "New equipment",
+    "equipmentHint": "Equipment hangs off a machine train. If it does not exist yet, create it in Plant structure.",
+    "assetGroup": "Machine train",
+    "assetGroupHint": "The train: motor + pump, motor + compressor…",
+    "name": "Name",
+    "clientTag": "Customer TAG",
+    "clientTagHint": "Optional. It can repeat between motor and pump; the internal code is generated.",
+    "equipmentType": "Equipment type",
+    "frequency": "Monitoring frequency",
+    "points": "Measurement points",
+    "pointsHint": "Two points with H, V and A axes. Motors usually start at 1 and driven machines at 3.",
+    "generatePoints": "Generate points automatically"
+  },
+  "kind": {
+    "motor_pump": "Motor-Pump",
+    "motor_compressor": "Motor-Compressor",
+    "motor_gearbox": "Motor-Gearbox",
+    "motor_fan": "Motor-Fan",
+    "motor_blower": "Motor-Blower",
+    "standalone": "Standalone"
   }
 }

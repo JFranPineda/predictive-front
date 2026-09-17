@@ -2,6 +2,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import { useAppSelector } from '@app/hooks';
+import { Button } from '@shared/ui/Button';
+
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -15,6 +18,7 @@ import { StatusBadge } from '@shared/ui/StatusBadge';
 import { displayStatus, overdueDays } from '../domain/status';
 import type { Equipment } from '../domain/types';
 import { useAreasQuery, useEquipmentsQuery } from '../infrastructure/endpoints';
+import { EquipmentFormModal } from './EquipmentFormModal';
 
 export default function EquipmentListPage() {
   const { t } = useTranslation('assets');
@@ -22,6 +26,9 @@ export default function EquipmentListPage() {
   const [search, setSearch] = useState('');
   const areas = useAreasQuery();
   const equipments = useEquipmentsQuery({ area, search: search || undefined, page_size: 100 });
+  const permissions = useAppSelector((state) => state.session.permissions);
+  const canManage = permissions.includes('assets.manage_equipment');
+  const [creating, setCreating] = useState(false);
 
   const rows = equipments.data?.results ?? [];
   const totals = useMemo(() => summarise(rows), [rows]);
@@ -95,7 +102,25 @@ export default function EquipmentListPage() {
 
   return (
     <Page>
-      <PageHeader title={t('title')} description={t('subtitle')} />
+      <PageHeader
+        title={t('title')}
+        description={t('subtitle')}
+        actions={
+          <>
+            <Link
+              to="/assets/structure"
+              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
+            >
+              {t('structure.title')}
+            </Link>
+            {canManage && (
+              <Button variant="primary" onClick={() => setCreating(true)}>
+                + {t('new')}
+              </Button>
+            )}
+          </>
+        }
+      />
 
       {equipments.isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
@@ -151,6 +176,8 @@ export default function EquipmentListPage() {
           </Card>
         </>
       )}
+
+      {creating && <EquipmentFormModal onClose={() => setCreating(false)} />}
     </Page>
   );
 }

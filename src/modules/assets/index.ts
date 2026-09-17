@@ -14,6 +14,11 @@ const definition: ModuleDefinition = {
   code: 'assets',
   routes: [
     {
+      path: '/assets/structure',
+      component: lazy(() => import('./ui/PlantStructurePage')),
+      permission: 'assets.view_equipment',
+    },
+    {
       path: '/assets',
       component: lazy(() => import('./ui/EquipmentListPage')),
       permission: 'assets.view_equipment',

@@ -11,6 +11,7 @@ export interface Area {
   parent: number | null;
   criticality: number;
   equipment_count: number;
+  sectors: { id: number; name: string }[];
 }
 
 export interface Equipment {
@@ -39,3 +40,54 @@ export interface MeasurementPoint {
   blueprint_x: number | null;
   blueprint_y: number | null;
 }
+
+export interface Plant {
+  id: number;
+  code: string;
+  name: string;
+  address: string;
+  is_active: boolean;
+  area_count: number;
+}
+
+export interface AssetGroup {
+  id: number;
+  code: string;
+  name: string;
+  /** The machine train: what gets aligned and reported together. */
+  kind: string;
+  sector: string;
+  area_code: string;
+  equipment_count: number;
+}
+
+export interface EquipmentDraft {
+  asset_group: number;
+  name: string;
+  equipment_type: EquipmentType;
+  client_tag?: string;
+  position_in_group?: 'driver' | 'driven' | 'intermediate';
+  monitoring_frequency?: MonitoringFrequency;
+  generate_points?: boolean;
+  first_point?: number;
+}
+
+export const ASSET_GROUP_KINDS = [
+  'motor_pump',
+  'motor_compressor',
+  'motor_gearbox',
+  'motor_fan',
+  'motor_blower',
+  'standalone',
+] as const;
+
+export const EQUIPMENT_TYPES = [
+  'motor',
+  'pump',
+  'compressor',
+  'gearbox',
+  'fan',
+  'blower',
+  'bearing_housing',
+  'other',
+] as const;
