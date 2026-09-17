@@ -9,7 +9,7 @@
   },
   "index": {
     "title": "Measurements",
-    "subtitle": "Pick an equipment to see its point × date matrix.",
+    "subtitle": "Pick the service to see what it measures and which equipment it covers.",
     "search": "TAG or name",
     "loading": "Loading equipment…",
     "open": "View trend",
@@ -22,7 +22,16 @@
       "area": "Area",
       "status": "Status"
     },
-    "empty": "No equipment matches"
+    "empty": "No equipment matches",
+    "format": "{{service}} format",
+    "formatHint": "What this service records at each point. Its evidence is {{evidence}}.",
+    "noMagnitudes": "This service has no magnitudes configured",
+    "noMagnitudesHint": "Create them in Settings → Magnitudes.",
+    "metric": {
+      "equipment": "Equipment",
+      "magnitudes": "Magnitudes",
+      "areas": "Areas"
+    }
   },
   "notMeasured": "could not be measured",
   "trend": {

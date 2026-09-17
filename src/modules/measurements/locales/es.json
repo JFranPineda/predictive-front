@@ -9,7 +9,7 @@
   },
   "index": {
     "title": "Mediciones",
-    "subtitle": "Elige un equipo para ver su matriz de valores por punto y fecha.",
+    "subtitle": "Elige el servicio para ver qué mide y sobre qué equipos se aplica.",
     "search": "TAG o nombre",
     "loading": "Cargando equipos…",
     "open": "Ver tendencia",
@@ -22,7 +22,16 @@
       "area": "Área",
       "status": "Estado"
     },
-    "empty": "No hay equipos que coincidan"
+    "empty": "No hay equipos que coincidan",
+    "format": "Formato de {{service}}",
+    "formatHint": "Lo que este servicio registra en cada punto. Como evidencia produce {{evidence}}.",
+    "noMagnitudes": "Este servicio no tiene medidas configuradas",
+    "noMagnitudesHint": "Créalas en Configuración → Medidas.",
+    "metric": {
+      "equipment": "Equipos",
+      "magnitudes": "Medidas",
+      "areas": "Áreas"
+    }
   },
   "notMeasured": "no se pudo medir",
   "trend": {
