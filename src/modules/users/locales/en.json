@@ -90,5 +90,10 @@
     "scopeAll": "Access to the whole plant",
     "scopeSome": "Restricted to {{count}} areas",
     "revoke": "Revoke access"
+  },
+  "filter": {
+    "search": "Name or email",
+    "allRoles": "All roles",
+    "allKinds": "Internal and external"
   }
 }

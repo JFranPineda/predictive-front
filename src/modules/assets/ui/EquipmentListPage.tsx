@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
+import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Button } from '@shared/ui/Button';
+import { TableToolbar } from '@shared/ui/TableToolbar';
 
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
@@ -17,20 +19,43 @@ import { StatusBadge } from '@shared/ui/StatusBadge';
 
 import { displayStatus, overdueDays } from '../domain/status';
 import type { Equipment } from '../domain/types';
-import { useAreasQuery, useEquipmentsQuery } from '../infrastructure/endpoints';
+import { useEquipmentsQuery } from '../infrastructure/endpoints';
 import { EquipmentFormModal } from './EquipmentFormModal';
 
 export default function EquipmentListPage() {
   const { t } = useTranslation('assets');
-  const [area, setArea] = useState<number | undefined>();
-  const [search, setSearch] = useState('');
-  const areas = useAreasQuery();
-  const equipments = useEquipmentsQuery({ area, search: search || undefined, page_size: 100 });
+  const equipments = useEquipmentsQuery({ page_size: 200 });
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('assets.manage_equipment');
   const [creating, setCreating] = useState(false);
 
-  const rows = equipments.data?.results ?? [];
+  const loaded = useMemo(() => equipments.data?.results ?? [], [equipments.data]);
+  const specs = useMemo<FilterSpec<Equipment>[]>(
+    () => [
+      { key: 'area', label: t('filter.allAreas'), valueOf: (row) => row.area.code },
+      {
+        key: 'type',
+        label: t('filter.allTypes'),
+        valueOf: (row) => row.equipment_type,
+        labelOf: (value) => t(`type.${value}`, { defaultValue: value }),
+      },
+      {
+        key: 'status',
+        label: t('filter.allStatuses'),
+        valueOf: (row) => row.condition_status?.code ?? null,
+        labelOf: (value) =>
+          loaded.find((row) => row.condition_status?.code === value)?.condition_status?.name ??
+          value,
+      },
+    ],
+    [t, loaded],
+  );
+  const table = useTableFilter(
+    loaded,
+    (row) => `${row.client_tag} ${row.asset_code} ${row.name} ${row.asset_group.name} ${row.area.code}`,
+    specs,
+  );
+  const rows = table.filtered;
   const totals = useMemo(() => summarise(rows), [rows]);
 
   const columns: Column<Equipment>[] = [
@@ -127,7 +152,7 @@ export default function EquipmentListPage() {
       ) : (
         <>
           <MetricRow>
-            <Metric label={t('metric.total')} value={equipments.data?.count ?? 0} />
+            <Metric label={t('metric.total')} value={rows.length} />
             <Metric label={t('metric.alarm')} value={totals.alarm} tone="warn" />
             <Metric label={t('metric.shutdown')} value={totals.shutdown} tone="bad" />
             <Metric
@@ -142,28 +167,22 @@ export default function EquipmentListPage() {
             title={t('table.title')}
             description={t('table.hint')}
             actions={
-              <div className="flex gap-2">
-                <select
-                  value={area ?? ''}
-                  onChange={(event) =>
-                    setArea(event.target.value ? Number(event.target.value) : undefined)
-                  }
-                  className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
-                >
-                  <option value="">{t('filter.allAreas')}</option>
-                  {areas.data?.results.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.code} — {item.name} ({item.equipment_count})
-                    </option>
-                  ))}
-                </select>
-                <input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder={t('filter.search')}
-                  className="w-48 rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
-                />
-              </div>
+              <TableToolbar
+                query={table.query}
+                onQuery={table.setQuery}
+                placeholder={t('filter.search')}
+                filters={specs.map((spec) => ({
+                  key: spec.key,
+                  label: spec.label,
+                  options: table.options[spec.key] ?? [],
+                }))}
+                active={table.active}
+                onFilter={table.setFilter}
+                onClear={table.clear}
+                activeCount={table.activeCount}
+                total={loaded.length}
+                shown={rows.length}
+              />
             }
             padded={false}
           >

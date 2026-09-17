@@ -32,5 +32,9 @@
   "empty": {
     "title": "Todavía no hay mediciones",
     "body": "Cuando se registre la primera ronda, aquí aparecerá el semáforo por área."
+  },
+  "filter": {
+    "search": "Buscar área",
+    "allStatuses": "Todos los estados"
   }
 }

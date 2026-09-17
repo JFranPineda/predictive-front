@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
@@ -11,6 +12,7 @@ import { Metric, MetricRow } from '@shared/ui/Metric';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
+import { TableToolbar } from '@shared/ui/TableToolbar';
 
 import { ROLES, type CompanyUser } from '../domain/roles';
 import { useCompanyUsersQuery, useUpdateUserMutation } from '../infrastructure/endpoints';
@@ -27,7 +29,24 @@ export default function UsersPage() {
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<CompanyUser | null>(null);
 
-  const rows = data ?? [];
+  const loaded = data ?? [];
+  const specs: FilterSpec<CompanyUser>[] = [
+    {
+      key: 'role',
+      label: t('filter.allRoles'),
+      valueOf: (row) => row.role,
+      labelOf: (value) => t(`role.${value}`, { defaultValue: value }),
+    },
+    {
+      key: 'kind',
+      label: t('filter.allKinds'),
+      valueOf: (row) => (row.is_external ? 'external' : 'internal'),
+      labelOf: (value) => t(value),
+    },
+  ];
+  const table = useTableFilter(loaded, (row) => `${row.full_name} ${row.email}`, specs);
+  const rows = table.filtered;
+
   const columns: Column<CompanyUser>[] = [
     {
       key: 'person',
@@ -143,21 +162,39 @@ export default function UsersPage() {
       ) : (
         <>
           <MetricRow>
-            <Metric label={t('metric.total')} value={rows.length} />
+            <Metric label={t('metric.total')} value={loaded.length} />
             <Metric
               label={t('metric.external')}
-              value={rows.filter((row) => row.is_external).length}
+              value={loaded.filter((row) => row.is_external).length}
               hint={t('metric.externalHint')}
             />
             <Metric
               label={t('metric.inactive')}
-              value={rows.filter((row) => !row.is_active).length}
+              value={loaded.filter((row) => !row.is_active).length}
             />
           </MetricRow>
 
           <Card
             title={t('table.title')}
             description={canManage ? t('table.hintManage') : t('table.hintRead')}
+            actions={
+              <TableToolbar
+                query={table.query}
+                onQuery={table.setQuery}
+                placeholder={t('filter.search')}
+                filters={specs.map((spec) => ({
+                  key: spec.key,
+                  label: spec.label,
+                  options: table.options[spec.key] ?? [],
+                }))}
+                active={table.active}
+                onFilter={table.setFilter}
+                onClear={table.clear}
+                activeCount={table.activeCount}
+                total={loaded.length}
+                shown={rows.length}
+              />
+            }
             padded={false}
           >
             <DataTable

@@ -3,7 +3,9 @@
   "loading": "Loading equipment…",
   "filter": {
     "allAreas": "All areas",
-    "search": "TAG or name"
+    "search": "TAG or name",
+    "allTypes": "All types",
+    "allStatuses": "All statuses"
   },
   "column": {
     "tag": "TAG",

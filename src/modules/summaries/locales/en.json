@@ -32,5 +32,9 @@
   "empty": {
     "title": "No measurements yet",
     "body": "Once the first round is recorded, the traffic light will appear here."
+  },
+  "filter": {
+    "search": "Search area",
+    "allStatuses": "All statuses"
   }
 }

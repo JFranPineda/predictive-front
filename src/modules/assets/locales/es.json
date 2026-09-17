@@ -3,7 +3,9 @@
   "loading": "Cargando equipos…",
   "filter": {
     "allAreas": "Todas las áreas",
-    "search": "TAG o nombre"
+    "search": "TAG o nombre",
+    "allTypes": "Todos los tipos",
+    "allStatuses": "Todos los estados"
   },
   "column": {
     "tag": "TAG",

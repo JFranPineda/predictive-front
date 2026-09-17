@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercent } from '@app/i18n/format';
+import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { Legend } from '@shared/ui/Legend';
@@ -9,6 +10,7 @@ import { Metric, MetricRow } from '@shared/ui/Metric';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
+import { TableToolbar } from '@shared/ui/TableToolbar';
 
 import { barSegments, coverageTone, readableOn } from '../domain/palette';
 import type { StatusCount, SummaryNode, TechniqueSummary } from '../domain/types';
@@ -24,6 +26,23 @@ export default function PlantSummaryPage() {
   const summaries = data ?? [];
   const active = summaries.find((s) => s.technique_code === technique) ?? summaries[0];
   const totals = useMemo(() => rollUpTotals(active), [active]);
+
+  const areas = useMemo(() => active?.nodes ?? [], [active]);
+  const specs = useMemo<FilterSpec<SummaryNode>[]>(
+    () => [
+      {
+        key: 'status',
+        label: t('filter.allStatuses'),
+        valueOf: (node) => node.worst.code,
+        labelOf: (value) =>
+          areas.find((node) => node.worst.code === value)?.worst.name ?? value,
+      },
+    ],
+    [t, areas],
+  );
+  // Filtering by the worst status is how a plant manager gets to "show me
+  // only what is in alarm" without reading twenty-four rows.
+  const table = useTableFilter(areas, (node) => node.label, specs);
 
   if (isLoading) return <Spinner label={t('loading')} />;
 
@@ -84,6 +103,24 @@ export default function PlantSummaryPage() {
       <Card
         title={t('tree.title')}
         description={t('tree.hint')}
+        actions={
+          <TableToolbar
+            query={table.query}
+            onQuery={table.setQuery}
+            placeholder={t('filter.search')}
+            filters={specs.map((spec) => ({
+              key: spec.key,
+              label: spec.label,
+              options: table.options[spec.key] ?? [],
+            }))}
+            active={table.active}
+            onFilter={table.setFilter}
+            onClear={table.clear}
+            activeCount={table.activeCount}
+            total={areas.length}
+            shown={table.filtered.length}
+          />
+        }
         padded={false}
       >
         <div className="hidden border-b border-slate-100 px-4 py-2 text-xs uppercase tracking-wide text-slate-500 md:flex dark:border-slate-800">
@@ -94,9 +131,9 @@ export default function PlantSummaryPage() {
           <span className="w-20 text-right">{t('tree.column.total')}</span>
           <span className="w-28 text-right">{t('tree.column.coverage')}</span>
         </div>
-        {active && active.nodes.length > 0 ? (
+        {table.filtered.length > 0 ? (
           <ul>
-            {active.nodes.map((node) => (
+            {table.filtered.map((node) => (
               <NodeRow key={node.key} node={node} depth={0} />
             ))}
           </ul>
