@@ -40,5 +40,30 @@
     "back": "← Back",
     "empty": "This equipment has no readings",
     "emptyBody": "They will appear once the first visit is recorded."
+  },
+  "record": {
+    "title": "Record of values",
+    "loading": "Loading the record…",
+    "save": "Save {{count}} values",
+    "saved": "No changes",
+    "saveFailed": "Some column could not be saved",
+    "legend": "One row per point, one column per round. Only open rounds you performed can be edited; the padlock marks the closed ones. Clearing a cell means “could not be measured”, not zero.",
+    "scope": {
+      "group": "Whole train",
+      "equipment": "This equipment only"
+    },
+    "column": {
+      "component": "Component",
+      "side": "Side",
+      "point": "Point"
+    }
+  },
+  "side": {
+    "free_end": "Free end",
+    "coupling_end": "Coupling end",
+    "opposite_coupling": "Opposite coupling",
+    "inboard": "Inboard",
+    "outboard": "Outboard",
+    "custom": "General"
   }
 }

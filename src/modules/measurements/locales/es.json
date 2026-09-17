@@ -40,5 +40,30 @@
     "back": "← Volver",
     "empty": "Este equipo no tiene lecturas",
     "emptyBody": "Aparecerán cuando se registre la primera visita."
+  },
+  "record": {
+    "title": "Registro de valores",
+    "loading": "Cargando el registro…",
+    "save": "Guardar {{count}} valores",
+    "saved": "Sin cambios",
+    "saveFailed": "Alguna columna no se pudo guardar",
+    "legend": "Una fila por punto, una columna por ronda. Solo se editan las rondas abiertas que ejecutaste tú; el candado marca las cerradas. Vaciar una celda significa «no se pudo medir», no cero.",
+    "scope": {
+      "group": "Todo el conjunto",
+      "equipment": "Solo este equipo"
+    },
+    "column": {
+      "component": "Componente",
+      "side": "Lado",
+      "point": "Punto"
+    }
+  },
+  "side": {
+    "free_end": "Lado libre",
+    "coupling_end": "Lado acople",
+    "opposite_coupling": "Lado opuesto a acople",
+    "inboard": "Interior",
+    "outboard": "Exterior",
+    "custom": "General"
   }
 }

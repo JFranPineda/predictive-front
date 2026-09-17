@@ -17,6 +17,11 @@ const definition: ModuleDefinition = {
     },
     {
       path: '/measurements/:equipmentId',
+      component: lazy(() => import('./ui/RecordOfValuesPage')),
+      permission: 'measurements.view_reading',
+    },
+    {
+      path: '/measurements/:equipmentId/trend',
       component: lazy(() => import('./ui/TrendMatrixPage')),
       permission: 'measurements.view_reading',
     },

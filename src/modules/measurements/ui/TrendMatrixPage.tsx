@@ -43,7 +43,7 @@ export default function TrendMatrixPage() {
         description={t('trend.subtitle')}
         actions={
           <Link
-            to="/measurements"
+            to={`/measurements/${id}`}
             className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
           >
             {t('trend.back')}
