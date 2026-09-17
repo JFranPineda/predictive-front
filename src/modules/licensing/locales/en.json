@@ -1,0 +1,39 @@
+{
+  "title": "Licence",
+  "loading": "Checking the licence…",
+  "subtitle": "Service status for this customer.",
+  "field": {
+    "customer": "Customer",
+    "deployment": "Deployment",
+    "status": "Status",
+    "daysLeft": "Term",
+    "mode": "Mode",
+    "reason": "Reason",
+    "code": "Code"
+  },
+  "deployment": {
+    "hosted": "Database hosted by us",
+    "on_premise": "Customer's own database"
+  },
+  "status": {
+    "active": "Active",
+    "grace": "In grace period",
+    "expired": "Expired",
+    "revoked": "Revoked",
+    "suspended": "Suspended",
+    "invalid": "Invalid"
+  },
+  "days": "{{count}} days left",
+  "overdue": "expired {{count}} days ago",
+  "readOnly": "Read only",
+  "warning": "The licence is close to expiry, or the system is already read-only. Contact the provider before it blocks.",
+  "note": "Maintenance data lives in the customer's own database. The licence enables the system that exploits it; it does not encrypt that data.",
+  "readWrite": "Read and write",
+  "card": {
+    "title": "Customer details"
+  },
+  "daysHint": {
+    "left": "days remaining",
+    "overdue": "days expired"
+  }
+}

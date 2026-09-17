@@ -1,0 +1,39 @@
+{
+  "title": "Licencia",
+  "loading": "Consultando la licencia…",
+  "subtitle": "Estado del servicio para este cliente.",
+  "field": {
+    "customer": "Cliente",
+    "deployment": "Despliegue",
+    "status": "Estado",
+    "daysLeft": "Vigencia",
+    "mode": "Modo",
+    "reason": "Motivo",
+    "code": "Código"
+  },
+  "deployment": {
+    "hosted": "Base de datos alojada por nosotros",
+    "on_premise": "Base de datos del cliente"
+  },
+  "status": {
+    "active": "Vigente",
+    "grace": "En periodo de gracia",
+    "expired": "Vencida",
+    "revoked": "Revocada",
+    "suspended": "Suspendida",
+    "invalid": "No válida"
+  },
+  "days": "{{count}} días restantes",
+  "overdue": "vencida hace {{count}} días",
+  "readOnly": "Solo lectura",
+  "warning": "La licencia está por vencer o el sistema ya está en solo lectura. Contacta con el proveedor antes de que se bloquee.",
+  "note": "Los datos de mantenimiento viven en la base de datos del cliente. La licencia habilita el sistema que los explota, no cifra esos datos.",
+  "readWrite": "Lectura y escritura",
+  "card": {
+    "title": "Datos del cliente"
+  },
+  "daysHint": {
+    "left": "días de vigencia",
+    "overdue": "días vencida"
+  }
+}

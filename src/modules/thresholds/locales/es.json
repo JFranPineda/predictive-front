@@ -1,0 +1,56 @@
+{
+  "title": "Umbrales",
+  "subtitle": "Gana el ámbito más específico y vigente. Un umbral por equipo sustituye a la norma sin modificarla.",
+  "loading": "Cargando umbrales…",
+  "version": "v{{version}} · desde {{date}}",
+  "scope": {
+    "global": "Global",
+    "equipment_type": "Tipo de equipo",
+    "asset_group_kind": "Tipo de conjunto",
+    "equipment": "Equipo",
+    "point": "Punto"
+  },
+  "override": {
+    "stricter": "Más estricto que {{standard}} ({{a}} vs {{b}} {{unit}})",
+    "looser": "Más permisivo que {{standard}} ({{a}} vs {{b}} {{unit}})",
+    "standardFallback": "la norma"
+  },
+  "standards": {
+    "title": "Normas",
+    "loading": "Cargando normas…",
+    "subtitle": "La norma asignada a un equipo decide sus bandas. Cambiarla lo recalifica sin tocar ningún umbral.",
+    "builtin": "de fábrica",
+    "setCount": "{{count}} juegos de umbrales",
+    "empty": "No hay normas cargadas",
+    "noClasses": "Esta norma no clasifica por tipo de máquina",
+    "seeThresholds": "Ver umbrales →",
+    "metric": {
+      "total": "Normas",
+      "inUse": "En uso",
+      "inUseHint": "con al menos un juego de bandas",
+      "classes": "Clases de máquina"
+    }
+  },
+  "statuses": {
+    "title": "Estados",
+    "loading": "Cargando estados…",
+    "subtitle": "El color y el nombre salen de aquí; cada técnica elige cuáles ofrece.",
+    "condition": "Condición",
+    "conditionHint": "Se calculan a partir del valor medido.",
+    "availability": "Disponibilidad",
+    "availabilityHint": "Los declara el técnico y explican por qué no hay valor.",
+    "severity": "severidad {{value}}",
+    "notMeasurable": "no medible",
+    "empty": "No hay estados definidos",
+    "measurable": "se puede medir",
+    "color": "Color de {{name}}",
+    "save": "Guardar"
+  },
+  "sets": {
+    "title": "Juegos de bandas",
+    "allMagnitudes": "Todas las magnitudes",
+    "hint": "Se listan del ámbito más específico al más general: el primero que coincida con un equipo es el que manda.",
+    "custom": "criterio propio",
+    "empty": "No hay umbrales para esa magnitud"
+  }
+}

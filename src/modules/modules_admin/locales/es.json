@@ -1,0 +1,18 @@
+{
+  "title": "Aplicaciones",
+  "subtitle": "Desinstalar oculta el módulo y revoca sus permisos; los datos históricos se conservan.",
+  "loading": "Cargando aplicaciones…",
+  "core": "núcleo",
+  "requires": "Requiere: {{list}}",
+  "missing": "Faltan dependencias: {{list}}",
+  "metric": {
+    "installed": "Instalados",
+    "available": "Disponibles",
+    "upgradable": "Con actualización"
+  },
+  "state": {
+    "installed": "instalado",
+    "available": "disponible"
+  },
+  "coreLocked": "Un módulo del núcleo no se puede desinstalar"
+}

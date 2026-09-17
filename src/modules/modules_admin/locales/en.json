@@ -1,0 +1,18 @@
+{
+  "title": "Applications",
+  "subtitle": "Uninstalling hides the module and revokes its permissions; historical data is kept.",
+  "loading": "Loading applications…",
+  "core": "core",
+  "requires": "Requires: {{list}}",
+  "missing": "Missing dependencies: {{list}}",
+  "metric": {
+    "installed": "Installed",
+    "available": "Available",
+    "upgradable": "Upgradable"
+  },
+  "state": {
+    "installed": "installed",
+    "available": "available"
+  },
+  "coreLocked": "A core module cannot be uninstalled"
+}

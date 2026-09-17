@@ -1,0 +1,56 @@
+{
+  "title": "Thresholds",
+  "subtitle": "The most specific set in force wins. An equipment override replaces the standard without changing it.",
+  "loading": "Loading thresholds…",
+  "version": "v{{version}} · since {{date}}",
+  "scope": {
+    "global": "Global",
+    "equipment_type": "Equipment type",
+    "asset_group_kind": "Machine train type",
+    "equipment": "Equipment",
+    "point": "Point"
+  },
+  "override": {
+    "stricter": "Stricter than {{standard}} ({{a}} vs {{b}} {{unit}})",
+    "looser": "Looser than {{standard}} ({{a}} vs {{b}} {{unit}})",
+    "standardFallback": "the standard"
+  },
+  "standards": {
+    "title": "Standards",
+    "loading": "Loading standards…",
+    "subtitle": "The standard assigned to an equipment decides its bands. Switching it re-grades the equipment without touching a threshold.",
+    "builtin": "built-in",
+    "setCount": "{{count}} threshold sets",
+    "empty": "No standards loaded",
+    "noClasses": "This standard does not classify by machine type",
+    "seeThresholds": "View thresholds →",
+    "metric": {
+      "total": "Standards",
+      "inUse": "In use",
+      "inUseHint": "with at least one band set",
+      "classes": "Machine classes"
+    }
+  },
+  "statuses": {
+    "title": "Statuses",
+    "loading": "Loading statuses…",
+    "subtitle": "Colour and name come from here; each technique picks which ones it offers.",
+    "condition": "Condition",
+    "conditionHint": "Derived from the measured value.",
+    "availability": "Availability",
+    "availabilityHint": "Declared by the technician; they explain why there is no value.",
+    "severity": "severity {{value}}",
+    "notMeasurable": "not measurable",
+    "empty": "No statuses defined",
+    "measurable": "can be measured",
+    "color": "Colour for {{name}}",
+    "save": "Save"
+  },
+  "sets": {
+    "title": "Band sets",
+    "allMagnitudes": "All magnitudes",
+    "hint": "Listed from the most specific scope to the most general: the first one that matches an equipment wins.",
+    "custom": "own criterion",
+    "empty": "No thresholds for that magnitude"
+  }
+}

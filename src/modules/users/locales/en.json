@@ -1,0 +1,47 @@
+{
+  "title": "Users",
+  "loading": "Loading users…",
+  "subtitle": "An external inspector sees the equipment but only edits the service they performed.",
+  "external": "external",
+  "column": {
+    "person": "Person",
+    "email": "Email",
+    "role": "Role",
+    "scope": "Scope",
+    "state": "State",
+    "kind": "Kind"
+  },
+  "role": {
+    "company_admin": "Administrator",
+    "engineer": "Engineer",
+    "planner": "Planner",
+    "technician": "Technician",
+    "external_inspector": "External inspector",
+    "client_viewer": "Customer"
+  },
+  "scope": {
+    "all": "Whole plant",
+    "areas": "{{count}} areas"
+  },
+  "state": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "internal": "internal",
+  "empty": "No users in this company",
+  "action": {
+    "activate": "Activate",
+    "deactivate": "Deactivate"
+  },
+  "metric": {
+    "total": "Users",
+    "external": "External",
+    "externalHint": "contractors with limited access",
+    "inactive": "Inactive"
+  },
+  "table": {
+    "title": "Company access",
+    "hintManage": "You can change the role and activate or deactivate anyone but yourself.",
+    "hintRead": "Read only: managing users requires the user administration permission."
+  }
+}

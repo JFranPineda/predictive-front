@@ -1,0 +1,47 @@
+{
+  "title": "Usuarios",
+  "loading": "Cargando usuarios…",
+  "subtitle": "Un inspector externo ve el equipo pero solo edita el servicio que ejecutó él.",
+  "external": "externo",
+  "column": {
+    "person": "Persona",
+    "email": "Correo",
+    "role": "Rol",
+    "scope": "Alcance",
+    "state": "Estado",
+    "kind": "Tipo"
+  },
+  "role": {
+    "company_admin": "Administrador",
+    "engineer": "Ingeniero",
+    "planner": "Planificador",
+    "technician": "Técnico",
+    "external_inspector": "Inspector externo",
+    "client_viewer": "Cliente"
+  },
+  "scope": {
+    "all": "Toda la planta",
+    "areas": "{{count}} áreas"
+  },
+  "state": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "internal": "interno",
+  "empty": "No hay usuarios en esta compañía",
+  "action": {
+    "activate": "Activar",
+    "deactivate": "Desactivar"
+  },
+  "metric": {
+    "total": "Usuarios",
+    "external": "Externos",
+    "externalHint": "contratistas con acceso limitado",
+    "inactive": "Inactivos"
+  },
+  "table": {
+    "title": "Acceso a la compañía",
+    "hintManage": "Puedes cambiar el rol y activar o desactivar a cualquiera menos a ti mismo.",
+    "hintRead": "Solo lectura: necesitas el permiso de administración de usuarios para cambiar roles."
+  }
+}
