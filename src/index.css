@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+/* Tailwind's default `dark:` follows the OS only. The app lets the user
+   override it, so the variant is bound to the attribute that `theme.ts`
+   writes. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background-color: var(--color-slate-50);
+}
+
+html[data-theme='dark'] {
+  background-color: var(--color-slate-950);
+}
