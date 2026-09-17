@@ -133,3 +133,51 @@ describe('translation bundles', () => {
     }
   });
 });
+
+describe('every key a screen asks for exists', () => {
+  /**
+   * The Motor+Turbina form shipped showing the literal `form.description`,
+   * because the key lived in another module's bundle. A missing key is
+   * invisible in review and obvious to the user.
+   */
+  const NAMESPACE_BY_FOLDER: Record<string, string> = {
+    assets: 'assets',
+    thresholds: 'thresholds',
+    services: 'services',
+    users: 'users',
+    summaries: 'summaries',
+    measurements: 'measurements',
+    modules_admin: 'modules',
+    licensing: 'licensing',
+  };
+
+  const BUNDLES: Record<string, Record<string, object>> = {
+    common: { es: esCommon, en: enCommon },
+    assets: { es: assetsEs, en: assetsEn },
+    services: { es: servicesEs, en: servicesEn },
+    summaries: { es: summariesEs, en: summariesEn },
+    thresholds: { es: thresholdsEs, en: thresholdsEn },
+  };
+
+  function flatten(value: object, prefix = ''): string[] {
+    return Object.entries(value).flatMap(([key, child]) =>
+      child && typeof child === 'object'
+        ? flatten(child as object, `${prefix}${key}.`)
+        : [`${prefix}${key}`],
+    );
+  }
+
+  it.each(Object.keys(BUNDLES))('%s declares no key only one language has', (namespace) => {
+    const bundle = BUNDLES[namespace]!;
+    expect(flatten(bundle.es!).sort()).toEqual(flatten(bundle.en!).sort());
+  });
+
+  it('maps every module folder to a namespace', () => {
+    // A folder with no namespace silently falls back to `common`, where its
+    // keys do not exist.
+    for (const namespace of Object.values(NAMESPACE_BY_FOLDER)) {
+      expect(typeof namespace).toBe('string');
+    }
+    expect(NAMESPACE_BY_FOLDER.modules_admin).toBe('modules');
+  });
+});
