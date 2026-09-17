@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -12,6 +14,7 @@ import { Spinner } from '@shared/ui/Spinner';
 
 import { ROLES, type CompanyUser } from '../domain/roles';
 import { useCompanyUsersQuery, useUpdateUserMutation } from '../infrastructure/endpoints';
+import { UserFormModal } from './UserFormModal';
 
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'common']);
@@ -20,6 +23,7 @@ export default function UsersPage() {
   const canManage = permissions.includes('security.manage_user');
   const { data, isLoading, isError } = useCompanyUsersQuery();
   const [updateUser, updating] = useUpdateUserMutation();
+  const [creating, setCreating] = useState(false);
 
   const rows = data ?? [];
   const columns: Column<CompanyUser>[] = [
@@ -111,7 +115,17 @@ export default function UsersPage() {
 
   return (
     <Page>
-      <PageHeader title={t('title')} description={t('subtitle')} />
+      <PageHeader
+        title={t('title')}
+        description={t('subtitle')}
+        actions={
+          canManage && (
+            <Button variant="primary" onClick={() => setCreating(true)}>
+              + {t('form.new')}
+            </Button>
+          )
+        }
+      />
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
       ) : (
@@ -143,6 +157,8 @@ export default function UsersPage() {
           </Card>
         </>
       )}
+
+      {creating && <UserFormModal onClose={() => setCreating(false)} />}
     </Page>
   );
 }

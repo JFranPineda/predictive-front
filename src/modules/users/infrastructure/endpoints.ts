@@ -8,6 +8,20 @@ export const usersApi = baseApi.injectEndpoints({
       query: () => 'users/',
       providesTags: ['User'],
     }),
+    createUser: build.mutation<
+      CompanyUser,
+      {
+        email: string;
+        first_name?: string;
+        last_name?: string;
+        initials?: string;
+        role: string;
+        password: string;
+      }
+    >({
+      query: (body) => ({ url: 'users/new/', method: 'POST', body }),
+      invalidatesTags: ['User'],
+    }),
     updateUser: build.mutation<
       Partial<CompanyUser> & { id: number },
       { id: number; role?: string; is_active?: boolean }
@@ -20,4 +34,5 @@ export const usersApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCompanyUsersQuery, useUpdateUserMutation } = usersApi;
+export const { useCompanyUsersQuery, useCreateUserMutation, useUpdateUserMutation } =
+  usersApi;

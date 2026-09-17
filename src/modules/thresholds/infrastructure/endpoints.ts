@@ -31,6 +31,10 @@ export const thresholdsApi = baseApi.injectEndpoints({
       query: () => 'magnitudes/',
       providesTags: ['Magnitude'],
     }),
+    createUnit: build.mutation<UnitRef, { code: string; name: string }>({
+      query: (body) => ({ url: 'units/', method: 'POST', body }),
+      invalidatesTags: ['Magnitude'],
+    }),
     createMagnitude: build.mutation<Magnitude, Partial<Magnitude> & { name: string }>({
       query: (body) => ({ url: 'magnitudes/', method: 'POST', body }),
       invalidatesTags: ['Magnitude'],
@@ -91,6 +95,7 @@ export const {
   useUnitsQuery,
   useMagnitudesQuery,
   useCreateMagnitudeMutation,
+  useCreateUnitMutation,
   useCreateStandardMutation,
   useUpdateStandardMutation,
   useDeleteStandardMutation,

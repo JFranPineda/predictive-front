@@ -43,5 +43,23 @@
     "title": "Acceso a la compañía",
     "hintManage": "Puedes cambiar el rol y activar o desactivar a cualquiera menos a ti mismo.",
     "hintRead": "Solo lectura: necesitas el permiso de administración de usuarios para cambiar roles."
+  },
+  "form": {
+    "new": "Nuevo usuario",
+    "title": "Invitar a la compañía",
+    "hint": "Se crea la persona y su acceso a esta compañía. La contraseña se define aquí y ella la cambia después.",
+    "email": "Correo",
+    "role": "Rol",
+    "roleHint": "Define qué puede ver y tocar",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "initials": "Iniciales",
+    "initialsHint": "Como firman la hoja de campo: HT, CT",
+    "password": "Contraseña inicial",
+    "passwordHint": "Mínimo {{count}} caracteres",
+    "passwordShort": "Necesita al menos {{count}} caracteres",
+    "create": "Crear acceso",
+    "genericError": "No se pudo crear",
+    "externalNotice": "Un inspector externo verá los equipos pero solo podrá editar las visitas que él mismo ejecute, y solo mientras estén abiertas."
   }
 }

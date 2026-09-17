@@ -112,5 +112,28 @@
     "decimals": "Decimals",
     "higherIsWorse": "A higher value is worse",
     "higherIsWorseHint": "Viscosity and dielectric strength get worse as they drop"
+  },
+  "magnitudes": {
+    "title": "Magnitudes",
+    "loading": "Loading magnitudes…",
+    "subtitle": "What each service measures. The magnitude fixes the service and therefore which standards may judge it.",
+    "table": "Catalogue",
+    "empty": "No magnitudes",
+    "new": "New magnitude",
+    "higherWorse": "higher is worse",
+    "lowerWorse": "lower is worse",
+    "column": {
+      "name": "Magnitude",
+      "technique": "Service",
+      "unit": "Unit",
+      "aggregation": "Aggregation",
+      "decimals": "Decimals",
+      "direction": "Direction"
+    }
+  },
+  "units": {
+    "new": "New unit",
+    "hint": "The symbol is what appears next to the value in reports.",
+    "symbol": "Symbol"
   }
 }

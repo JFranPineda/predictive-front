@@ -7,9 +7,22 @@ import es from './locales/es.json';
 
 import { thresholdsApi } from './infrastructure/endpoints';
 
+export {
+  useMagnitudesQuery,
+  useStandardsQuery,
+  useTechniquesQuery,
+  useUnitsQuery,
+} from './infrastructure/endpoints';
+export type { Magnitude, Standard, UnitRef } from './domain/types';
+
 const definition: ModuleDefinition = {
   code: 'thresholds',
   routes: [
+    {
+      path: '/settings/magnitudes',
+      component: lazy(() => import('./ui/MagnitudesPage')),
+      permission: 'thresholds.view_set',
+    },
     {
       path: '/settings/standards',
       component: lazy(() => import('./ui/StandardsPage')),

@@ -43,5 +43,23 @@
     "title": "Company access",
     "hintManage": "You can change the role and activate or deactivate anyone but yourself.",
     "hintRead": "Read only: managing users requires the user administration permission."
+  },
+  "form": {
+    "new": "New user",
+    "title": "Invite to the company",
+    "hint": "Creates the person and their access to this company. The password is set here and they change it later.",
+    "email": "Email",
+    "role": "Role",
+    "roleHint": "Defines what they can see and touch",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "initials": "Initials",
+    "initialsHint": "As they sign the field sheet: HT, CT",
+    "password": "Initial password",
+    "passwordHint": "At least {{count}} characters",
+    "passwordShort": "Needs at least {{count}} characters",
+    "create": "Create access",
+    "genericError": "Could not create",
+    "externalNotice": "An external inspector will see the equipment but can only edit the visits they perform, and only while those are open."
   }
 }

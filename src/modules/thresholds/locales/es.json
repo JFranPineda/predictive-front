@@ -112,5 +112,28 @@
     "decimals": "Decimales",
     "higherIsWorse": "Un valor más alto es peor",
     "higherIsWorseHint": "La viscosidad y la rigidez dieléctrica empeoran al bajar"
+  },
+  "magnitudes": {
+    "title": "Medidas",
+    "loading": "Cargando medidas…",
+    "subtitle": "Qué se mide en cada servicio. La medida fija el servicio y, con él, qué normas pueden juzgarla.",
+    "table": "Catálogo",
+    "empty": "No hay medidas",
+    "new": "Nueva medida",
+    "higherWorse": "más alto es peor",
+    "lowerWorse": "más bajo es peor",
+    "column": {
+      "name": "Medida",
+      "technique": "Servicio",
+      "unit": "Unidad",
+      "aggregation": "Agregación",
+      "decimals": "Decimales",
+      "direction": "Sentido"
+    }
+  },
+  "units": {
+    "new": "Nueva unidad",
+    "hint": "El símbolo es el que aparece junto al valor en los reportes.",
+    "symbol": "Símbolo"
   }
 }
