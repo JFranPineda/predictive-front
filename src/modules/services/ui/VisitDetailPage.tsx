@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
 import { formatDateTime } from '@app/i18n/format';
+import { captureKindFor, MediaGallery } from '@modules/media';
 import { Card, Field } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -12,6 +13,7 @@ import { Spinner } from '@shared/ui/Spinner';
 import { StatusBadge } from '@shared/ui/StatusBadge';
 
 import { ENTRY_ORDER } from '../domain/authorship';
+import { OperatingSection } from './OperatingSection';
 import type { EntryType } from '../domain/types';
 import {
   useAddVisitEntryMutation,
@@ -20,7 +22,7 @@ import {
 } from '../infrastructure/endpoints';
 
 export default function VisitDetailPage() {
-  const { t } = useTranslation('services');
+  const { t } = useTranslation(['services', 'media']);
   const { visitId } = useParams();
   const id = Number(visitId);
   const { data, isLoading, isError } = useVisitQuery(id);
@@ -118,7 +120,19 @@ export default function VisitDetailPage() {
         />
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]">
+      <nav className="flex flex-wrap gap-2 text-sm">
+        {SECTIONS.map((section) => (
+          <a
+            key={section}
+            href={`#${section}`}
+            className="rounded-lg border border-slate-200 px-3 py-1 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          >
+            {t(`section.${section}`)}
+          </a>
+        ))}
+      </nav>
+
+      <div id="readings" className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]">
         <Card
           title={t('visit.readings')}
           description={t('visit.readingsHint')}
@@ -238,7 +252,7 @@ export default function VisitDetailPage() {
             </dl>
           </Card>
 
-          <Card title={t('visit.diary')} description={t('visit.diaryHint')}>
+          <Card id="diary" title={t('visit.diary')} description={t('visit.diaryHint')}>
             {data.entries.length === 0 ? (
               <EmptyState title={t('visit.noEntries')} />
             ) : (
@@ -300,9 +314,42 @@ export default function VisitDetailPage() {
           </Card>
         </div>
       </div>
+
+      <div id="operating">
+        <OperatingSection visitId={id} canEdit={data.can_edit} />
+      </div>
+
+      <div id="captures">
+        <MediaGallery
+          ownerType="visit"
+          ownerId={id}
+          kind={captureKindFor(data.technique_code)}
+          title={t(`media:captures.${data.technique_code}`, {
+            defaultValue: t('media:captures.maintenance'),
+          })}
+          description={t(`media:captures.${data.technique_code}Hint`, {
+            defaultValue: t('media:captures.maintenanceHint'),
+          })}
+          canEdit={data.can_edit}
+        />
+      </div>
+
+      <div id="photos">
+        <MediaGallery
+          ownerType="visit"
+          ownerId={id}
+          kind="photo"
+          title={t('media:equipmentPhotos')}
+          description={t('media:equipmentPhotosHint')}
+          canEdit={data.can_edit}
+        />
+      </div>
     </Page>
   );
 }
+
+/** The order the customer's own report prints them in. */
+const SECTIONS = ['readings', 'operating', 'captures', 'photos', 'diary'] as const;
 
 /** `0.8700` for a two-decimal magnitude is false precision, and it is what the
  * database column happens to store, not what was measured. */

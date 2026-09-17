@@ -1,12 +1,14 @@
 import type { ReactNode } from 'react';
 
 export function Card({
+  id,
   title,
   description,
   actions,
   children,
   padded = true,
 }: {
+  id?: string;
   title?: string;
   description?: string;
   actions?: ReactNode;
@@ -14,7 +16,10 @@ export function Card({
   padded?: boolean;
 }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+    <section
+      id={id}
+      className="scroll-mt-6 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
+    >
       {(title || actions) && (
         <header className="flex flex-wrap items-start gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
           <div className="min-w-0 flex-1">

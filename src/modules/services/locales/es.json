@@ -129,5 +129,18 @@
     "from": "Desde",
     "to": "Hasta",
     "create": "Crear orden"
+  },
+  "operating": {
+    "title": "Datos operativos",
+    "hint": "Condiciones del equipo durante la toma. Sin ellas dos lecturas no son comparables.",
+    "empty": "Este servicio no registra datos operativos",
+    "emptyHint": "Se configuran en Configuración → Parámetros operativos."
+  },
+  "section": {
+    "readings": "Valores",
+    "operating": "Datos operativos",
+    "captures": "Capturas",
+    "photos": "Fotos",
+    "diary": "Conclusiones"
   }
 }

@@ -119,6 +119,31 @@ export const servicesApi = baseApi.injectEndpoints({
       query: ({ id }) => ({ url: `log-entries/${id}/`, method: 'DELETE' }),
       invalidatesTags: (_r, _e, { visitId }) => [{ type: 'Visit', id: visitId }, 'ServiceOrder'],
     }),
+    visitOperating: build.query<
+      {
+        code: string;
+        name: string;
+        unit_code: string;
+        decimals: number;
+        value: string | null;
+        text_value: string;
+      }[],
+      number
+    >({
+      query: (visitId) => `service-visits/${visitId}/operating/`,
+      providesTags: (_r, _e, id) => [{ type: 'Visit', id }],
+    }),
+    saveVisitOperating: build.mutation<
+      { saved: number },
+      { visitId: number; values: { code: string; value: string | null }[] }
+    >({
+      query: ({ visitId, values }) => ({
+        url: `service-visits/${visitId}/operating/`,
+        method: 'PUT',
+        body: { values },
+      }),
+      invalidatesTags: (_r, _e, { visitId }) => [{ type: 'Visit', id: visitId }],
+    }),
     addVisitEntry: build.mutation<
       AuthoredEntry,
       { visitId: number; entry_type: EntryType; text: string }
@@ -144,6 +169,8 @@ export const {
   useRemoveParticipantMutation,
   useUpdateLogEntryMutation,
   useDeleteLogEntryMutation,
+  useVisitOperatingQuery,
+  useSaveVisitOperatingMutation,
   useServiceOrdersQuery,
   useAuthorshipQuery,
   useVisitQuery,

@@ -129,5 +129,18 @@
     "from": "From",
     "to": "To",
     "create": "Create order"
+  },
+  "operating": {
+    "title": "Operating data",
+    "hint": "The equipment's conditions during the round. Without them two readings are not comparable.",
+    "empty": "This service records no operating data",
+    "emptyHint": "They are configured in Settings → Operating parameters."
+  },
+  "section": {
+    "readings": "Readings",
+    "operating": "Operating data",
+    "captures": "Captures",
+    "photos": "Photos",
+    "diary": "Conclusions"
   }
 }
