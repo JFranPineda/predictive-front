@@ -13,7 +13,10 @@
     "uninstall": "Desinstalar",
     "upgrade": "Actualizar",
     "export": "Exportar",
-    "search": "Buscar"
+    "search": "Buscar",
+    "delete": "Eliminar",
+    "add": "Agregar",
+    "new": "Nuevo"
   },
   "state": {
     "loading": "Cargando…",
