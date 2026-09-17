@@ -56,7 +56,10 @@
       "component": "Component",
       "side": "Side",
       "point": "Point"
-    }
+    },
+    "export": "Export to Excel",
+    "exporting": "Building…",
+    "exportFailed": "Could not build the file"
   },
   "side": {
     "free_end": "Free end",

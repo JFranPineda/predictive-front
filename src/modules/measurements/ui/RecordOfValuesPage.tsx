@@ -8,6 +8,7 @@ import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
+import { useDownload } from '@shared/hooks/useDownload';
 import { Spinner } from '@shared/ui/Spinner';
 
 import {
@@ -38,6 +39,7 @@ export default function RecordOfValuesPage() {
   const [saveColumn, saving] = useSaveMatrixColumnMutation();
   const [draft, setDraft] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
+  const { download, isDownloading, error: downloadError } = useDownload();
 
   // Mirror the server until the user types; re-mirroring after a save is what
   // makes the recalculated statuses appear.
@@ -118,6 +120,17 @@ export default function RecordOfValuesPage() {
             >
               {t('trend.back')}
             </Link>
+            <Button
+              disabled={isDownloading}
+              onClick={() =>
+                void download(
+                  `equipments/${id}/matrix/export/?scope=${scope}`,
+                  `registro-${data?.equipment.tag ?? id}.xlsx`,
+                )
+              }
+            >
+              {isDownloading ? t('record.exporting') : t('record.export')}
+            </Button>
             <Button variant="primary" disabled={edits.length === 0 || saving.isLoading} onClick={() => void save()}>
               {edits.length > 0 ? t('record.save', { count: edits.length }) : t('record.saved')}
             </Button>
@@ -126,6 +139,7 @@ export default function RecordOfValuesPage() {
       />
 
       {error && <ErrorState title={error} />}
+      {downloadError && <ErrorState title={t('record.exportFailed')} />}
 
       {data.blocks.length === 0 ? (
         <EmptyState title={t('trend.empty')} body={t('trend.emptyBody')} />

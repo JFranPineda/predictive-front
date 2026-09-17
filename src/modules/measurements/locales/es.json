@@ -56,7 +56,10 @@
       "component": "Componente",
       "side": "Lado",
       "point": "Punto"
-    }
+    },
+    "export": "Exportar a Excel",
+    "exporting": "Generando…",
+    "exportFailed": "No se pudo generar el archivo"
   },
   "side": {
     "free_end": "Lado libre",
