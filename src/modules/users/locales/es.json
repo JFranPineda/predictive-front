@@ -61,5 +61,34 @@
     "create": "Crear acceso",
     "genericError": "No se pudo crear",
     "externalNotice": "Un inspector externo verá los equipos pero solo podrá editar las visitas que él mismo ejecute, y solo mientras estén abiertas."
+  },
+  "roles": {
+    "title": "Permisos",
+    "loading": "Cargando permisos…",
+    "subtitle": "Qué puede ver, crear, editar y eliminar cada rol, módulo por módulo. Los permisos los declara cada módulo al instalarse.",
+    "list": "Roles",
+    "memberCount": "{{count}} usuarios con este rol",
+    "save": "Guardar permisos",
+    "saved": "Sin cambios",
+    "newName": "Nuevo rol",
+    "newPlaceholder": "Analista junior",
+    "action": {
+      "view": "ver",
+      "add": "crear",
+      "change": "editar",
+      "delete": "eliminar",
+      "other": "acción"
+    }
+  },
+  "edit": {
+    "title": "Editar a {{name}}",
+    "hint": "Perfil, contraseña y hasta dónde llega dentro de la planta.",
+    "newPassword": "Nueva contraseña",
+    "newPasswordHint": "Déjala vacía para no cambiarla. Mínimo {{count}} caracteres.",
+    "scope": "Áreas a las que accede",
+    "scopeHint": "Sin marcar ninguna ve toda la planta. Marcar algunas lo restringe a esas.",
+    "scopeAll": "Acceso a toda la planta",
+    "scopeSome": "Restringido a {{count}} áreas",
+    "revoke": "Quitar acceso"
   }
 }

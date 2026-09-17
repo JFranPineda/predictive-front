@@ -11,6 +11,11 @@ const definition: ModuleDefinition = {
   code: 'security',
   routes: [
     {
+      path: '/settings/roles',
+      component: lazy(() => import('./ui/RolesPage')),
+      permission: 'security.manage_role',
+    },
+    {
       path: '/settings/users',
       component: lazy(() => import('./ui/UsersPage')),
       permission: 'security.view_user',

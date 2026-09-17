@@ -14,6 +14,7 @@ import { Spinner } from '@shared/ui/Spinner';
 
 import { ROLES, type CompanyUser } from '../domain/roles';
 import { useCompanyUsersQuery, useUpdateUserMutation } from '../infrastructure/endpoints';
+import { UserEditModal } from './UserEditModal';
 import { UserFormModal } from './UserFormModal';
 
 export default function UsersPage() {
@@ -24,6 +25,7 @@ export default function UsersPage() {
   const { data, isLoading, isError } = useCompanyUsersQuery();
   const [updateUser, updating] = useUpdateUserMutation();
   const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState<CompanyUser | null>(null);
 
   const rows = data ?? [];
   const columns: Column<CompanyUser>[] = [
@@ -85,6 +87,16 @@ export default function UsersPage() {
             : t('scope.all')}
         </span>
       ),
+    },
+    {
+      key: 'edit',
+      header: '',
+      render: (row) =>
+        canManage ? (
+          <button onClick={() => setEditing(row)} className="text-xs font-medium text-sky-600">
+            {t('common:action.edit')}
+          </button>
+        ) : null,
     },
     {
       key: 'state',
@@ -159,6 +171,13 @@ export default function UsersPage() {
       )}
 
       {creating && <UserFormModal onClose={() => setCreating(false)} />}
+      {editing && (
+        <UserEditModal
+          user={editing}
+          isSelf={editing.id === currentUserId}
+          onClose={() => setEditing(null)}
+        />
+      )}
     </Page>
   );
 }

@@ -23,3 +23,26 @@ export interface CompanyUser {
   language: string;
   area_restrictions: (string | number)[];
 }
+
+export interface RolePermissions {
+  id: number;
+  code: string;
+  name: string;
+  is_system: boolean;
+  member_count: number;
+  permissions: string[];
+}
+
+export interface PermissionEntry {
+  code: string;
+  description: string;
+  /** view / add / change / delete, or `other` for things like import. */
+  action: string;
+}
+
+export interface RoleCatalogue {
+  roles: RolePermissions[];
+  modules: { code: string; permissions: PermissionEntry[] }[];
+}
+
+export const ACTION_ORDER = ['view', 'add', 'change', 'delete', 'other'] as const;

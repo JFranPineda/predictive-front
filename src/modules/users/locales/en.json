@@ -61,5 +61,34 @@
     "create": "Create access",
     "genericError": "Could not create",
     "externalNotice": "An external inspector will see the equipment but can only edit the visits they perform, and only while those are open."
+  },
+  "roles": {
+    "title": "Permissions",
+    "loading": "Loading permissions…",
+    "subtitle": "What each role may view, create, edit and delete, module by module. Permissions are declared by each module on install.",
+    "list": "Roles",
+    "memberCount": "{{count}} users with this role",
+    "save": "Save permissions",
+    "saved": "No changes",
+    "newName": "New role",
+    "newPlaceholder": "Junior analyst",
+    "action": {
+      "view": "view",
+      "add": "create",
+      "change": "edit",
+      "delete": "delete",
+      "other": "action"
+    }
+  },
+  "edit": {
+    "title": "Edit {{name}}",
+    "hint": "Profile, password and how far they reach inside the plant.",
+    "newPassword": "New password",
+    "newPasswordHint": "Leave empty to keep it. At least {{count}} characters.",
+    "scope": "Areas they can reach",
+    "scopeHint": "With none ticked they see the whole plant. Ticking some restricts them to those.",
+    "scopeAll": "Access to the whole plant",
+    "scopeSome": "Restricted to {{count}} areas",
+    "revoke": "Revoke access"
   }
 }

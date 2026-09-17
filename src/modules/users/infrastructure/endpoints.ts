@@ -1,6 +1,6 @@
 import { baseApi } from '@app/api/baseApi';
 
-import type { CompanyUser } from '../domain/roles';
+import type { CompanyUser, RoleCatalogue } from '../domain/roles';
 
 export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -22,9 +22,43 @@ export const usersApi = baseApi.injectEndpoints({
       query: (body) => ({ url: 'users/new/', method: 'POST', body }),
       invalidatesTags: ['User'],
     }),
+    roles: build.query<RoleCatalogue, void>({
+      query: () => 'roles/',
+      providesTags: ['Role'],
+    }),
+    createRole: build.mutation<{ id: number }, { name: string; permissions: string[] }>({
+      query: (body) => ({ url: 'roles/', method: 'POST', body }),
+      invalidatesTags: ['Role'],
+    }),
+    updateRole: build.mutation<
+      { id: number; permissions: string[] },
+      { id: number; name?: string; permissions?: string[] }
+    >({
+      query: ({ id, ...body }) => ({ url: `roles/${id}/`, method: 'PATCH', body }),
+      // A permission change rewrites what those users may do, so their shell
+      // has to be rebuilt.
+      invalidatesTags: ['Role', 'Bootstrap', 'User'],
+    }),
+    deleteRole: build.mutation<void, number>({
+      query: (id) => ({ url: `roles/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['Role'],
+    }),
+    removeUser: build.mutation<void, number>({
+      query: (id) => ({ url: `users/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['User'],
+    }),
     updateUser: build.mutation<
       Partial<CompanyUser> & { id: number },
-      { id: number; role?: string; is_active?: boolean }
+      {
+        id: number;
+        role?: string;
+        is_active?: boolean;
+        first_name?: string;
+        last_name?: string;
+        initials?: string;
+        password?: string;
+        area_restrictions?: number[];
+      }
     >({
       query: ({ id, ...body }) => ({ url: `users/${id}/`, method: 'PATCH', body }),
       // A role change rewrites what that person may do, so the shell they see
@@ -34,5 +68,13 @@ export const usersApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCompanyUsersQuery, useCreateUserMutation, useUpdateUserMutation } =
-  usersApi;
+export const {
+  useCompanyUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useRemoveUserMutation,
+  useRolesQuery,
+  useCreateRoleMutation,
+  useUpdateRoleMutation,
+  useDeleteRoleMutation,
+} = usersApi;
