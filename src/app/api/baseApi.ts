@@ -60,6 +60,7 @@ export const baseApi = createApi({
     'Plant',
     'Area',
     'AssetGroup',
+    'GroupKind',
     'Equipment',
     'Point',
     'Reading',
