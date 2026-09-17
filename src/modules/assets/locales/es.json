@@ -1,0 +1,44 @@
+{
+  "title": "Equipos",
+  "loading": "Cargando equipos…",
+  "filter": {
+    "allAreas": "Todas las áreas",
+    "search": "TAG o nombre"
+  },
+  "column": {
+    "tag": "TAG",
+    "equipment": "Equipo",
+    "group": "Conjunto",
+    "area": "Área",
+    "frequency": "Frecuencia",
+    "status": "Estado",
+    "overdue": "Vencido"
+  },
+  "frequency": {
+    "monthly": "Mensual",
+    "bimonthly": "Bimestral",
+    "quarterly": "Trimestral",
+    "semiannual": "Semestral",
+    "annual": "Anual",
+    "on_demand": "Bajo demanda"
+  },
+  "status": {
+    "notEvaluated": "Sin evaluar"
+  },
+  "overdue": "{{count}} d de retraso",
+  "subtitle": "Todos los equipos de la planta con su último estado conocido. El color sale de la última ronda medida.",
+  "openTrend": "Ver tendencia →",
+  "empty": "No hay equipos que coincidan con el filtro",
+  "metric": {
+    "total": "Equipos",
+    "alarm": "En alarma",
+    "shutdown": "En parada",
+    "notMeasured": "Sin medir",
+    "notMeasuredHint": "apagados, retirados o nunca evaluados",
+    "overdue": "Fuera de plan"
+  },
+  "table": {
+    "title": "Listado",
+    "hint": "TAG es el código del cliente; puede repetirse entre motor y bomba."
+  }
+}

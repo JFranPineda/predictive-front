@@ -1,0 +1,44 @@
+{
+  "title": "Equipment",
+  "loading": "Loading equipment…",
+  "filter": {
+    "allAreas": "All areas",
+    "search": "TAG or name"
+  },
+  "column": {
+    "tag": "TAG",
+    "equipment": "Equipment",
+    "group": "Machine train",
+    "area": "Area",
+    "frequency": "Frequency",
+    "status": "Status",
+    "overdue": "Overdue"
+  },
+  "frequency": {
+    "monthly": "Monthly",
+    "bimonthly": "Every 2 months",
+    "quarterly": "Quarterly",
+    "semiannual": "Every 6 months",
+    "annual": "Yearly",
+    "on_demand": "On demand"
+  },
+  "status": {
+    "notEvaluated": "Not evaluated"
+  },
+  "overdue": "{{count}} d overdue",
+  "subtitle": "Every equipment in the plant with its last known status. The colour comes from the last measured round.",
+  "openTrend": "View trend →",
+  "empty": "No equipment matches the filter",
+  "metric": {
+    "total": "Equipment",
+    "alarm": "In alarm",
+    "shutdown": "In shutdown",
+    "notMeasured": "Not measured",
+    "notMeasuredHint": "off, retired or never evaluated",
+    "overdue": "Behind plan"
+  },
+  "table": {
+    "title": "List",
+    "hint": "TAG is the customer's code; it can repeat between motor and pump."
+  }
+}

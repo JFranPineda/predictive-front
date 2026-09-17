@@ -1,0 +1,35 @@
+{
+  "title": "Reading record",
+  "loading": "Loading trend…",
+  "column": {
+    "point": "Point",
+    "unit": "Unit",
+    "delta": "Δ last",
+    "deltaHint": "Change against the previous round. A large jump matters even when the value is still within limits."
+  },
+  "index": {
+    "title": "Measurements",
+    "subtitle": "Pick an equipment to see its point × date matrix.",
+    "search": "TAG or name",
+    "loading": "Loading equipment…",
+    "open": "View trend",
+    "points": "{{count}} points",
+    "pick": "Pick an equipment",
+    "column": {
+      "tag": "TAG",
+      "equipment": "Equipment",
+      "group": "Train",
+      "area": "Area",
+      "status": "Status"
+    },
+    "empty": "No equipment matches"
+  },
+  "notMeasured": "could not be measured",
+  "trend": {
+    "subtitle": "Point × date matrix, the same shape as the customer's trend sheet.",
+    "hint": "Each cell is tinted with the status that reading got. An empty dot is a round that does not exist; a dash is a round that could not be measured.",
+    "back": "← Back",
+    "empty": "This equipment has no readings",
+    "emptyBody": "They will appear once the first visit is recorded."
+  }
+}

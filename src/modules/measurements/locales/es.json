@@ -1,0 +1,35 @@
+{
+  "title": "Registro de valores",
+  "loading": "Cargando tendencia…",
+  "column": {
+    "point": "Punto",
+    "unit": "Unidad",
+    "delta": "Δ última",
+    "deltaHint": "Variación contra la toma anterior. Un salto grande importa aunque el valor siga dentro de límites."
+  },
+  "index": {
+    "title": "Mediciones",
+    "subtitle": "Elige un equipo para ver su matriz de valores por punto y fecha.",
+    "search": "TAG o nombre",
+    "loading": "Cargando equipos…",
+    "open": "Ver tendencia",
+    "points": "{{count}} puntos",
+    "pick": "Elige un equipo",
+    "column": {
+      "tag": "TAG",
+      "equipment": "Equipo",
+      "group": "Conjunto",
+      "area": "Área",
+      "status": "Estado"
+    },
+    "empty": "No hay equipos que coincidan"
+  },
+  "notMeasured": "no se pudo medir",
+  "trend": {
+    "subtitle": "Matriz de valores por punto y fecha, como la hoja de tendencias del cliente.",
+    "hint": "Cada celda se colorea con el estado que obtuvo esa lectura. Un punto vacío es una toma que no existe; un guion es una toma que no se pudo hacer.",
+    "back": "← Volver",
+    "empty": "Este equipo no tiene lecturas",
+    "emptyBody": "Aparecerán cuando se registre la primera visita."
+  }
+}
