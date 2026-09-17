@@ -1,0 +1,24 @@
+{
+  "add": "Upload",
+  "uploading": "Uploading {{count}}…",
+  "uploadFailed": "Could not upload {{name}}",
+  "empty": "No images yet",
+  "emptyHint": "You can upload several at once, from a phone or a computer.",
+  "captionPlaceholder": "Describe what it shows…",
+  "equipmentPhotos": "Equipment photographic record",
+  "equipmentPhotosHint": "Photographs of the equipment in operation during the service.",
+  "captures": {
+    "vibration": "Spectra and waveforms",
+    "vibrationHint": "Instrument captures. The caption on each one is the diagnosis the report will carry.",
+    "thermography": "Thermograms",
+    "thermographyHint": "The radiometric image and its visual pair. The original is never re-encoded.",
+    "ultrasound": "Ultrasound captures",
+    "ultrasoundHint": "Instrument screen and audio spectrograms.",
+    "oil_analysis": "Laboratory reports",
+    "oil_analysisHint": "The PDF the laboratory returns.",
+    "insulating_oil": "Laboratory reports",
+    "insulating_oilHint": "The PDF the laboratory returns.",
+    "maintenance": "Work evidence",
+    "maintenanceHint": "Before and after the intervention."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "add": "Subir",
+  "uploading": "Subiendo {{count}}…",
+  "uploadFailed": "No se pudo subir {{name}}",
+  "empty": "Sin imágenes todavía",
+  "emptyHint": "Puedes subir varias a la vez desde el móvil o el equipo.",
+  "captionPlaceholder": "Describe lo que muestra…",
+  "equipmentPhotos": "Registro fotográfico del equipo",
+  "equipmentPhotosHint": "Fotos del equipo en operación durante el servicio.",
+  "captures": {
+    "vibration": "Espectros y formas de onda",
+    "vibrationHint": "Capturas del instrumento. El pie de cada una es el diagnóstico que se leerá en el reporte.",
+    "thermography": "Termogramas",
+    "thermographyHint": "Imagen radiométrica y su par visual. El original nunca se recomprime.",
+    "ultrasound": "Capturas de ultrasonido",
+    "ultrasoundHint": "Pantalla del equipo y espectrogramas del audio.",
+    "oil_analysis": "Informes de laboratorio",
+    "oil_analysisHint": "El PDF que devuelve el laboratorio.",
+    "insulating_oil": "Informes de laboratorio",
+    "insulating_oilHint": "El PDF que devuelve el laboratorio.",
+    "maintenance": "Evidencia del trabajo",
+    "maintenanceHint": "Antes y después de la intervención."
+  }
+}

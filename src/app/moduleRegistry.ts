@@ -21,6 +21,7 @@ const LOADERS: Record<string, ModuleLoader[]> = {
   summaries: [() => import('@modules/summaries')],
   security: [() => import('@modules/users')],
   licensing: [() => import('@modules/licensing')],
+  media: [() => import('@modules/media')],
 };
 
 export function knownModuleCodes(): string[] {
