@@ -1,4 +1,4 @@
-import type { Scope, ThresholdSet } from './types';
+import type { Scope, Standard, ThresholdSet } from './types';
 
 /** Same precedence as the backend resolver. Duplicated on purpose: the UI has
  * to explain *which* set would win before anything is saved. */
@@ -49,4 +49,25 @@ export function overrideSummary(
     key: a < b ? 'override.stricter' : 'override.looser',
     values: { a, b, unit: override.unit_code, standard: standard.standard?.name ?? null },
   };
+}
+
+/**
+ * The standards that may judge a magnitude of this technique.
+ *
+ * A standard with no technique is a house criterion and applies to anything;
+ * everything else belongs to the service it was written for. Offering ISO
+ * 10816-3 for an ultrasound limit is how a report ends up citing a standard
+ * that never mentions decibels.
+ */
+export function standardsForTechnique(
+  standards: Standard[],
+  techniqueCode: string | undefined,
+): Standard[] {
+  if (!techniqueCode) return [];
+  return standards.filter(
+    (standard) =>
+      standard.is_active &&
+      (standard.techniques.length === 0 ||
+        standard.techniques.some((technique) => technique.code === techniqueCode)),
+  );
 }

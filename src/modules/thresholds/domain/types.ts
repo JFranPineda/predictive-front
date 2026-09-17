@@ -12,20 +12,68 @@ export interface ConditionStatus {
 }
 
 export interface MachineClass {
+  id?: number;
   code: string;
   name: string;
   description: string;
+}
+
+export interface TechniqueRef {
+  code: string;
+  name: string;
 }
 
 export interface Standard {
   id: number;
   code: string;
   name: string;
+  names: Record<string, string>;
   source: string;
+  description: string;
   is_builtin: boolean;
   is_active: boolean;
+  /** The service types this standard judges. Empty means any — which is what
+   * a company's own in-house criterion usually is. */
+  techniques: TechniqueRef[];
   machine_classes: MachineClass[];
   set_count: number;
+}
+
+export interface Magnitude {
+  code: string;
+  name: string;
+  technique_code: string;
+  technique_name: string;
+  unit_code: string;
+  aggregation: string;
+  decimals: number;
+  higher_is_worse: boolean;
+}
+
+export interface UnitRef {
+  code: string;
+  name: string;
+}
+
+export interface StandardDraft {
+  code?: string;
+  name: string;
+  source?: string;
+  description?: string;
+  techniques: string[];
+  machine_classes: { code?: string; name: string; description?: string }[];
+}
+
+export interface ThresholdSetDraft {
+  magnitude_code: string;
+  standard_code: string | null;
+  machine_class_code: string | null;
+  scope: Scope;
+  scope_ref_id: string | null;
+  unit_code: string;
+  aggregation: string;
+  rationale: string;
+  bands: { status_code: string; min_value: string | null; max_value: string | null }[];
 }
 
 export type Scope = 'global' | 'equipment_type' | 'asset_group_kind' | 'equipment' | 'point';

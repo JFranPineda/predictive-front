@@ -10,9 +10,13 @@ import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 import { StatusBadge } from '@shared/ui/StatusBadge';
 
+import { useAppSelector } from '@app/hooks';
+import { Button } from '@shared/ui/Button';
+
 import { sortByPrecedence } from '../domain/cascade';
 import type { ThresholdSet } from '../domain/types';
-import { useThresholdSetsQuery } from '../infrastructure/endpoints';
+import { useRetireThresholdSetMutation, useThresholdSetsQuery } from '../infrastructure/endpoints';
+import { ThresholdFormModal } from './ThresholdFormModal';
 
 const SCOPE_TONE: Record<string, string> = {
   point: 'bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300',
@@ -25,6 +29,10 @@ const SCOPE_TONE: Record<string, string> = {
 export default function ThresholdsPage() {
   const { t } = useTranslation(['thresholds', 'common']);
   const [magnitude, setMagnitude] = useState('');
+  const permissions = useAppSelector((state) => state.session.permissions);
+  const canManage = permissions.includes('thresholds.manage_set');
+  const [editing, setEditing] = useState<ThresholdSet | null>(null);
+  const [creating, setCreating] = useState(false);
   const { data, isLoading, isError } = useThresholdSetsQuery({});
 
   if (isLoading) return <Spinner label={t('loading')} />;
@@ -37,7 +45,17 @@ export default function ThresholdsPage() {
 
   return (
     <Page>
-      <PageHeader title={t('title')} description={t('subtitle')} />
+      <PageHeader
+        title={t('title')}
+        description={t('subtitle')}
+        actions={
+          canManage && (
+            <Button variant="primary" onClick={() => setCreating(true)}>
+              + {t('sets.new')}
+            </Button>
+          )
+        }
+      />
 
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
@@ -65,18 +83,42 @@ export default function ThresholdsPage() {
           ) : (
             <ul className="space-y-3">
               {rows.map((set) => (
-                <ThresholdCard key={set.id} set={set} />
+                <ThresholdCard
+                  key={set.id}
+                  set={set}
+                  canManage={canManage}
+                  onEdit={() => setEditing(set)}
+                />
               ))}
             </ul>
           )}
         </Card>
       )}
+
+      {(creating || editing) && (
+        <ThresholdFormModal
+          set={editing ?? undefined}
+          onClose={() => {
+            setCreating(false);
+            setEditing(null);
+          }}
+        />
+      )}
     </Page>
   );
 }
 
-function ThresholdCard({ set }: { set: ThresholdSet }) {
-  const { t } = useTranslation('thresholds');
+function ThresholdCard({
+  set,
+  canManage,
+  onEdit,
+}: {
+  set: ThresholdSet;
+  canManage: boolean;
+  onEdit: () => void;
+}) {
+  const { t } = useTranslation(['thresholds', 'common']);
+  const [retire] = useRetireThresholdSetMutation();
   return (
     <li className="rounded-lg border border-slate-200 p-4 dark:border-slate-800">
       <header className="mb-3 flex flex-wrap items-center gap-2 text-sm">
@@ -96,6 +138,16 @@ function ThresholdCard({ set }: { set: ThresholdSet }) {
         <span className="ml-auto text-xs text-slate-400">
           {t('version', { version: set.version, date: formatDate(set.valid_from) })}
         </span>
+        {canManage && (
+          <span className="flex gap-2">
+            <Button onClick={onEdit}>{t('common:action.edit')}</Button>
+            {/* Readings freeze the set that judged them, so a criterion is
+                retired, never deleted. */}
+            <Button variant="danger" onClick={() => void retire(set.id)}>
+              {t('sets.retire')}
+            </Button>
+          </span>
+        )}
       </header>
 
       <div className="flex flex-wrap gap-x-6 gap-y-2">

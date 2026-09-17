@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -11,12 +12,14 @@ import { Spinner } from '@shared/ui/Spinner';
 
 import type { ConditionStatus } from '../domain/types';
 import { useConditionStatusesQuery, useUpdateStatusMutation } from '../infrastructure/endpoints';
+import { StatusFormModal } from './StatusFormModal';
 
 export default function StatusesPage() {
   const { t } = useTranslation(['thresholds', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('thresholds.manage_status');
   const { data, isLoading, isError } = useConditionStatusesQuery();
+  const [creating, setCreating] = useState(false);
 
   if (isLoading) return <Spinner label={t('statuses.loading')} />;
 
@@ -25,7 +28,17 @@ export default function StatusesPage() {
 
   return (
     <Page>
-      <PageHeader title={t('statuses.title')} description={t('statuses.subtitle')} />
+      <PageHeader
+        title={t('statuses.title')}
+        description={t('statuses.subtitle')}
+        actions={
+          canManage && (
+            <Button variant="primary" onClick={() => setCreating(true)}>
+              + {t('statuses.new')}
+            </Button>
+          )
+        }
+      />
 
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
@@ -39,6 +52,8 @@ export default function StatusesPage() {
           </Card>
         </div>
       )}
+
+      {creating && <StatusFormModal onClose={() => setCreating(false)} />}
     </Page>
   );
 }
