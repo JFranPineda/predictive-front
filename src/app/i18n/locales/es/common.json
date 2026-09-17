@@ -1,0 +1,57 @@
+{
+  "app": {
+    "name": "Predictive"
+  },
+  "nav": {
+    "settings": "Configuración"
+  },
+  "action": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "install": "Instalar",
+    "uninstall": "Desinstalar",
+    "upgrade": "Actualizar",
+    "export": "Exportar",
+    "search": "Buscar"
+  },
+  "state": {
+    "loading": "Cargando…",
+    "loadingModules": "Cargando módulos…",
+    "empty": "No hay datos",
+    "error": "Algo salió mal",
+    "failed": "No se pudieron cargar los datos",
+    "failedBody": "Puede ser un problema de conexión o tu sesión pudo haber terminado.",
+    "retry": "Reintentar"
+  },
+  "auth": {
+    "email": "Correo",
+    "password": "Contraseña",
+    "signIn": "Entrar",
+    "failed": "No se pudo iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "sessionExpired": "Tu sesión terminó. Vuelve a entrar."
+  },
+  "language": {
+    "title": "Idioma",
+    "description": "Cambia el idioma de toda la interfaz. Se guarda en tu perfil.",
+    "current": "Idioma actual",
+    "saved": "Idioma actualizado"
+  },
+  "notFound": {
+    "title": "Esa pantalla no existe",
+    "body": "El módulo no está instalado o todavía no tiene interfaz en esta versión.",
+    "back": "Volver al inicio"
+  },
+  "theme": {
+    "title": "Apariencia",
+    "system": "Según el sistema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "description": "«Según el sistema» sigue la configuración de tu equipo, incluso si la cambias más tarde."
+  },
+  "preferences": {
+    "title": "Preferencias",
+    "description": "Idioma y apariencia de la interfaz. Se guardan en tu perfil y en este navegador."
+  }
+}

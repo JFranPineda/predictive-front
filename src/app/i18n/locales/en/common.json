@@ -1,0 +1,57 @@
+{
+  "app": {
+    "name": "Predictive"
+  },
+  "nav": {
+    "settings": "Settings"
+  },
+  "action": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "upgrade": "Upgrade",
+    "export": "Export",
+    "search": "Search"
+  },
+  "state": {
+    "loading": "Loading…",
+    "loadingModules": "Loading modules…",
+    "empty": "No data",
+    "error": "Something went wrong",
+    "failed": "Could not load the data",
+    "failedBody": "It may be a connection problem, or your session may have ended.",
+    "retry": "Retry"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "failed": "Could not sign in",
+    "signOut": "Sign out",
+    "sessionExpired": "Your session ended. Please sign in again."
+  },
+  "language": {
+    "title": "Language",
+    "description": "Changes the language of the whole interface. It is saved to your profile.",
+    "current": "Current language",
+    "saved": "Language updated"
+  },
+  "notFound": {
+    "title": "No such screen",
+    "body": "The module is not installed, or has no interface in this build yet.",
+    "back": "Back to the start"
+  },
+  "theme": {
+    "title": "Appearance",
+    "system": "Follow the system",
+    "light": "Light",
+    "dark": "Dark",
+    "description": "\"Follow the system\" tracks your device setting, even when you change it later."
+  },
+  "preferences": {
+    "title": "Preferences",
+    "description": "Interface language and appearance. Saved to your profile and to this browser."
+  }
+}
