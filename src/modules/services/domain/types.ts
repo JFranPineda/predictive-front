@@ -99,6 +99,8 @@ export interface VisitDetail {
   participants: Participant[];
   points: VisitPoint[];
   entries: (AuthoredEntry & { status: string | null; from_this_visit: boolean })[];
+  /** What this service found, from its technique's catalogue. */
+  fault_modes: { code: string; name: string; reference: string }[];
   is_closed: boolean;
   report_issued: boolean;
   can_edit: boolean;

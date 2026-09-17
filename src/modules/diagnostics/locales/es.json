@@ -1,0 +1,9 @@
+{
+  "title": "Problemas identificados",
+  "hint": "Opcional. Marca uno o varios; el catálogo cambia según el servicio y cada entrada cita la norma que define el término.",
+  "save": "Guardar problemas",
+  "saved": "Sin cambios",
+  "none": "No se registró ningún problema en este servicio",
+  "noCatalogue": "Este servicio no tiene catálogo de problemas",
+  "noCatalogueHint": "Se configura en Configuración → Modos de falla."
+}

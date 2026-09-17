@@ -8,6 +8,7 @@ import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
+import { NameplateModal } from '@modules/nameplate';
 import { useDownload } from '@shared/hooks/useDownload';
 import { Spinner } from '@shared/ui/Spinner';
 
@@ -31,7 +32,7 @@ import { useMatrixQuery, useSaveMatrixColumnMutation } from '../infrastructure/e
  * saves through its own visit, so the ownership rule still holds.
  */
 export default function RecordOfValuesPage() {
-  const { t } = useTranslation(['measurements', 'common']);
+  const { t } = useTranslation(['measurements', 'common', 'nameplate']);
   const { equipmentId } = useParams();
   const id = Number(equipmentId);
   const [scope, setScope] = useState<'group' | 'equipment'>('group');
@@ -40,6 +41,7 @@ export default function RecordOfValuesPage() {
   const [draft, setDraft] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
   const { download, isDownloading, error: downloadError } = useDownload();
+  const [editingPlate, setEditingPlate] = useState(false);
 
   // Mirror the server until the user types; re-mirroring after a save is what
   // makes the recalculated statuses appear.
@@ -120,6 +122,7 @@ export default function RecordOfValuesPage() {
             >
               {t('trend.back')}
             </Link>
+            <Button onClick={() => setEditingPlate(true)}>{t('nameplate:open')}</Button>
             <Button
               disabled={isDownloading}
               onClick={() =>
@@ -156,6 +159,10 @@ export default function RecordOfValuesPage() {
       )}
 
       <p className="text-xs text-slate-400">{t('record.legend')}</p>
+
+      {editingPlate && (
+        <NameplateModal equipmentId={id} onClose={() => setEditingPlate(false)} />
+      )}
     </Page>
   );
 }

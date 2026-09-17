@@ -105,6 +105,8 @@ export const baseApi = createApi({
     'Point',
     'Reading',
     'Visit',
+    'FaultMode',
+    'Nameplate',
     'ThresholdSet',
     'ConditionStatus',
     'Standard',

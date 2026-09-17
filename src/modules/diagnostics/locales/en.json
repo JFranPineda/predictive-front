@@ -1,0 +1,9 @@
+{
+  "title": "Problems found",
+  "hint": "Optional. Tick one or several; the catalogue changes with the service and each entry cites the standard that defines the term.",
+  "save": "Save problems",
+  "saved": "No changes",
+  "none": "No problem was recorded in this service",
+  "noCatalogue": "This service has no problem catalogue",
+  "noCatalogueHint": "It is configured in Settings → Fault modes."
+}

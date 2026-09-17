@@ -1,0 +1,20 @@
+{
+  "title": "Nameplate of {{name}}",
+  "hint": "Rated power and foundation decide which ISO table this equipment's readings are judged against.",
+  "loading": "Loading the nameplate…",
+  "open": "Nameplate",
+  "field": {
+    "powerKw": "Power (kW)", "powerHint": "Rated, as stamped",
+    "powerHp": "Power (HP)", "powerHpHint": "Converted to kW automatically",
+    "mounting": "Foundation", "mountingHint": "Rigid or flexible, per ISO 10816-3",
+    "manufacturer": "Manufacturer", "model": "Model", "serial": "Serial number",
+    "rpm": "Rated RPM", "voltage": "Voltage (V)", "current": "Current (A)",
+    "bearingDe": "Drive-end bearing", "bearingHint": "Enables BPFO, BPFI and BSF",
+    "bearingNde": "Non-drive-end bearing", "lubricant": "Lubricant"
+  },
+  "mounting": { "rigid": "Rigid", "flexible": "Flexible" },
+  "class": {
+    "derived": "At this power, {{standard}} classifies it as {{name}}, and its limits follow from that.",
+    "explicit": "It has a class set by hand, which overrides the derived one ({{standard}} · {{name}})."
+  }
+}

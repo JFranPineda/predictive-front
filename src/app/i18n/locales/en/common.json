@@ -56,5 +56,10 @@
   "preferences": {
     "title": "Preferences",
     "description": "Interface language and appearance. Saved to your profile and to this browser."
+  },
+  "table": {
+    "all": "{{count}} records",
+    "shown": "{{shown}} of {{total}}",
+    "clear": "Clear"
   }
 }

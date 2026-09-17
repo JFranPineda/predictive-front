@@ -1,0 +1,20 @@
+{
+  "title": "Ficha técnica de {{name}}",
+  "hint": "La potencia y la cimentación deciden contra qué tabla ISO se juzgan las lecturas de este equipo.",
+  "loading": "Cargando la ficha…",
+  "open": "Ficha técnica",
+  "field": {
+    "powerKw": "Potencia (kW)", "powerHint": "Nominal de placa",
+    "powerHp": "Potencia (HP)", "powerHpHint": "Se convierte a kW automáticamente",
+    "mounting": "Cimentación", "mountingHint": "Rígida o flexible, según ISO 10816-3",
+    "manufacturer": "Fabricante", "model": "Modelo", "serial": "N° de serie",
+    "rpm": "RPM nominal", "voltage": "Tensión (V)", "current": "Corriente (A)",
+    "bearingDe": "Rodamiento lado acople", "bearingHint": "Permite calcular BPFO, BPFI y BSF",
+    "bearingNde": "Rodamiento lado libre", "lubricant": "Lubricante"
+  },
+  "mounting": { "rigid": "Rígida", "flexible": "Flexible" },
+  "class": {
+    "derived": "Con esta potencia, {{standard}} lo clasifica como {{name}}, y de ahí salen sus límites.",
+    "explicit": "Tiene una clase asignada a mano, que manda sobre la derivada ({{standard}} · {{name}})."
+  }
+}

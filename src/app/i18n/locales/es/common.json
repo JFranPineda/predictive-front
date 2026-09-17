@@ -56,5 +56,10 @@
   "preferences": {
     "title": "Preferencias",
     "description": "Idioma y apariencia de la interfaz. Se guardan en tu perfil y en este navegador."
+  },
+  "table": {
+    "all": "{{count}} registros",
+    "shown": "{{shown}} de {{total}}",
+    "clear": "Limpiar"
   }
 }

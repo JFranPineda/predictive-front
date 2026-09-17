@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
 import { formatDateTime } from '@app/i18n/format';
+import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
 import { Card, Field } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -319,6 +320,15 @@ export default function VisitDetailPage() {
         <OperatingSection visitId={id} canEdit={data.can_edit} />
       </div>
 
+      <div id="faults">
+        <FaultPicker
+          visitId={id}
+          technique={data.technique_code}
+          selected={data.fault_modes}
+          canEdit={data.can_edit}
+        />
+      </div>
+
       <div id="captures">
         <MediaGallery
           ownerType="visit"
@@ -349,7 +359,7 @@ export default function VisitDetailPage() {
 }
 
 /** The order the customer's own report prints them in. */
-const SECTIONS = ['readings', 'operating', 'captures', 'photos', 'diary'] as const;
+const SECTIONS = ['readings', 'operating', 'faults', 'captures', 'photos', 'diary'] as const;
 
 /** `0.8700` for a two-decimal magnitude is false precision, and it is what the
  * database column happens to store, not what was measured. */
