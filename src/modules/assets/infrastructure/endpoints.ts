@@ -3,8 +3,10 @@ import { baseApi } from '@app/api/baseApi';
 import type {
   Area,
   AssetGroup,
+  AssetGroupKind,
   Equipment,
   EquipmentDraft,
+  GroupPoints,
   MeasurementPoint,
   Plant,
 } from '../domain/types';
@@ -71,7 +73,8 @@ export const assetsApi = baseApi.injectEndpoints({
     }),
     createAssetGroup: build.mutation<
       AssetGroup,
-      { sector: number; name: string; kind: string }
+      // `kind` is a catalogue row now, not a hardcoded string.
+      { sector: number; name: string; kind: number }
     >({
       query: (body) => ({ url: 'asset-groups/', method: 'POST', body }),
       invalidatesTags: ['AssetGroup'],
@@ -79,6 +82,41 @@ export const assetsApi = baseApi.injectEndpoints({
     deleteAssetGroup: build.mutation<void, number>({
       query: (id) => ({ url: `asset-groups/${id}/`, method: 'DELETE' }),
       invalidatesTags: ['AssetGroup'],
+    }),
+    groupKinds: build.query<AssetGroupKind[], void>({
+      query: () => 'asset-group-kinds/',
+      providesTags: ['GroupKind'],
+    }),
+    createGroupKind: build.mutation<AssetGroupKind, Partial<AssetGroupKind>>({
+      query: (body) => ({ url: 'asset-group-kinds/', method: 'POST', body }),
+      invalidatesTags: ['GroupKind'],
+    }),
+    updateGroupKind: build.mutation<AssetGroupKind, Partial<AssetGroupKind> & { id: number }>({
+      query: ({ id, ...body }) => ({ url: `asset-group-kinds/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['GroupKind'],
+    }),
+    deleteGroupKind: build.mutation<void, number>({
+      query: (id) => ({ url: `asset-group-kinds/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['GroupKind'],
+    }),
+    groupPoints: build.query<GroupPoints, number>({
+      query: (id) => `asset-groups/${id}/points/`,
+      providesTags: ['Point'],
+    }),
+    applyPointTemplate: build.mutation<{ created: number; total: number }, number>({
+      query: (id) => ({ url: `asset-groups/${id}/points/`, method: 'POST', body: {} }),
+      invalidatesTags: ['Point', 'Equipment'],
+    }),
+    createPoint: build.mutation<
+      { id: number; label: string },
+      { equipment: number; number: number; axis: string; side?: string; point_type?: string }
+    >({
+      query: (body) => ({ url: 'points/', method: 'POST', body }),
+      invalidatesTags: ['Point'],
+    }),
+    deletePoint: build.mutation<void, number>({
+      query: (id) => ({ url: `points/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['Point'],
     }),
     createEquipment: build.mutation<
       { id: number; asset_code: string; name: string; point_count: number },
@@ -114,6 +152,14 @@ export const {
   useDeleteSectorMutation,
   useCreateAssetGroupMutation,
   useDeleteAssetGroupMutation,
+  useGroupKindsQuery,
+  useCreateGroupKindMutation,
+  useUpdateGroupKindMutation,
+  useDeleteGroupKindMutation,
+  useGroupPointsQuery,
+  useApplyPointTemplateMutation,
+  useCreatePointMutation,
+  useDeletePointMutation,
   useCreateEquipmentMutation,
   useUpdateEquipmentMutation,
   useDeleteEquipmentMutation,

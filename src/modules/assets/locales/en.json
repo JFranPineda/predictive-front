@@ -66,7 +66,10 @@
     "noAreas": "Create an area and a sector first",
     "readOnly": "You need permission to create",
     "sector": "Sector",
-    "noSectors": "Create a sector first"
+    "noSectors": "Create a sector first",
+    "pointCount": "{{count}} points",
+    "editPoints": "Points",
+    "kindHint": "Sets the point template that will be applied"
   },
   "type": {
     "motor": "Motor",
@@ -76,7 +79,8 @@
     "fan": "Fan",
     "blower": "Blower",
     "bearing_housing": "Bearing housing",
-    "other": "Other"
+    "other": "Other",
+    "turbine": "Turbine"
   },
   "form": {
     "genericError": "Could not save",
@@ -91,7 +95,8 @@
     "frequency": "Monitoring frequency",
     "points": "Measurement points",
     "pointsHint": "Two points with H, V and A axes. Motors usually start at 1 and driven machines at 3.",
-    "generatePoints": "Generate points automatically"
+    "generatePoints": "Generate points automatically",
+    "description": "Description"
   },
   "kind": {
     "motor_pump": "Motor-Pump",
@@ -100,5 +105,47 @@
     "motor_fan": "Motor-Fan",
     "motor_blower": "Motor-Blower",
     "standalone": "Standalone"
+  },
+  "kinds": {
+    "title": "Train types",
+    "loading": "Loading types…",
+    "subtitle": "Each type defines which machines the train is made of and how many points are measured. It is what makes a new train produce the rows of the real report.",
+    "new": "New type",
+    "edit": "Edit type",
+    "formHint": "Define the components and, below, the layout point by point: number, axis, side and what is measured.",
+    "empty": "No train types",
+    "emptyBody": "Create the first one: Motor + Pump, Motor + Turbine…",
+    "groupCount": "{{count}} trains",
+    "noLayout": "No point layout configured",
+    "components": "Train components",
+    "componentsHint": "In order: the driver first, then the driven machine.",
+    "addComponent": "Add component",
+    "driver": "Driver",
+    "driven": "Driven",
+    "intermediate": "Intermediate",
+    "layout": "Point layout",
+    "layoutHint": "As in the report: points 1 and 2 on the motor, 3 and 4 on the driven machine, axes H/V/A. Envelope and temperature are usually read on H only.",
+    "addPoint": "Add point",
+    "column": {
+      "point": "Point",
+      "component": "Component",
+      "side": "Side",
+      "axes": "Axes",
+      "axis": "Axis",
+      "magnitudes": "Measured"
+    }
+  },
+  "points": {
+    "title": "Points of {{group}}",
+    "loading": "Loading points…",
+    "hint": "Points are what readings hang off. Applying the template fills what is missing without touching what is there.",
+    "kind": "Type: {{kind}}",
+    "applyTemplate": "Apply the type's template",
+    "none": "This equipment has no points yet",
+    "hasReadings": "readings recorded",
+    "equipment": "Equipment",
+    "number": "No.",
+    "axis": "Axis",
+    "side": "Side"
   }
 }

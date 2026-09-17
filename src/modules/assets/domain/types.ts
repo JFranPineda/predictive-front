@@ -91,3 +91,65 @@ export const EQUIPMENT_TYPES = [
   'bearing_housing',
   'other',
 ] as const;
+
+export interface KindComponent {
+  id?: number;
+  label: string;
+  equipment_type: string;
+  position: string;
+  order?: number;
+}
+
+export interface PointTemplateRow {
+  id?: number;
+  number: number;
+  axis: string;
+  label?: string;
+  side: string;
+  point_type: string;
+  magnitudes: string[];
+  component_label?: string;
+}
+
+/** A kind of machine train and the measuring layout its reports use. */
+export interface AssetGroupKind {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+  is_builtin: boolean;
+  is_active: boolean;
+  group_count: number;
+  components: KindComponent[];
+  point_templates: PointTemplateRow[];
+}
+
+export interface GroupPoint {
+  id: number;
+  label: string;
+  number: number;
+  axis: string;
+  side: string;
+  point_type: string;
+  equipment_id: number;
+  equipment_name: string;
+  is_active: boolean;
+  reading_count: number;
+}
+
+export interface GroupPoints {
+  group: { id: number; name: string; kind: string | null };
+  equipments: { id: number; name: string; tag: string; type: string; position: string }[];
+  points: GroupPoint[];
+}
+
+export const POINT_SIDES = [
+  'free_end',
+  'coupling_end',
+  'opposite_coupling',
+  'inboard',
+  'outboard',
+  'custom',
+] as const;
+
+export const POINT_AXES = ['H', 'V', 'A', 'N'] as const;

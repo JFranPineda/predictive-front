@@ -66,7 +66,10 @@
     "noAreas": "Crea primero un área y un sector",
     "readOnly": "Necesitas permiso para crear",
     "sector": "Sector",
-    "noSectors": "Crea primero un sector"
+    "noSectors": "Crea primero un sector",
+    "pointCount": "{{count}} puntos",
+    "editPoints": "Puntos",
+    "kindHint": "Define la plantilla de puntos que se aplicará"
   },
   "type": {
     "motor": "Motor",
@@ -76,7 +79,8 @@
     "fan": "Ventilador",
     "blower": "Soplador",
     "bearing_housing": "Chumacera",
-    "other": "Otro"
+    "other": "Otro",
+    "turbine": "Turbina"
   },
   "form": {
     "genericError": "No se pudo guardar",
@@ -91,7 +95,8 @@
     "frequency": "Frecuencia de monitoreo",
     "points": "Puntos de medición",
     "pointsHint": "Se crean 2 puntos con ejes H, V y A. El motor suele numerarse desde 1 y el conducido desde 3.",
-    "generatePoints": "Generar puntos automáticamente"
+    "generatePoints": "Generar puntos automáticamente",
+    "description": "Descripción"
   },
   "kind": {
     "motor_pump": "Motor-Bomba",
@@ -100,5 +105,47 @@
     "motor_fan": "Motor-Ventilador",
     "motor_blower": "Motor-Soplador",
     "standalone": "Equipo aislado"
+  },
+  "kinds": {
+    "title": "Tipos de conjunto",
+    "loading": "Cargando tipos…",
+    "subtitle": "Cada tipo define de qué máquinas se compone el tren y cuántos puntos se miden. Es lo que hace que un conjunto nuevo produzca las filas del reporte real.",
+    "new": "Nuevo tipo",
+    "edit": "Editar tipo",
+    "formHint": "Define los componentes y, debajo, el punto a punto: número, eje, lado y qué se mide.",
+    "empty": "No hay tipos de conjunto",
+    "emptyBody": "Crea el primero: Motor + Bomba, Motor + Turbina…",
+    "groupCount": "{{count}} conjuntos",
+    "noLayout": "Sin plantilla de puntos configurada",
+    "components": "Componentes del tren",
+    "componentsHint": "En orden: primero el motriz, luego el conducido.",
+    "addComponent": "Agregar componente",
+    "driver": "Motriz",
+    "driven": "Conducido",
+    "intermediate": "Intermedio",
+    "layout": "Plantilla de puntos",
+    "layoutHint": "Como en el reporte: puntos 1 y 2 en el motor, 3 y 4 en el conducido, ejes H/V/A. Envolvente y temperatura suelen leerse solo en H.",
+    "addPoint": "Agregar punto",
+    "column": {
+      "point": "Punto",
+      "component": "Componente",
+      "side": "Lado",
+      "axes": "Ejes",
+      "axis": "Eje",
+      "magnitudes": "Se mide"
+    }
+  },
+  "points": {
+    "title": "Puntos de {{group}}",
+    "loading": "Cargando puntos…",
+    "hint": "Los puntos son donde cuelgan las lecturas. Aplicar la plantilla rellena lo que falte sin tocar lo existente.",
+    "kind": "Tipo: {{kind}}",
+    "applyTemplate": "Aplicar plantilla del tipo",
+    "none": "Este equipo aún no tiene puntos",
+    "hasReadings": "lecturas registradas",
+    "equipment": "Equipo",
+    "number": "Nº",
+    "axis": "Eje",
+    "side": "Lado"
   }
 }

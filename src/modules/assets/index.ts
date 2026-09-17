@@ -7,12 +7,24 @@ import es from './locales/es.json';
 
 import { assetsApi } from './infrastructure/endpoints';
 
-export { useAreasQuery, useEquipmentQuery, useEquipmentsQuery } from './infrastructure/endpoints';
-export type { Area, Equipment, MeasurementPoint } from './domain/types';
+export {
+  useAreasQuery,
+  useAssetGroupsQuery,
+  useEquipmentQuery,
+  useEquipmentsQuery,
+  useGroupKindsQuery,
+  usePlantsQuery,
+} from './infrastructure/endpoints';
+export type { Area, AssetGroup, AssetGroupKind, Equipment, MeasurementPoint, Plant } from './domain/types';
 
 const definition: ModuleDefinition = {
   code: 'assets',
   routes: [
+    {
+      path: '/settings/group-kinds',
+      component: lazy(() => import('./ui/GroupKindsPage')),
+      permission: 'assets.view_equipment',
+    },
     {
       path: '/assets/structure',
       component: lazy(() => import('./ui/PlantStructurePage')),

@@ -11,7 +11,7 @@ import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
-import { ASSET_GROUP_KINDS } from '../domain/types';
+
 import {
   useAreasQuery,
   useAssetGroupsQuery,
@@ -20,10 +20,12 @@ import {
   useCreatePlantMutation,
   useCreateSectorMutation,
   useDeleteAreaMutation,
+  useGroupKindsQuery,
   useDeleteAssetGroupMutation,
   usePlantsQuery,
 } from '../infrastructure/endpoints';
 import { readApiError } from './EquipmentFormModal';
+import { GroupPointsModal } from './GroupPointsModal';
 
 /**
  * Where the plant is built: plant → area → sector → machine train.
@@ -231,7 +233,8 @@ function GroupForm({ onError }: { onError: (message: string | null) => void }) {
   const { t } = useTranslation(['assets', 'common']);
   const areas = useAreasQuery();
   const [create, { isLoading }] = useCreateAssetGroupMutation();
-  const [draft, setDraft] = useState({ sector: 0, name: '', kind: 'motor_pump' });
+  const kinds = useGroupKindsQuery();
+  const [draft, setDraft] = useState({ sector: 0, name: '', kind: 0 });
   const sectors = (areas.data?.results ?? []).flatMap((area) =>
     area.sectors.map((sector) => ({ ...sector, area: area.code })),
   );
@@ -270,11 +273,15 @@ function GroupForm({ onError }: { onError: (message: string | null) => void }) {
             placeholder="BBA. AGUA CRUDA - TAG:A"
           />
         </FormField>
-        <FormField label={t('structure.kind')}>
-          <Select value={draft.kind} onChange={(e) => setDraft({ ...draft, kind: e.target.value })}>
-            {ASSET_GROUP_KINDS.map((kind) => (
-              <option key={kind} value={kind}>
-                {t(`kind.${kind}`)}
+        <FormField label={t('structure.kind')} hint={t('structure.kindHint')}>
+          <Select
+            value={draft.kind || ''}
+            onChange={(e) => setDraft({ ...draft, kind: Number(e.target.value) })}
+          >
+            <option value="">—</option>
+            {kinds.data?.map((kind) => (
+              <option key={kind.id} value={kind.id}>
+                {kind.name}
               </option>
             ))}
           </Select>
@@ -329,19 +336,42 @@ function GroupRow({
   canManage,
   onError,
 }: {
-  group: { id: number; name: string; area_code: string; equipment_count: number };
+  group: {
+    id: number;
+    name: string;
+    area_code: string;
+    equipment_count: number;
+    point_count?: number;
+    kind_name?: string;
+  };
   canManage: boolean;
   onError: (message: string | null) => void;
 }) {
   const { t } = useTranslation(['assets', 'common']);
   const [remove] = useDeleteAssetGroupMutation();
+  const [editingPoints, setEditingPoints] = useState(false);
   return (
     <li className="flex items-center gap-2 text-sm">
       <span className="font-mono text-xs text-slate-400">{group.area_code}</span>
       <span className="truncate">{group.name}</span>
+      {group.kind_name && (
+        <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] dark:bg-slate-800">
+          {group.kind_name}
+        </span>
+      )}
       <span className="ml-auto shrink-0 text-xs text-slate-500">
-        {t('structure.equipmentCount', { count: group.equipment_count })}
+        {t('structure.pointCount', { count: group.point_count ?? 0 })}
       </span>
+      <Button variant="ghost" onClick={() => setEditingPoints(true)}>
+        {t('structure.editPoints')}
+      </Button>
+      {editingPoints && (
+        <GroupPointsModal
+          groupId={group.id}
+          groupName={group.name}
+          onClose={() => setEditingPoints(false)}
+        />
+      )}
       {canManage && (
         <Button
           variant="ghost"
@@ -370,7 +400,7 @@ function InlineForm({
   disabled: boolean;
   onSubmit: () => Promise<void>;
 }) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common']);
   return (
     <form
       onSubmit={(event) => {
