@@ -51,8 +51,12 @@ export interface Magnitude {
 }
 
 export interface UnitRef {
+  id: number;
   code: string;
   name: string;
+  names?: Record<string, string>;
+  /** How many magnitudes are reported in it: a unit in use cannot be deleted. */
+  magnitude_count?: number;
 }
 
 export interface StandardDraft {

@@ -26,6 +26,7 @@ export const thresholdsApi = baseApi.injectEndpoints({
     }),
     units: build.query<UnitRef[], void>({
       query: () => 'units/',
+      providesTags: ['Unit'],
     }),
     magnitudes: build.query<Magnitude[], void>({
       query: () => 'magnitudes/',
@@ -76,7 +77,33 @@ export const thresholdsApi = baseApi.injectEndpoints({
       query: (equipmentId) => `equipments/${equipmentId}/effective-thresholds/`,
       providesTags: ['ThresholdSet'],
     }),
-    updateStatus: build.mutation<ConditionStatus, { id: number; color?: string; names?: Record<string, string> }>({
+    updateUnit: build.mutation<
+      { id: number; code: string; name: string },
+      { id: number; code?: string; name?: string }
+    >({
+      query: ({ id, ...body }) => ({ url: `units/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['Unit', 'Magnitude'],
+    }),
+    deleteUnit: build.mutation<void, number>({
+      query: (id) => ({ url: `units/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['Unit'],
+    }),
+    deleteStatus: build.mutation<void, number>({
+      query: (id) => ({ url: `statuses/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['ConditionStatus', 'Summary', 'ThresholdSet'],
+    }),
+    updateStatus: build.mutation<
+      ConditionStatus,
+      {
+        id: number;
+        color?: string;
+        names?: Record<string, string>;
+        severity?: number;
+        requires_action?: boolean;
+        is_terminal?: boolean;
+        measurable?: boolean;
+      }
+    >({
       query: ({ id, ...body }) => ({ url: `statuses/${id}/`, method: 'PATCH', body }),
       // The colour is used by every screen that draws a status.
       invalidatesTags: ['ConditionStatus', 'Summary', 'Equipment', 'ThresholdSet'],
@@ -90,6 +117,9 @@ export const thresholdsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useUpdateUnitMutation,
+  useDeleteUnitMutation,
+  useDeleteStatusMutation,
   useStandardsQuery,
   useTechniquesQuery,
   useUnitsQuery,

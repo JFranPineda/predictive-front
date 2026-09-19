@@ -25,4 +25,7 @@ const definition: ModuleDefinition = {
   registerEndpoints: () => void usersApi,
 };
 
+/** A module speaks to another through its index, never its internals. */
+export { useCompanyUsersQuery } from './infrastructure/endpoints';
+
 export default definition;

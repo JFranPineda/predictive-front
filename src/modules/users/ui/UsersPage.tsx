@@ -15,7 +15,12 @@ import { Spinner } from '@shared/ui/Spinner';
 import { TableToolbar } from '@shared/ui/TableToolbar';
 
 import { ROLES, type CompanyUser } from '../domain/roles';
-import { useCompanyUsersQuery, useUpdateUserMutation } from '../infrastructure/endpoints';
+import {
+  useCompanyUsersQuery,
+  useRemoveUserMutation,
+  useUpdateUserMutation,
+} from '../infrastructure/endpoints';
+import { readUserError } from './UserFormModal';
 import { UserEditModal } from './UserEditModal';
 import { UserFormModal } from './UserFormModal';
 
@@ -26,6 +31,17 @@ export default function UsersPage() {
   const canManage = permissions.includes('security.manage_user');
   const { data, isLoading, isError } = useCompanyUsersQuery();
   const [updateUser, updating] = useUpdateUserMutation();
+  const [removeUser] = useRemoveUserMutation();
+
+  async function revoke(id: number) {
+    setError(null);
+    try {
+      await removeUser(id).unwrap();
+    } catch (cause) {
+      setError(readUserError(cause) ?? t('form.genericError'));
+    }
+  }
+  const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<CompanyUser | null>(null);
 
@@ -112,9 +128,21 @@ export default function UsersPage() {
       header: '',
       render: (row) =>
         canManage ? (
-          <button onClick={() => setEditing(row)} className="text-xs font-medium text-sky-600">
-            {t('common:action.edit')}
-          </button>
+          <span className="flex gap-3">
+            <button onClick={() => setEditing(row)} className="text-xs font-medium text-sky-600">
+              {t('common:action.edit')}
+            </button>
+            {/* Access to this company, not the person: their name stays on
+                every reading and conclusion they signed. */}
+            <button
+              disabled={row.id === currentUserId}
+              title={t('action.revokeHint')}
+              onClick={() => void revoke(row.id)}
+              className="text-xs font-medium text-red-600 disabled:cursor-not-allowed disabled:text-slate-400"
+            >
+              {t('action.revoke')}
+            </button>
+          </span>
         ) : null,
     },
     {
@@ -146,6 +174,7 @@ export default function UsersPage() {
 
   return (
     <Page>
+      {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       <PageHeader
         title={t('title')}
         description={t('subtitle')}

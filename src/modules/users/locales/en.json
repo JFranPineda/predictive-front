@@ -31,7 +31,9 @@
   "empty": "No users in this company",
   "action": {
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "revoke": "Revoke access",
+    "revokeHint": "Removes access to this company; their signature stays on the reports they wrote"
   },
   "metric": {
     "total": "Users",

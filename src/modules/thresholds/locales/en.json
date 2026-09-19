@@ -47,7 +47,9 @@
     "measurable": "can be measured",
     "color": "Colour for {{name}}",
     "save": "Save",
-    "new": "New status"
+    "new": "New status",
+    "edit": "Edit {{name}}",
+    "editHint": "Its name, the severity it competes with, and what it implies"
   },
   "sets": {
     "title": "Band sets",
@@ -56,7 +58,13 @@
     "custom": "own criterion",
     "empty": "No thresholds for that magnitude",
     "new": "New threshold",
-    "retire": "Retire"
+    "retire": "Retire",
+    "allScopes": "All scopes",
+    "competing": "{{count}} competing criteria, most specific first",
+    "rankHint": "Place in the cascade: the most specific one wins",
+    "simulate": "Simulate impact",
+    "simulateResult": "{{count}} machine(s) would change state — {{detail}}",
+    "simulateFailed": "Could not simulate the impact"
   },
   "form": {
     "genericError": "Could not save",
@@ -101,8 +109,8 @@
     "severityHint": "Higher is worse; it orders the statuses",
     "color": "Colour",
     "measurable": "Can be measured in this state",
-    "requiresAction": "Requires action",
-    "isTerminal": "Terminal state",
+    "requiresAction": "Requires an action",
+    "isTerminal": "Is a terminal state",
     "newMagnitude": "New magnitude",
     "magnitudeFormHint": "A magnitude belongs to exactly one service.",
     "technique": "Service",
@@ -111,7 +119,8 @@
     "aggregationHint": "Gs peak and Gs peak-to-peak are different criteria",
     "decimals": "Decimals",
     "higherIsWorse": "A higher value is worse",
-    "higherIsWorseHint": "Viscosity and dielectric strength get worse as they drop"
+    "higherIsWorseHint": "Viscosity and dielectric strength get worse as they drop",
+    "measurableHint": "A machine that is off or retired is not measured"
   },
   "magnitudes": {
     "title": "Magnitudes",
@@ -134,6 +143,12 @@
   "units": {
     "new": "New unit",
     "hint": "The symbol is what appears next to the value in reports.",
-    "symbol": "Symbol"
+    "symbol": "Symbol",
+    "table": "Units",
+    "tableHint": "The symbol printed next to every value in the reports",
+    "empty": "No units",
+    "usedBy": "Magnitudes",
+    "edit": "Edit unit",
+    "inUse": "Cannot delete: magnitudes are reported in this unit"
   }
 }

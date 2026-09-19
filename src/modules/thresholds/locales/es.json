@@ -47,7 +47,9 @@
     "measurable": "se puede medir",
     "color": "Color de {{name}}",
     "save": "Guardar",
-    "new": "Nuevo estado"
+    "new": "Nuevo estado",
+    "edit": "Editar {{name}}",
+    "editHint": "El nombre, la severidad con la que compite y lo que implica"
   },
   "sets": {
     "title": "Juegos de bandas",
@@ -56,7 +58,13 @@
     "custom": "criterio propio",
     "empty": "No hay umbrales para esa magnitud",
     "new": "Nuevo umbral",
-    "retire": "Retirar"
+    "retire": "Retirar",
+    "allScopes": "Todos los alcances",
+    "competing": "{{count}} criterio(s) compitiendo, del más específico al más general",
+    "rankHint": "Orden en la cascada: gana el más específico",
+    "simulate": "Simular impacto",
+    "simulateResult": "Cambiarían de estado {{count}} equipo(s) — {{detail}}",
+    "simulateFailed": "No se pudo simular el impacto"
   },
   "form": {
     "genericError": "No se pudo guardar",
@@ -101,8 +109,8 @@
     "severityHint": "Mayor es peor; ordena los estados",
     "color": "Color",
     "measurable": "Se puede medir estando así",
-    "requiresAction": "Exige acción",
-    "isTerminal": "Estado terminal",
+    "requiresAction": "Exige una acción",
+    "isTerminal": "Es un estado terminal",
     "newMagnitude": "Nueva medida",
     "magnitudeFormHint": "Una medida pertenece a un solo servicio.",
     "technique": "Servicio",
@@ -111,7 +119,8 @@
     "aggregationHint": "Gs pico y Gs pico-pico son criterios distintos",
     "decimals": "Decimales",
     "higherIsWorse": "Un valor más alto es peor",
-    "higherIsWorseHint": "La viscosidad y la rigidez dieléctrica empeoran al bajar"
+    "higherIsWorseHint": "La viscosidad y la rigidez dieléctrica empeoran al bajar",
+    "measurableHint": "Un equipo apagado o retirado no se mide"
   },
   "magnitudes": {
     "title": "Medidas",
@@ -134,6 +143,12 @@
   "units": {
     "new": "Nueva unidad",
     "hint": "El símbolo es el que aparece junto al valor en los reportes.",
-    "symbol": "Símbolo"
+    "symbol": "Símbolo",
+    "table": "Unidades",
+    "tableHint": "El símbolo que acompaña a cada valor en los reportes",
+    "empty": "No hay unidades",
+    "usedBy": "Magnitudes",
+    "edit": "Editar unidad",
+    "inUse": "No se puede borrar: hay magnitudes que se reportan en esta unidad"
   }
 }

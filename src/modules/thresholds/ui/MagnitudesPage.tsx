@@ -8,12 +8,15 @@ import { DataTable, type Column } from '@shared/ui/DataTable';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
+import { Modal } from '@shared/ui/Modal';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
-import type { Magnitude } from '../domain/types';
+import type { Magnitude, UnitRef } from '../domain/types';
 import {
+  useDeleteUnitMutation,
+  useUpdateUnitMutation,
   useCreateMagnitudeMutation,
   useCreateUnitMutation,
   useMagnitudesQuery,
@@ -39,6 +42,8 @@ export default function MagnitudesPage() {
   const techniques = useTechniquesQuery();
   const units = useUnitsQuery();
   const [error, setError] = useState<string | null>(null);
+  const [editingUnit, setEditingUnit] = useState<UnitRef | null>(null);
+  const [deleteUnit] = useDeleteUnitMutation();
 
   if (magnitudes.isLoading) return <Spinner label={t('magnitudes.loading')} />;
 
@@ -80,6 +85,51 @@ export default function MagnitudesPage() {
     },
   ];
 
+  // The unit is what the customer reads next to every value, so the list has
+  // to show which magnitudes lean on each one before anyone renames it.
+  const unitColumns: Column<UnitRef>[] = [
+    {
+      key: 'code',
+      header: t('units.symbol'),
+      render: (row) => <span className="font-mono text-sm">{row.code}</span>,
+    },
+    { key: 'name', header: t('form.name'), render: (row) => row.name },
+    {
+      key: 'magnitudes',
+      header: t('units.usedBy'),
+      render: (row) => row.magnitude_count ?? 0,
+    },
+    {
+      key: 'actions',
+      header: '',
+      render: (row) =>
+        canManage ? (
+          <span className="flex justify-end gap-3">
+            <button onClick={() => setEditingUnit(row)} className="text-xs text-sky-600">
+              {t('common:action.edit')}
+            </button>
+            <button
+              disabled={Boolean(row.magnitude_count)}
+              title={row.magnitude_count ? t('units.inUse') : undefined}
+              onClick={() => void removeUnit(row)}
+              className="text-xs text-red-600 disabled:cursor-not-allowed disabled:text-slate-400"
+            >
+              {t('common:action.delete')}
+            </button>
+          </span>
+        ) : null,
+    },
+  ];
+
+  async function removeUnit(row: UnitRef) {
+    setError(null);
+    try {
+      await deleteUnit(row.id).unwrap();
+    } catch (cause) {
+      setError(readError(cause) ?? t('form.genericError'));
+    }
+  }
+
   return (
     <Page>
       <PageHeader title={t('magnitudes.title')} description={t('magnitudes.subtitle')} />
@@ -98,6 +148,15 @@ export default function MagnitudesPage() {
             />
           </Card>
 
+          <Card title={t('units.table')} description={t('units.tableHint')} padded={false}>
+            <DataTable
+              columns={unitColumns}
+              rows={units.data ?? []}
+              rowKey={(row) => row.code}
+              empty={<div className="p-6"><EmptyState title={t('units.empty')} /></div>}
+            />
+          </Card>
+
           {canManage && (
             <div className="grid gap-6 lg:grid-cols-2">
               <MagnitudeForm
@@ -110,7 +169,70 @@ export default function MagnitudesPage() {
           )}
         </>
       )}
+
+      {editingUnit && (
+        <UnitEditModal
+          unit={editingUnit}
+          onClose={() => setEditingUnit(null)}
+          onError={setError}
+        />
+      )}
     </Page>
+  );
+}
+
+function UnitEditModal({
+  unit,
+  onClose,
+  onError,
+}: {
+  unit: UnitRef;
+  onClose: () => void;
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['thresholds', 'common']);
+  const [update, { isLoading }] = useUpdateUnitMutation();
+  const [draft, setDraft] = useState({ code: unit.code, name: unit.name });
+
+  async function submit() {
+    onError(null);
+    try {
+      await update({ id: unit.id, ...draft }).unwrap();
+      onClose();
+    } catch (cause) {
+      onError(readError(cause) ?? t('form.genericError'));
+    }
+  }
+
+  return (
+    <Modal
+      title={t('units.edit')}
+      description={t('units.hint')}
+      onClose={onClose}
+      footer={
+        <>
+          <Button onClick={onClose}>{t('common:action.cancel')}</Button>
+          <Button variant="primary" disabled={isLoading} onClick={() => void submit()}>
+            {t('common:action.save')}
+          </Button>
+        </>
+      }
+    >
+      <div className="grid gap-4 sm:grid-cols-[8rem_1fr]">
+        <FormField label={t('units.symbol')}>
+          <TextInput
+            value={draft.code}
+            onChange={(event) => setDraft({ ...draft, code: event.target.value })}
+          />
+        </FormField>
+        <FormField label={t('form.name')}>
+          <TextInput
+            value={draft.name}
+            onChange={(event) => setDraft({ ...draft, name: event.target.value })}
+          />
+        </FormField>
+      </div>
+    </Modal>
   );
 }
 

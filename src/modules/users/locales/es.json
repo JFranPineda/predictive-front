@@ -31,7 +31,9 @@
   "empty": "No hay usuarios en esta compañía",
   "action": {
     "activate": "Activar",
-    "deactivate": "Desactivar"
+    "deactivate": "Desactivar",
+    "revoke": "Quitar acceso",
+    "revokeHint": "Quita el acceso a esta empresa; su firma sigue en los reportes que escribió"
   },
   "metric": {
     "total": "Usuarios",
