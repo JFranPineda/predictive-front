@@ -20,5 +20,24 @@
     "insulating_oilHint": "The PDF the laboratory returns.",
     "maintenance": "Work evidence",
     "maintenanceHint": "Before and after the intervention."
+  },
+  "equipmentGallery": {
+    "title": "Equipment gallery",
+    "hint": "Every image of this machine, across all its services, newest first",
+    "all": "All",
+    "empty": "This equipment has no images yet",
+    "emptyHint": "Captures and photos are uploaded from the service visit",
+    "loading": "Loading images…",
+    "more": "Load more",
+    "noCaption": "No caption"
+  },
+  "kind": {
+    "photo": "Photographs",
+    "spectrum_image": "Spectra",
+    "thermogram": "Thermograms",
+    "ultrasound_capture": "Ultrasound",
+    "document": "Documents",
+    "blueprint": "Blueprints",
+    "nameplate": "Nameplates"
   }
 }

@@ -20,5 +20,24 @@
     "insulating_oilHint": "El PDF que devuelve el laboratorio.",
     "maintenance": "Evidencia del trabajo",
     "maintenanceHint": "Antes y después de la intervención."
+  },
+  "equipmentGallery": {
+    "title": "Galería del equipo",
+    "hint": "Todas las imágenes del equipo, de todos sus servicios, la más reciente primero",
+    "all": "Todas",
+    "empty": "Este equipo aún no tiene imágenes",
+    "emptyHint": "Las capturas y fotos se suben desde la visita de servicio",
+    "loading": "Cargando imágenes…",
+    "more": "Cargar más",
+    "noCaption": "Sin descripción"
+  },
+  "kind": {
+    "photo": "Fotografías",
+    "spectrum_image": "Espectros",
+    "thermogram": "Termogramas",
+    "ultrasound_capture": "Ultrasonido",
+    "document": "Documentos",
+    "blueprint": "Planos",
+    "nameplate": "Placas"
   }
 }

@@ -1,3 +1,5 @@
+import { lazy } from 'react';
+
 import type { ModuleDefinition } from '@app/moduleDefinition';
 
 import { mediaApi } from './infrastructure/endpoints';
@@ -8,10 +10,17 @@ export { MediaGallery } from './ui/MediaGallery';
 export { captureKindFor } from './domain/types';
 export type { MediaAsset, MediaKind } from './domain/types';
 
-/** No routes of its own: the gallery is embedded where the images belong. */
+/** The per-visit gallery is embedded where the images belong; the per-equipment
+ *  one is a page, because a year of a machine's history is not a side panel. */
 const definition: ModuleDefinition = {
   code: 'media',
-  routes: [],
+  routes: [
+    {
+      path: '/assets/:equipmentId/media',
+      component: lazy(() => import('./ui/EquipmentMediaPage')),
+      permission: 'media.view',
+    },
+  ],
   translations: { namespace: 'media', bundle: { es, en } },
   registerEndpoints: () => void mediaApi,
 };

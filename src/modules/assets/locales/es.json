@@ -98,7 +98,9 @@
     "points": "Puntos de medición",
     "pointsHint": "Se crean 2 puntos con ejes H, V y A. El motor suele numerarse desde 1 y el conducido desde 3.",
     "generatePoints": "Generar puntos automáticamente",
-    "description": "Descripción"
+    "description": "Descripción",
+    "firstPointAuto": "auto",
+    "firstPointHint": "Primer número de punto; vacío sigue la numeración del conjunto"
   },
   "kind": {
     "motor_pump": "Motor-Bomba",
@@ -135,7 +137,10 @@
       "axes": "Ejes",
       "axis": "Eje",
       "magnitudes": "Se mide"
-    }
+    },
+    "pointCount": "Puntos",
+    "pointCountHint": "Cuántos puntos se miden en este componente",
+    "rebuildLayout": "Regenerar plantilla desde los componentes"
   },
   "points": {
     "title": "Puntos de {{group}}",
@@ -148,6 +153,19 @@
     "equipment": "Equipo",
     "number": "Nº",
     "axis": "Eje",
-    "side": "Lado"
-  }
+    "side": "Lado",
+    "count": "{{count}} puntos"
+  },
+  "side": {
+    "free_end": "Lado libre",
+    "coupling_end": "Lado acople",
+    "opposite_coupling": "Lado opuesto a acople",
+    "inboard": "Interior",
+    "outboard": "Exterior",
+    "lower": "Inferior",
+    "upper": "Superior",
+    "custom": "Otro"
+  },
+  "openGallery": "Galería",
+  "openSpectra": "Espectros"
 }

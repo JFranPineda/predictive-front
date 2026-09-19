@@ -98,7 +98,9 @@
     "points": "Measurement points",
     "pointsHint": "Two points with H, V and A axes. Motors usually start at 1 and driven machines at 3.",
     "generatePoints": "Generate points automatically",
-    "description": "Description"
+    "description": "Description",
+    "firstPointAuto": "auto",
+    "firstPointHint": "First point number; blank continues the train's numbering"
   },
   "kind": {
     "motor_pump": "Motor-Pump",
@@ -135,7 +137,10 @@
       "axes": "Axes",
       "axis": "Axis",
       "magnitudes": "Measured"
-    }
+    },
+    "pointCount": "Points",
+    "pointCountHint": "How many points are read on this component",
+    "rebuildLayout": "Rebuild layout from components"
   },
   "points": {
     "title": "Points of {{group}}",
@@ -148,6 +153,19 @@
     "equipment": "Equipment",
     "number": "No.",
     "axis": "Axis",
-    "side": "Side"
-  }
+    "side": "Side",
+    "count": "{{count}} points"
+  },
+  "side": {
+    "free_end": "Free end",
+    "coupling_end": "Coupling end",
+    "opposite_coupling": "Opposite coupling",
+    "inboard": "Inboard",
+    "outboard": "Outboard",
+    "lower": "Lower",
+    "upper": "Upper",
+    "custom": "Other"
+  },
+  "openGallery": "Gallery",
+  "openSpectra": "Spectra"
 }

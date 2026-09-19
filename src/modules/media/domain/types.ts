@@ -38,6 +38,24 @@ export const CAPTURE_KIND_BY_TECHNIQUE: Record<string, MediaKind> = {
   insulating_oil: 'document',
 };
 
+export interface MediaPage {
+  items: MediaAsset[];
+  next_cursor: string | null;
+}
+
+export interface MediaVisitRef {
+  id: number;
+  visited_at: string;
+  order_code: string;
+  technique: string;
+}
+
+export interface EquipmentMediaPage extends MediaPage {
+  items: (MediaAsset & { visit?: MediaVisitRef })[];
+  /** Only on the first page: what fills the filter chips. */
+  counts?: Partial<Record<MediaKind, number>>;
+}
+
 export function captureKindFor(technique: string): MediaKind {
   return CAPTURE_KIND_BY_TECHNIQUE[technique] ?? 'photo';
 }
