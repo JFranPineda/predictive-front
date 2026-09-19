@@ -1,0 +1,19 @@
+{
+  "parameters": {
+    "title": "Operating parameters",
+    "subtitle": "The conditions the machine was running under when measured",
+    "table": "Parameters",
+    "empty": "No parameters",
+    "loading": "Loading parameters…",
+    "name": "Name",
+    "unit": "Unit",
+    "technique": "Service",
+    "general": "General",
+    "techniqueHint": "Empty = recorded on any service",
+    "decimals": "Decimals",
+    "cumulative": "Cumulative",
+    "cumulativeHint": "Only grows (running hours)",
+    "new": "New parameter",
+    "newHint": "An hour counter is read differently from a pressure"
+  }
+}

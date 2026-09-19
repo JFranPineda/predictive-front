@@ -5,5 +5,21 @@
   "saved": "Sin cambios",
   "none": "No se registró ningún problema en este servicio",
   "noCatalogue": "Este servicio no tiene catálogo de problemas",
-  "noCatalogueHint": "Se configura en Configuración → Modos de falla."
+  "noCatalogueHint": "Se configura en Configuración → Modos de falla.",
+  "faults": {
+    "title": "Modos de falla",
+    "subtitle": "El vocabulario de hallazgos de la planta, por servicio",
+    "table": "Catálogo",
+    "empty": "No hay modos de falla",
+    "loading": "Cargando catálogo…",
+    "name": "Nombre",
+    "technique": "Servicio",
+    "signature": "Firma típica",
+    "signatureHint": "Cómo se reconoce en los datos",
+    "reference": "Norma",
+    "allTechniques": "Todos los servicios",
+    "anyTechnique": "General",
+    "new": "Nuevo modo de falla",
+    "newHint": "El servidor rechaza uno de otra técnica"
+  }
 }

@@ -24,6 +24,7 @@ const LOADERS: Record<string, ModuleLoader[]> = {
   media: [() => import('@modules/media')],
   diagnostics: [() => import('@modules/diagnostics')],
   nameplate: [() => import('@modules/nameplate')],
+  operating_data: [() => import('@modules/operating_data')],
 };
 
 export function knownModuleCodes(): string[] {

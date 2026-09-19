@@ -1,0 +1,19 @@
+{
+  "parameters": {
+    "title": "Parámetros operativos",
+    "subtitle": "Bajo qué condiciones estaba funcionando la máquina al medirla",
+    "table": "Parámetros",
+    "empty": "No hay parámetros",
+    "loading": "Cargando parámetros…",
+    "name": "Nombre",
+    "unit": "Unidad",
+    "technique": "Servicio",
+    "general": "General",
+    "techniqueHint": "Vacío = se registra en cualquier servicio",
+    "decimals": "Decimales",
+    "cumulative": "Acumulativo",
+    "cumulativeHint": "Solo crece (horas de marcha)",
+    "new": "Nuevo parámetro",
+    "newHint": "Un contador de horas se lee distinto que una presión"
+  }
+}

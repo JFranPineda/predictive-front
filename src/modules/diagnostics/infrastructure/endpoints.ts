@@ -16,6 +16,18 @@ export const diagnosticsApi = baseApi.injectEndpoints({
       query: (params) => ({ url: 'fault-modes/', params }),
       providesTags: ['FaultMode'],
     }),
+    createFaultMode: build.mutation<FaultMode, Partial<FaultMode>>({
+      query: (body) => ({ url: 'fault-modes/', method: 'POST', body }),
+      invalidatesTags: ['FaultMode'],
+    }),
+    updateFaultMode: build.mutation<FaultMode, Partial<FaultMode> & { id: number }>({
+      query: ({ id, ...body }) => ({ url: `fault-modes/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['FaultMode'],
+    }),
+    deleteFaultMode: build.mutation<void, number>({
+      query: (id) => ({ url: `fault-modes/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['FaultMode'],
+    }),
     setVisitFaults: build.mutation<{ codes: string[] }, { visitId: number; codes: string[] }>({
       query: ({ visitId, codes }) => ({
         url: `service-visits/${visitId}/faults/`,
@@ -27,4 +39,10 @@ export const diagnosticsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useFaultModesQuery, useSetVisitFaultsMutation } = diagnosticsApi;
+export const {
+  useFaultModesQuery,
+  useCreateFaultModeMutation,
+  useUpdateFaultModeMutation,
+  useDeleteFaultModeMutation,
+  useSetVisitFaultsMutation,
+} = diagnosticsApi;

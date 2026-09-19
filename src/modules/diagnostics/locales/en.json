@@ -5,5 +5,21 @@
   "saved": "No changes",
   "none": "No problem was recorded in this service",
   "noCatalogue": "This service has no problem catalogue",
-  "noCatalogueHint": "It is configured in Settings → Fault modes."
+  "noCatalogueHint": "It is configured in Settings → Fault modes.",
+  "faults": {
+    "title": "Fault modes",
+    "subtitle": "The plant's vocabulary of findings, per service",
+    "table": "Catalogue",
+    "empty": "No fault modes",
+    "loading": "Loading catalogue…",
+    "name": "Name",
+    "technique": "Service",
+    "signature": "Typical signature",
+    "signatureHint": "How it shows up in the data",
+    "reference": "Standard",
+    "allTechniques": "All services",
+    "anyTechnique": "General",
+    "new": "New fault mode",
+    "newHint": "The server refuses one from another technique"
+  }
 }
