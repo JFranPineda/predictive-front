@@ -12,6 +12,7 @@ import {
   useCreatePointMutation,
   useDeletePointMutation,
   useGroupPointsQuery,
+  useUpdatePointMutation,
 } from '../infrastructure/endpoints';
 import { readKindError } from './GroupKindsPage';
 
@@ -36,6 +37,7 @@ export function GroupPointsModal({
   const [applyTemplate, applying] = useApplyPointTemplateMutation();
   const [createPoint, creatingPoint] = useCreatePointMutation();
   const [deletePoint] = useDeletePointMutation();
+  const [updatePoint] = useUpdatePointMutation();
   const [error, setError] = useState<string | null>(null);
   const [draft, setDraft] = useState({ equipment: 0, number: 1, axis: 'H', side: 'custom' });
 
@@ -78,7 +80,15 @@ export function GroupPointsModal({
             return (
               <section key={equipment.id}>
                 <h3 className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-500">
+                  {equipment.component_label && (
+                    <span className="mr-2 rounded bg-slate-100 px-1.5 py-0.5 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                      {equipment.component_label}
+                    </span>
+                  )}
                   {equipment.name} · {equipment.tag}
+                  <span className="ml-2 font-normal normal-case text-slate-400">
+                    {t('points.count', { count: points.length })}
+                  </span>
                 </h3>
                 {points.length === 0 ? (
                   <p className="text-sm text-slate-400">{t('points.none')}</p>
@@ -90,9 +100,24 @@ export function GroupPointsModal({
                         className="flex items-center gap-2 rounded-lg border border-slate-200 px-2 py-1 text-xs dark:border-slate-700"
                       >
                         <span className="font-mono font-medium">{point.label}</span>
-                        <span className="text-slate-400">
-                          {t(`side.${point.side}`, { defaultValue: point.side })}
-                        </span>
+                        {/* The side was only settable at creation, so a layout
+                            typed wrong had to be deleted — and deleting a
+                            point takes its readings with it. */}
+                        <select
+                          value={point.side}
+                          onChange={(event) =>
+                            void run(() =>
+                              updatePoint({ id: point.id, side: event.target.value }).unwrap(),
+                            )
+                          }
+                          className="rounded border border-slate-200 bg-transparent text-xs dark:border-slate-700"
+                        >
+                          {POINT_SIDES.map((side) => (
+                            <option key={side} value={side}>
+                              {t(`side.${side}`, { defaultValue: side })}
+                            </option>
+                          ))}
+                        </select>
                         {point.reading_count > 0 && (
                           <span className="text-slate-400" title={t('points.hasReadings')}>
                             · {point.reading_count}

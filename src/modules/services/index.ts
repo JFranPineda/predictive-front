@@ -30,4 +30,8 @@ const definition: ModuleDefinition = {
   registerEndpoints: () => void servicesApi,
 };
 
+/** A module speaks to another through its index, never its internals. */
+export { useVisitQuery } from './infrastructure/endpoints';
+export type { VisitDetail, VisitPoint } from './domain/types';
+
 export default definition;

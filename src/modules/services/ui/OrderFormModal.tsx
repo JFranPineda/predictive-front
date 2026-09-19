@@ -7,29 +7,54 @@ import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
 
-import { useCreateServiceOrderMutation } from '../infrastructure/endpoints';
+import type { ServiceOrder } from '../domain/types';
+import {
+  useCreateServiceOrderMutation,
+  useUpdateServiceOrderMutation,
+} from '../infrastructure/endpoints';
 import { readServiceError } from './readServiceError';
 
-export function OrderFormModal({ onClose }: { onClose: () => void }) {
+/** Creates a round, or corrects one that was already scheduled. */
+export function OrderFormModal({
+  order,
+  onClose,
+}: {
+  order?: ServiceOrder;
+  onClose: () => void;
+}) {
   const { t } = useTranslation(['services', 'common']);
   const plants = usePlantsQuery();
   const techniques = useTechniquesQuery();
-  const [create, { isLoading }] = useCreateServiceOrderMutation();
+  const [create, creating] = useCreateServiceOrderMutation();
+  const [update, updating] = useUpdateServiceOrderMutation();
+  const isLoading = creating.isLoading || updating.isLoading;
   const [error, setError] = useState<string | null>(null);
   const today = new Date().toISOString().slice(0, 10);
   const [draft, setDraft] = useState({
     plant: 0,
-    technique: 'vibration',
-    code: '',
-    client_work_order: '',
-    scheduled_from: today,
-    scheduled_to: today,
+    technique: order?.technique_code ?? 'vibration',
+    code: order?.code ?? '',
+    client_work_order: order?.client_work_order ?? '',
+    scheduled_from: order?.scheduled_from ?? today,
+    scheduled_to: order?.scheduled_to ?? today,
   });
 
   async function submit() {
     setError(null);
     try {
-      await create(draft).unwrap();
+      if (order) {
+        // The plant and the technique are what every visit of the round hangs
+        // off; moving them would orphan the readings already taken.
+        await update({
+          id: order.id,
+          code: draft.code,
+          client_work_order: draft.client_work_order,
+          scheduled_from: draft.scheduled_from,
+          scheduled_to: draft.scheduled_to,
+        }).unwrap();
+      } else {
+        await create(draft).unwrap();
+      }
       onClose();
     } catch (cause) {
       setError(readServiceError(cause) ?? t('form.genericError'));
@@ -38,7 +63,7 @@ export function OrderFormModal({ onClose }: { onClose: () => void }) {
 
   return (
     <Modal
-      title={t('orderForm.title')}
+      title={order ? t('orderForm.edit') : t('orderForm.title')}
       description={t('orderForm.hint')}
       onClose={onClose}
       footer={

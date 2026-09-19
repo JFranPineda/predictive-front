@@ -34,6 +34,7 @@ export default function ServiceOrdersPage() {
   const canManage = permissions.includes('services.manage_order');
   const [cancelOrder] = useCancelServiceOrderMutation();
   const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState<ServiceOrder | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const rows = data?.results ?? [];
@@ -93,6 +94,10 @@ export default function ServiceOrdersPage() {
       header: '',
       render: (row) =>
         canManage && row.status !== 'cancelled' ? (
+          <span className="flex gap-3">
+          <button onClick={() => setEditing(row)} className="text-xs font-medium text-sky-600">
+            {t('common:action.edit')}
+          </button>
           <button
             onClick={async () => {
               setError(null);
@@ -106,6 +111,7 @@ export default function ServiceOrdersPage() {
           >
             {t('orders.cancel')}
           </button>
+          </span>
         ) : null,
     },
   ];
@@ -166,6 +172,7 @@ export default function ServiceOrdersPage() {
       )}
 
       {creating && <OrderFormModal onClose={() => setCreating(false)} />}
+      {editing && <OrderFormModal order={editing} onClose={() => setEditing(null)} />}
     </Page>
   );
 }

@@ -98,7 +98,11 @@
     "entryPlaceholder": "Write what you observed…",
     "addEntry": "Add to the log",
     "saveCount_one": "Save 1 change",
-    "saveCount_other": "Save {{count}} changes"
+    "saveCount_other": "Save {{count}} changes",
+    "addPerformer": "Add performer",
+    "pickPerformer": "Pick a person…",
+    "removeLastPerformer": "Remove the last one",
+    "capture": "Capture the whole round"
   },
   "subtitle": "Every visit with who performed it and what they wrote. You can only edit your own while they are open.",
   "empty": "No visits recorded",
@@ -128,7 +132,8 @@
     "clientOrder": "Customer WO",
     "from": "From",
     "to": "To",
-    "create": "Create order"
+    "create": "Create order",
+    "edit": "Edit order"
   },
   "operating": {
     "title": "Operating data",

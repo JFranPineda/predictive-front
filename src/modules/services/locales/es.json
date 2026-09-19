@@ -98,7 +98,11 @@
     "entryPlaceholder": "Escribe lo que observaste…",
     "addEntry": "Agregar al diario",
     "saveCount_one": "Guardar 1 cambio",
-    "saveCount_other": "Guardar {{count}} cambios"
+    "saveCount_other": "Guardar {{count}} cambios",
+    "addPerformer": "Añadir ejecutante",
+    "pickPerformer": "Elegir persona…",
+    "removeLastPerformer": "Quitar el último",
+    "capture": "Capturar la ronda completa"
   },
   "subtitle": "Cada visita con quien la ejecutó y lo que anotó. Solo puedes editar las tuyas mientras sigan abiertas.",
   "empty": "No hay visitas registradas",
@@ -128,7 +132,8 @@
     "clientOrder": "OT del cliente",
     "from": "Desde",
     "to": "Hasta",
-    "create": "Crear orden"
+    "create": "Crear orden",
+    "edit": "Editar orden"
   },
   "operating": {
     "title": "Datos operativos",

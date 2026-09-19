@@ -20,6 +20,12 @@ import {
   useCreatePlantMutation,
   useCreateSectorMutation,
   useDeleteAreaMutation,
+  useDeletePlantMutation,
+  useDeleteSectorMutation,
+  useUpdateAreaMutation,
+  useUpdateAssetGroupMutation,
+  useUpdatePlantMutation,
+  useUpdateSectorMutation,
   useGroupKindsQuery,
   useDeleteAssetGroupMutation,
   usePlantsQuery,
@@ -57,13 +63,7 @@ export default function PlantStructurePage() {
         <Card title={t('structure.plants')} description={t('structure.plantsHint')}>
           <ul className="mb-4 space-y-1.5">
             {plants.data?.map((plant) => (
-              <li key={plant.id} className="flex items-center gap-2 text-sm">
-                <span className="font-medium">{plant.name}</span>
-                <span className="font-mono text-xs text-slate-400">{plant.code}</span>
-                <span className="ml-auto text-xs text-slate-500">
-                  {t('structure.areaCount', { count: plant.area_count })}
-                </span>
-              </li>
+              <PlantRow key={plant.id} plant={plant} canManage={canManage} onError={setError} />
             ))}
           </ul>
           {canManage && <PlantForm onError={setError} />}
@@ -78,7 +78,19 @@ export default function PlantStructurePage() {
           {canManage && <AreaForm plants={plants.data ?? []} onError={setError} />}
         </Card>
 
-        <Card title={t('structure.sectors')} description={t('structure.sectorsHint')} >
+        <Card title={t('structure.sectors')} description={t('structure.sectorsHint')}>
+          <ul className="mb-4 max-h-64 space-y-1.5 overflow-y-auto">
+            {(areas.data?.results ?? []).flatMap((area) =>
+              (area.sectors ?? []).map((sector) => (
+                <SectorRow
+                  key={sector.id}
+                  sector={{ ...sector, area_code: area.code }}
+                  canManage={canManage}
+                  onError={setError}
+                />
+              )),
+            )}
+          </ul>
           {canManage ? (
             <SectorForm areas={areas.data?.results ?? []} onError={setError} />
           ) : (
@@ -305,10 +317,16 @@ function AreaRow({
 }) {
   const { t } = useTranslation(['assets', 'common']);
   const [remove] = useDeleteAreaMutation();
+  const [rename] = useUpdateAreaMutation();
   return (
     <li className="flex items-center gap-2 text-sm">
       <span className="font-mono text-xs text-slate-400">{area.code}</span>
-      <span>{area.name}</span>
+      <InlineRename
+        value={area.name}
+        canEdit={canManage}
+        onSave={(name) => rename({ id: area.id, name }).unwrap()}
+        onError={onError}
+      />
       <span className="ml-auto text-xs text-slate-500">
         {t('structure.equipmentCount', { count: area.equipment_count })}
       </span>
@@ -349,11 +367,17 @@ function GroupRow({
 }) {
   const { t } = useTranslation(['assets', 'common']);
   const [remove] = useDeleteAssetGroupMutation();
+  const [rename] = useUpdateAssetGroupMutation();
   const [editingPoints, setEditingPoints] = useState(false);
   return (
     <li className="flex items-center gap-2 text-sm">
       <span className="font-mono text-xs text-slate-400">{group.area_code}</span>
-      <span className="truncate">{group.name}</span>
+      <InlineRename
+        value={group.name}
+        canEdit={canManage}
+        onSave={(name) => rename({ id: group.id, name }).unwrap()}
+        onError={onError}
+      />
       {group.kind_name && (
         <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] dark:bg-slate-800">
           {group.kind_name}
@@ -414,5 +438,157 @@ function InlineForm({
         + {t('action.add')}
       </Button>
     </form>
+  );
+}
+
+
+/**
+ * Click the name, type, press Enter.
+ *
+ * A plant of 558 machines is full of names typed once and wrong; a modal per
+ * rename is enough friction that nobody fixes them.
+ */
+function InlineRename({
+  value,
+  canEdit,
+  onSave,
+  onError,
+}: {
+  value: string;
+  canEdit: boolean;
+  onSave: (name: string) => Promise<unknown>;
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['assets', 'common']);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value);
+
+  if (!canEdit) return <span className="truncate">{value}</span>;
+  if (!editing) {
+    return (
+      <button
+        onClick={() => {
+          setDraft(value);
+          setEditing(true);
+        }}
+        title={t('structure.rename')}
+        className="truncate text-left hover:underline"
+      >
+        {value}
+      </button>
+    );
+  }
+
+  async function commit() {
+    onError(null);
+    setEditing(false);
+    if (draft.trim() === value || !draft.trim()) return;
+    try {
+      await onSave(draft.trim());
+    } catch (cause) {
+      onError(readApiError(cause) ?? t('form.genericError'));
+    }
+  }
+
+  return (
+    <input
+      autoFocus
+      value={draft}
+      onChange={(event) => setDraft(event.target.value)}
+      onBlur={() => void commit()}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') void commit();
+        if (event.key === 'Escape') setEditing(false);
+      }}
+      className="min-w-0 flex-1 rounded border border-slate-300 px-1 py-0.5 text-sm dark:border-slate-600 dark:bg-slate-800"
+    />
+  );
+}
+
+function PlantRow({
+  plant,
+  canManage,
+  onError,
+}: {
+  plant: { id: number; code: string; name: string; area_count: number };
+  canManage: boolean;
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['assets', 'common']);
+  const [rename] = useUpdatePlantMutation();
+  const [remove] = useDeletePlantMutation();
+
+  async function removePlant() {
+    onError(null);
+    try {
+      await remove(plant.id).unwrap();
+    } catch (cause) {
+      onError(readApiError(cause) ?? t('form.genericError'));
+    }
+  }
+  return (
+    <li className="flex items-center gap-2 text-sm">
+      <InlineRename
+        value={plant.name}
+        canEdit={canManage}
+        onSave={(name) => rename({ id: plant.id, name }).unwrap()}
+        onError={onError}
+      />
+      <span className="font-mono text-xs text-slate-400">{plant.code}</span>
+      <span className="ml-auto text-xs text-slate-500">
+        {t('structure.areaCount', { count: plant.area_count })}
+      </span>
+      {canManage && (
+        <Button
+          variant="ghost"
+          onClick={() => void removePlant()}
+        >
+          ✕
+        </Button>
+      )}
+    </li>
+  );
+}
+
+function SectorRow({
+  sector,
+  canManage,
+  onError,
+}: {
+  sector: { id: number; name: string; area_code: string };
+  canManage: boolean;
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['assets', 'common']);
+  const [rename] = useUpdateSectorMutation();
+  const [remove] = useDeleteSectorMutation();
+
+  async function removeSector() {
+    onError(null);
+    try {
+      await remove(sector.id).unwrap();
+    } catch (cause) {
+      onError(readApiError(cause) ?? t('form.genericError'));
+    }
+  }
+  return (
+    <li className="flex items-center gap-2 text-sm">
+      <span className="font-mono text-xs text-slate-400">{sector.area_code}</span>
+      <InlineRename
+        value={sector.name}
+        canEdit={canManage}
+        onSave={(name) => rename({ id: sector.id, name }).unwrap()}
+        onError={onError}
+      />
+      {canManage && (
+        <Button
+          variant="ghost"
+          className="ml-auto"
+          onClick={() => void removeSector()}
+        >
+          ✕
+        </Button>
+      )}
+    </li>
   );
 }

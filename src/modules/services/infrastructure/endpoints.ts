@@ -60,7 +60,14 @@ export const servicesApi = baseApi.injectEndpoints({
     }),
     updateServiceOrder: build.mutation<
       { id: number },
-      { id: number; code?: string; status?: string; client_work_order?: string }
+      {
+        id: number;
+        code?: string;
+        status?: string;
+        client_work_order?: string;
+        scheduled_from?: string;
+        scheduled_to?: string;
+      }
     >({
       query: ({ id, ...body }) => ({ url: `service-orders/${id}/`, method: 'PATCH', body }),
       invalidatesTags: ['ServiceOrder'],

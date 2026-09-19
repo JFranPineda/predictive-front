@@ -5,31 +5,66 @@ import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
 
-import { EQUIPMENT_TYPES, type EquipmentDraft } from '../domain/types';
-import { useAssetGroupsQuery, useCreateEquipmentMutation } from '../infrastructure/endpoints';
+import { EQUIPMENT_TYPES, type Equipment, type EquipmentDraft } from '../domain/types';
+import {
+  useAssetGroupsQuery,
+  useCreateEquipmentMutation,
+  useUpdateEquipmentMutation,
+} from '../infrastructure/endpoints';
 
 const FREQUENCIES = ['monthly', 'bimonthly', 'quarterly', 'semiannual', 'annual', 'on_demand'] as const;
 
-export function EquipmentFormModal({ onClose }: { onClose: () => void }) {
+/**
+ * Creates a machine, or corrects one.
+ *
+ * The same form does both: a plant of 558 machines has far more typos to fix
+ * than machines to add, and the fields that are wrong — the TAG, the type,
+ * the frequency — are exactly the ones this form already knows how to ask for.
+ */
+export function EquipmentFormModal({
+  equipment,
+  onClose,
+}: {
+  equipment?: Equipment;
+  onClose: () => void;
+}) {
   const { t } = useTranslation(['assets', 'common']);
   const groups = useAssetGroupsQuery();
-  const [create, { isLoading }] = useCreateEquipmentMutation();
+  const [create, creating] = useCreateEquipmentMutation();
+  const [update, updating] = useUpdateEquipmentMutation();
+  const isLoading = creating.isLoading || updating.isLoading;
   const [error, setError] = useState<string | null>(null);
   const [draft, setDraft] = useState<EquipmentDraft>({
-    asset_group: 0,
-    name: '',
-    equipment_type: 'motor',
-    client_tag: '',
+    asset_group: equipment?.asset_group.id ?? 0,
+    name: equipment?.name ?? '',
+    equipment_type: equipment?.equipment_type ?? 'motor',
+    client_tag: equipment?.client_tag ?? '',
     position_in_group: 'driver',
-    monitoring_frequency: 'monthly',
-    generate_points: true,
-    first_point: 1,
+    monitoring_frequency: equipment?.monitoring_frequency ?? 'monthly',
+    generate_points: !equipment,
+    // 0 means "continue the train's numbering": a gearbox read on four
+    // points does not start at 3 just because a motor came before it.
+    first_point: 0,
   });
 
   async function submit() {
     setError(null);
     try {
-      await create(draft).unwrap();
+      if (equipment) {
+        // Only what this form actually knows. The points already exist and
+        // carry readings, and `position_in_group` is not on the row — sending
+        // a guessed one would reorder the train behind the user's back.
+        await update({
+          id: equipment.id,
+          name: draft.name,
+          client_tag: draft.client_tag,
+          equipment_type: draft.equipment_type,
+          monitoring_frequency: draft.monitoring_frequency,
+          asset_group: draft.asset_group,
+        }).unwrap();
+      } else {
+        await create(draft).unwrap();
+      }
       onClose();
     } catch (cause) {
       setError(readApiError(cause) ?? t('form.genericError'));
@@ -38,7 +73,7 @@ export function EquipmentFormModal({ onClose }: { onClose: () => void }) {
 
   return (
     <Modal
-      title={t('form.newEquipment')}
+      title={equipment ? t('form.editEquipment') : t('form.newEquipment')}
       description={t('form.equipmentHint')}
       onClose={onClose}
       footer={
@@ -96,7 +131,6 @@ export function EquipmentFormModal({ onClose }: { onClose: () => void }) {
                 equipment_type: event.target.value as EquipmentDraft['equipment_type'],
                 // The driver of a train is its motor; everything else is driven.
                 position_in_group: event.target.value === 'motor' ? 'driver' : 'driven',
-                first_point: event.target.value === 'motor' ? 1 : 3,
               })
             }
           >
@@ -127,6 +161,7 @@ export function EquipmentFormModal({ onClose }: { onClose: () => void }) {
         </FormField>
       </div>
 
+      {!equipment && (
       <FormField label={t('form.points')} hint={t('form.pointsHint')}>
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 text-sm">
@@ -140,14 +175,17 @@ export function EquipmentFormModal({ onClose }: { onClose: () => void }) {
           {draft.generate_points && (
             <TextInput
               type="number"
-              min={1}
-              value={draft.first_point}
+              min={0}
+              value={draft.first_point || ''}
+              placeholder={t('form.firstPointAuto')}
+              title={t('form.firstPointHint')}
               onChange={(event) => setDraft({ ...draft, first_point: Number(event.target.value) })}
-              className="w-24"
+              className="w-32"
             />
           )}
         </div>
       </FormField>
+      )}
     </Modal>
   );
 }

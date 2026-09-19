@@ -5,6 +5,8 @@ import { Link, useParams } from 'react-router-dom';
 import { formatDateTime } from '@app/i18n/format';
 import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
+import { useCompanyUsersQuery } from '@modules/users';
+import { Button } from '@shared/ui/Button';
 import { Card, Field } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -17,10 +19,15 @@ import { ENTRY_ORDER } from '../domain/authorship';
 import { OperatingSection } from './OperatingSection';
 import type { EntryType } from '../domain/types';
 import {
+  useAddParticipantMutation,
   useAddVisitEntryMutation,
+  useDeleteLogEntryMutation,
+  useRemoveParticipantMutation,
   useSaveVisitReadingsMutation,
+  useUpdateLogEntryMutation,
   useVisitQuery,
 } from '../infrastructure/endpoints';
+import { readServiceError } from './readServiceError';
 
 export default function VisitDetailPage() {
   const { t } = useTranslation(['services', 'media']);
@@ -33,6 +40,7 @@ export default function VisitDetailPage() {
   const [draft, setDraft] = useState<Record<number, string>>({});
   const [entryText, setEntryText] = useState('');
   const [entryType, setEntryType] = useState<EntryType>('observation');
+  const [error, setError] = useState<string | null>(null);
 
   // The form mirrors the server until the user types; re-mirroring after a
   // save is what makes the recalculated statuses show up.
@@ -65,6 +73,7 @@ export default function VisitDetailPage() {
   if (isError || !data) {
     return (
       <Page>
+      {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
         <ErrorState title={t('visit.notFound')} body={t('visit.notFoundBody')} />
       </Page>
     );
@@ -248,6 +257,13 @@ export default function VisitDetailPage() {
                       )}
                     </span>
                   ))}
+                  {data.can_edit && (
+                    <ParticipantPicker
+                      visitId={id}
+                      taken={data.participants.map((row) => row.user_id)}
+                      onError={setError}
+                    />
+                  )}
                 </span>
               </Field>
             </dl>
@@ -276,7 +292,12 @@ export default function VisitDetailPage() {
                           <span className="text-[11px] text-sky-600">{t('visit.thisVisit')}</span>
                         )}
                       </div>
-                      <p className="mt-1 leading-relaxed">{entry.text}</p>
+                      <DiaryText
+                        entry={entry}
+                        visitId={id}
+                        canEdit={data.can_edit && entry.from_this_visit}
+                        onError={setError}
+                      />
                       <p className="mt-0.5 text-xs text-slate-400">{entry.author_name}</p>
                     </li>
                   ))}
@@ -329,6 +350,15 @@ export default function VisitDetailPage() {
         />
       </div>
 
+      {data.can_edit && data.points.length > 0 && (
+        <Link
+          to={`/services/visits/${id}/capture`}
+          className="inline-block rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white dark:bg-slate-100 dark:text-slate-900"
+        >
+          {t('visit.capture')}
+        </Link>
+      )}
+
       <div id="captures">
         <MediaGallery
           ownerType="visit"
@@ -367,4 +397,162 @@ function trim(value: string | null, decimals: number): string {
   if (value === null || value === '') return '';
   const numeric = Number(value);
   return Number.isNaN(numeric) ? value : String(Number(numeric.toFixed(decimals)));
+}
+
+
+/**
+ * The diary is a dated line with an author, not a text box.
+ *
+ * It was add-only, so a finding typed with a typo stayed in the report for
+ * good. Only the lines this visit wrote can be touched, and only while the
+ * visit is open — a closed round is what a customer was already told.
+ */
+function DiaryText({
+  entry,
+  visitId,
+  canEdit,
+  onError,
+}: {
+  entry: { id: number; text: string };
+  visitId: number;
+  canEdit: boolean;
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['services', 'common']);
+  const [update] = useUpdateLogEntryMutation();
+  const [remove] = useDeleteLogEntryMutation();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(entry.text);
+
+  async function run(action: () => Promise<unknown>) {
+    onError(null);
+    try {
+      await action();
+    } catch (cause) {
+      onError(readServiceError(cause) ?? t('form.genericError'));
+    }
+  }
+
+  if (editing) {
+    return (
+      <div className="mt-1 space-y-1">
+        <textarea
+          autoFocus
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          rows={3}
+          className="w-full rounded-md border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
+        />
+        <span className="flex gap-2">
+          <Button
+            variant="primary"
+            onClick={() =>
+              void run(async () => {
+                await update({ id: entry.id, visitId, text: draft }).unwrap();
+                setEditing(false);
+              })
+            }
+          >
+            {t('common:action.save')}
+          </Button>
+          <Button onClick={() => setEditing(false)}>{t('common:action.cancel')}</Button>
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <p className="mt-1 leading-relaxed">
+      {entry.text}
+      {canEdit && (
+        <span className="ml-2 inline-flex gap-2 align-middle">
+          <button onClick={() => setEditing(true)} className="text-xs text-sky-600">
+            {t('common:action.edit')}
+          </button>
+          <button
+            onClick={() => void run(() => remove({ id: entry.id, visitId }).unwrap())}
+            className="text-xs text-red-600"
+          >
+            {t('common:action.delete')}
+          </button>
+        </span>
+      )}
+    </p>
+  );
+}
+
+/** Who performed the service. It only ever came from the seed. */
+function ParticipantPicker({
+  visitId,
+  taken,
+  onError,
+}: {
+  visitId: number;
+  taken: number[];
+  onError: (message: string | null) => void;
+}) {
+  const { t } = useTranslation(['services', 'common']);
+  const users = useCompanyUsersQuery();
+  const [add] = useAddParticipantMutation();
+  const [remove] = useRemoveParticipantMutation();
+  const [open, setOpen] = useState(false);
+
+  const available = (users.data ?? []).filter((user) => !taken.includes(user.id));
+
+  async function run(action: () => Promise<unknown>) {
+    onError(null);
+    try {
+      await action();
+    } catch (cause) {
+      onError(readServiceError(cause) ?? t('form.genericError'));
+    }
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="rounded-full border border-dashed border-slate-300 px-2 py-0.5 text-xs text-slate-500 dark:border-slate-600"
+      >
+        + {t('visit.addPerformer')}
+      </button>
+    );
+  }
+
+  return (
+    <span className="flex items-center gap-2">
+      <select
+        defaultValue=""
+        onChange={(event) => {
+          const user = Number(event.target.value);
+          if (user) {
+            void run(() => add({ visitId, user, role: 'assistant' }).unwrap());
+            setOpen(false);
+          }
+        }}
+        className="rounded-md border border-slate-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-800"
+      >
+        <option value="">{t('visit.pickPerformer')}</option>
+        {available.map((user) => (
+          <option key={user.id} value={user.id}>
+            {user.full_name}
+          </option>
+        ))}
+      </select>
+      {taken.length > 1 && (
+        <button
+          onClick={() => {
+            void run(() => remove({ visitId, user: taken[taken.length - 1]! }).unwrap());
+            setOpen(false);
+          }}
+          className="text-xs text-red-600"
+        >
+          {t('visit.removeLastPerformer')}
+        </button>
+      )}
+      <button onClick={() => setOpen(false)} className="text-xs text-slate-500">
+        {t('common:action.cancel')}
+      </button>
+    </span>
+  );
 }

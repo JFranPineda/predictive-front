@@ -67,6 +67,35 @@ export const assetsApi = baseApi.injectEndpoints({
       query: (body) => ({ url: 'sectors/', method: 'POST', body }),
       invalidatesTags: ['Area', 'AssetGroup'],
     }),
+    updatePlant: build.mutation<
+      { id: number; name: string },
+      { id: number; name?: string; address?: string }
+    >({
+      query: ({ id, ...body }) => ({ url: `plants/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['Plant', 'Area'],
+    }),
+    deletePlant: build.mutation<void, number>({
+      query: (id) => ({ url: `plants/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['Plant', 'Area'],
+    }),
+    updateSector: build.mutation<{ id: number; name: string }, { id: number; name: string }>({
+      query: ({ id, ...body }) => ({ url: `sectors/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['Area', 'AssetGroup'],
+    }),
+    updateAssetGroup: build.mutation<
+      { id: number; name: string },
+      { id: number; name?: string; kind?: number; criticality?: number }
+    >({
+      query: ({ id, ...body }) => ({ url: `asset-groups/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['AssetGroup', 'Equipment'],
+    }),
+    updatePoint: build.mutation<
+      { id: number; label: string },
+      { id: number; number?: number; axis?: string; side?: string; point_type?: string }
+    >({
+      query: ({ id, ...body }) => ({ url: `points/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['Point', 'AssetGroup'],
+    }),
     deleteSector: build.mutation<void, number>({
       query: (id) => ({ url: `sectors/${id}/`, method: 'DELETE' }),
       invalidatesTags: ['Area', 'AssetGroup'],
@@ -138,6 +167,11 @@ export const assetsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useUpdatePlantMutation,
+  useDeletePlantMutation,
+  useUpdateSectorMutation,
+  useUpdateAssetGroupMutation,
+  useUpdatePointMutation,
   useAreasQuery,
   useEquipmentsQuery,
   useEquipmentQuery,

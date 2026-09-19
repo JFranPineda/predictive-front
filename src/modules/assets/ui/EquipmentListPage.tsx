@@ -19,8 +19,11 @@ import { StatusBadge } from '@shared/ui/StatusBadge';
 
 import { displayStatus, overdueDays } from '../domain/status';
 import type { Equipment } from '../domain/types';
-import { useEquipmentsQuery } from '../infrastructure/endpoints';
-import { EquipmentFormModal } from './EquipmentFormModal';
+import {
+  useDeleteEquipmentMutation,
+  useEquipmentsQuery,
+} from '../infrastructure/endpoints';
+import { EquipmentFormModal, readApiError } from './EquipmentFormModal';
 
 export default function EquipmentListPage() {
   const { t } = useTranslation('assets');
@@ -28,6 +31,20 @@ export default function EquipmentListPage() {
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('assets.manage_equipment');
   const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState<Equipment | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [deleteEquipment] = useDeleteEquipmentMutation();
+
+  async function remove(row: Equipment) {
+    setError(null);
+    try {
+      // The server deactivates anything with readings behind it rather than
+      // destroying it, and says so in the response.
+      await deleteEquipment(row.id).unwrap();
+    } catch (cause) {
+      setError(readApiError(cause) ?? t('form.genericError'));
+    }
+  }
 
   const loaded = useMemo(() => equipments.data?.results ?? [], [equipments.data]);
   const specs = useMemo<FilterSpec<Equipment>[]>(
@@ -113,12 +130,42 @@ export default function EquipmentListPage() {
       key: 'actions',
       header: '',
       render: (row) => (
-        <Link
-          to={`/measurements/${row.id}`}
-          className="whitespace-nowrap text-xs font-medium text-sky-600"
-        >
-          {t('openTrend')}
-        </Link>
+        <span className="flex gap-3">
+          <Link
+            to={`/measurements/${row.id}`}
+            className="whitespace-nowrap text-xs font-medium text-sky-600"
+          >
+            {t('openTrend')}
+          </Link>
+          <Link
+            to={`/assets/${row.id}/media`}
+            className="whitespace-nowrap text-xs font-medium text-sky-600"
+          >
+            {t('openGallery')}
+          </Link>
+          <Link
+            to={`/measurements/${row.id}/spectra`}
+            className="whitespace-nowrap text-xs font-medium text-sky-600"
+          >
+            {t('openSpectra')}
+          </Link>
+          {canManage && (
+            <>
+              <button
+                onClick={() => setEditing(row)}
+                className="whitespace-nowrap text-xs font-medium text-sky-600"
+              >
+                {t('common:action.edit')}
+              </button>
+              <button
+                onClick={() => void remove(row)}
+                className="whitespace-nowrap text-xs font-medium text-red-600"
+              >
+                {t('common:action.delete')}
+              </button>
+            </>
+          )}
+        </span>
       ),
     },
   ];
@@ -127,6 +174,7 @@ export default function EquipmentListPage() {
 
   return (
     <Page>
+      {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       <PageHeader
         title={t('title')}
         description={t('subtitle')}
@@ -197,6 +245,9 @@ export default function EquipmentListPage() {
       )}
 
       {creating && <EquipmentFormModal onClose={() => setCreating(false)} />}
+      {editing && (
+        <EquipmentFormModal equipment={editing} onClose={() => setEditing(null)} />
+      )}
     </Page>
   );
 }
