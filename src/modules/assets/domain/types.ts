@@ -98,6 +98,8 @@ export interface KindComponent {
   equipment_type: string;
   position: string;
   order?: number;
+  /** Machines of one train are not read on the same number of points. */
+  point_count: number;
 }
 
 export interface PointTemplateRow {
@@ -139,7 +141,16 @@ export interface GroupPoint {
 
 export interface GroupPoints {
   group: { id: number; name: string; kind: string | null };
-  equipments: { id: number; name: string; tag: string; type: string; position: string }[];
+  equipments: {
+    id: number;
+    name: string;
+    tag: string;
+    type: string;
+    position: string;
+    order: number;
+    component_id: number | null;
+    component_label: string;
+  }[];
   points: GroupPoint[];
 }
 
@@ -149,6 +160,8 @@ export const POINT_SIDES = [
   'opposite_coupling',
   'inboard',
   'outboard',
+  'lower',
+  'upper',
   'custom',
 ] as const;
 

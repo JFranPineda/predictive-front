@@ -39,8 +39,8 @@ export function KindFormModal({
     kind?.components.length
       ? kind.components
       : [
-          { label: 'MOTOR', equipment_type: 'motor', position: 'driver' },
-          { label: 'BOMBA', equipment_type: 'pump', position: 'driven' },
+          { label: 'MOTOR', equipment_type: 'motor', position: 'driver', point_count: 2 },
+          { label: 'BOMBA', equipment_type: 'pump', position: 'driven', point_count: 2 },
         ],
   );
   const [templates, setTemplates] = useState<PointTemplateRow[]>(
@@ -96,7 +96,7 @@ export function KindFormModal({
       <FormField label={t('kinds.components')} hint={t('kinds.componentsHint')}>
         <div className="space-y-2">
           {components.map((component, index) => (
-            <div key={index} className="grid grid-cols-[1fr_1fr_1fr_2rem] gap-2">
+            <div key={index} className="grid grid-cols-[1fr_1fr_1fr_5rem_2rem] gap-2">
               <TextInput
                 value={component.label}
                 placeholder="MOTOR"
@@ -127,6 +127,18 @@ export function KindFormModal({
                 <option value="driven">{t('kinds.driven')}</option>
                 <option value="intermediate">{t('kinds.intermediate')}</option>
               </Select>
+              <TextInput
+                type="number"
+                min={1}
+                value={String(component.point_count)}
+                aria-label={t('kinds.pointCount')}
+                title={t('kinds.pointCountHint')}
+                onChange={(event) =>
+                  setComponents(
+                    patch(components, index, { point_count: Number(event.target.value) || 1 }),
+                  )
+                }
+              />
               <Button
                 variant="ghost"
                 onClick={() => setComponents(components.filter((_, p) => p !== index))}
@@ -139,7 +151,7 @@ export function KindFormModal({
             onClick={() =>
               setComponents([
                 ...components,
-                { label: '', equipment_type: 'pump', position: 'driven' },
+                { label: '', equipment_type: 'pump', position: 'driven', point_count: 2 },
               ])
             }
           >
@@ -248,6 +260,11 @@ export function KindFormModal({
           >
             + {t('kinds.addPoint')}
           </Button>
+          {/* Typing thirty rows by hand to move a gearbox from two points to
+              four is how a layout ends up wrong. */}
+          <Button variant="ghost" onClick={() => setTemplates(layoutFor(components))}>
+            {t('kinds.rebuildLayout')}
+          </Button>
         </div>
       </FormField>
     </Modal>
@@ -258,28 +275,47 @@ function patch<T>(rows: T[], index: number, changes: Partial<T>): T[] {
   return rows.map((row, position) => (position === index ? { ...row, ...changes } : row));
 }
 
-/** The layout of the customer's own vibration report. */
-function defaultLayout(): PointTemplateRow[] {
+/**
+ * The layout of the customer's own vibration report.
+ *
+ * Numbering runs across the whole train, and each machine contributes as many
+ * points as it declares: the reports show MOTOR 2 + REDUCTOR 4, and a dryer
+ * group read on one bearing housing plus five points of gearbox.
+ */
+function layoutFor(components: KindComponent[]): PointTemplateRow[] {
   const axes: Record<string, string[]> = {
     H: ['vel_rms', 'env_accel', 'temp'],
     V: ['vel_rms'],
     A: ['vel_rms'],
   };
-  const sides = [
-    ['free_end', 'coupling_end'],
-    ['coupling_end', 'opposite_coupling'],
-  ];
-  const labels = ['MOTOR', 'BOMBA'];
-  return labels.flatMap((label, component) =>
-    [0, 1].flatMap((offset) =>
-      Object.entries(axes).map(([axis, magnitudes]) => ({
-        number: 1 + component * 2 + offset,
-        axis,
-        side: sides[component]![offset]!,
-        point_type: 'bearing',
-        magnitudes,
-        component_label: label,
-      })),
-    ),
-  );
+  const canonical: Record<string, string[]> = {
+    driver: ['free_end', 'coupling_end'],
+    driven: ['coupling_end', 'opposite_coupling'],
+  };
+  const rows: PointTemplateRow[] = [];
+  let number = 1;
+  components.forEach((component) => {
+    const sides = canonical[component.position] ?? [];
+    for (let offset = 0; offset < Math.max(component.point_count, 1); offset += 1) {
+      Object.entries(axes).forEach(([axis, magnitudes]) => {
+        rows.push({
+          number,
+          axis,
+          side: sides[offset] ?? 'custom',
+          point_type: 'bearing',
+          magnitudes,
+          component_label: component.label,
+        });
+      });
+      number += 1;
+    }
+  });
+  return rows;
+}
+
+function defaultLayout(): PointTemplateRow[] {
+  return layoutFor([
+    { label: 'MOTOR', equipment_type: 'motor', position: 'driver', point_count: 2 },
+    { label: 'BOMBA', equipment_type: 'pump', position: 'driven', point_count: 2 },
+  ]);
 }
