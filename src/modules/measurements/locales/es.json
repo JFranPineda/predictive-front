@@ -68,5 +68,71 @@
     "inboard": "Interior",
     "outboard": "Exterior",
     "custom": "General"
+  },
+  "instruments": {
+    "title": "Instrumentos",
+    "subtitle": "Con qué se toma cada ronda, y cuándo vence su calibración",
+    "table": "Instrumentos",
+    "empty": "No hay instrumentos",
+    "loading": "Cargando instrumentos…",
+    "name": "Nombre",
+    "manufacturer": "Fabricante",
+    "serial": "Serie",
+    "lastCalibration": "Última calibración",
+    "nextCalibration": "Próxima calibración",
+    "expired": "Calibración vencida",
+    "new": "Nuevo instrumento",
+    "newHint": "Una lectura tomada con un instrumento vencido no se puede defender"
+  },
+  "spectra": {
+    "title": "Espectros",
+    "subtitle": "La captura del instrumento, los números, o ambos",
+    "empty": "Este equipo no tiene espectros",
+    "emptyHint": "Importa el CSV que exporta el instrumento",
+    "loading": "Cargando espectros…",
+    "loadingCurve": "Cargando la curva…",
+    "import": "Importar espectro",
+    "importHint": "Acepta el CSV de SEMAPI y SKF, con preámbulo y coma decimal",
+    "point": "Punto",
+    "typeLabel": "Tipo",
+    "rpm": "RPM al capturar",
+    "file": "Archivo",
+    "fileHint": "Dos columnas: frecuencia y amplitud",
+    "upload": "Importar",
+    "uploadFailed": "No se pudo importar el archivo",
+    "openCurve": "Ver la curva ({{lines}} líneas)",
+    "captureOnly": "Solo captura, sin datos numéricos",
+    "peak": "pico {{hz}} Hz · {{value}} {{unit}}",
+    "span": "{{from}} a {{to}} Hz · {{rpm}} RPM",
+    "captionPlaceholder": "En modo Velocidad, muestra desalineamiento",
+    "type": {
+      "velocity": "Velocidad",
+      "envelope": "Envolvente",
+      "acceleration": "Aceleración",
+      "demodulation": "Demodulación",
+      "waveform": "Forma de onda"
+    }
+  },
+  "capture": {
+    "title": "Captura de ronda · {{equipment}}",
+    "subtitle": "Orden {{order}}",
+    "loading": "Cargando la visita…",
+    "noVisit": "Esa visita no existe",
+    "grid": "Valores medidos",
+    "gridHint": "Una casilla vacía se registra como no medida, con su motivo",
+    "point": "Punto",
+    "reason": "Si no se midió",
+    "send": "Registrar la ronda",
+    "recorded": "{{count}} lecturas registradas y graduadas",
+    "failed": "No se pudo registrar la ronda",
+    "backToVisit": "Volver a la visita",
+    "nothingToCapture": "No hay nada que capturar",
+    "nothingHint": "Este equipo no tiene puntos activos, o la técnica de la orden no mide magnitudes",
+    "reasonOption": {
+      "equipment_off": "Equipo apagado",
+      "no_access": "Sin acceso",
+      "stopped": "Equipo parado",
+      "retired": "Equipo retirado"
+    }
   }
 }

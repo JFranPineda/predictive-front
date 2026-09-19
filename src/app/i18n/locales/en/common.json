@@ -16,7 +16,8 @@
     "search": "Search",
     "delete": "Delete",
     "add": "Add",
-    "new": "New"
+    "new": "New",
+    "close": "Close"
   },
   "state": {
     "loading": "Loading…",

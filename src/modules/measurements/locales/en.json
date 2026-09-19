@@ -68,5 +68,71 @@
     "inboard": "Inboard",
     "outboard": "Outboard",
     "custom": "General"
+  },
+  "instruments": {
+    "title": "Instruments",
+    "subtitle": "What each round is taken with, and when its calibration expires",
+    "table": "Instruments",
+    "empty": "No instruments",
+    "loading": "Loading instruments…",
+    "name": "Name",
+    "manufacturer": "Manufacturer",
+    "serial": "Serial",
+    "lastCalibration": "Last calibration",
+    "nextCalibration": "Next calibration",
+    "expired": "Calibration expired",
+    "new": "New instrument",
+    "newHint": "A reading taken with an expired instrument cannot be defended"
+  },
+  "spectra": {
+    "title": "Spectra",
+    "subtitle": "The instrument's capture, the numbers, or both",
+    "empty": "This machine has no spectra",
+    "emptyHint": "Import the CSV the instrument exports",
+    "loading": "Loading spectra…",
+    "loadingCurve": "Loading the curve…",
+    "import": "Import a spectrum",
+    "importHint": "Takes the SEMAPI and SKF CSV, preamble and decimal comma included",
+    "point": "Point",
+    "typeLabel": "Type",
+    "rpm": "RPM at capture",
+    "file": "File",
+    "fileHint": "Two columns: frequency and amplitude",
+    "upload": "Import",
+    "uploadFailed": "Could not import the file",
+    "openCurve": "View the curve ({{lines}} lines)",
+    "captureOnly": "Capture only, no numeric data",
+    "peak": "peak {{hz}} Hz · {{value}} {{unit}}",
+    "span": "{{from}} to {{to}} Hz · {{rpm}} RPM",
+    "captionPlaceholder": "In Velocity mode, shows misalignment",
+    "type": {
+      "velocity": "Velocity",
+      "envelope": "Envelope",
+      "acceleration": "Acceleration",
+      "demodulation": "Demodulation",
+      "waveform": "Waveform"
+    }
+  },
+  "capture": {
+    "title": "Round capture · {{equipment}}",
+    "subtitle": "Order {{order}}",
+    "loading": "Loading the visit…",
+    "noVisit": "That visit does not exist",
+    "grid": "Measured values",
+    "gridHint": "A blank cell is recorded as not measured, with its reason",
+    "point": "Point",
+    "reason": "If not measured",
+    "send": "Record the round",
+    "recorded": "{{count}} readings recorded and graded",
+    "failed": "Could not record the round",
+    "backToVisit": "Back to the visit",
+    "nothingToCapture": "Nothing to capture",
+    "nothingHint": "This machine has no active points, or the order's technique measures nothing",
+    "reasonOption": {
+      "equipment_off": "Machine off",
+      "no_access": "No access",
+      "stopped": "Machine stopped",
+      "retired": "Machine retired"
+    }
   }
 }

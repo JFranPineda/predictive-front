@@ -21,6 +21,21 @@ const definition: ModuleDefinition = {
       permission: 'measurements.view_reading',
     },
     {
+      path: '/settings/instruments',
+      component: lazy(() => import('./ui/InstrumentsPage')),
+      permission: 'measurements.view_reading',
+    },
+    {
+      path: '/services/visits/:visitId/capture',
+      component: lazy(() => import('./ui/CapturePage')),
+      permission: 'measurements.add_reading',
+    },
+    {
+      path: '/measurements/:equipmentId/spectra',
+      component: lazy(() => import('./ui/SpectraPage')),
+      permission: 'measurements.view_reading',
+    },
+    {
       path: '/measurements/:equipmentId/trend',
       component: lazy(() => import('./ui/TrendMatrixPage')),
       permission: 'measurements.view_reading',

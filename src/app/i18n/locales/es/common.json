@@ -16,7 +16,8 @@
     "search": "Buscar",
     "delete": "Eliminar",
     "add": "Agregar",
-    "new": "Nuevo"
+    "new": "Nuevo",
+    "close": "Cerrar"
   },
   "state": {
     "loading": "Cargando…",
