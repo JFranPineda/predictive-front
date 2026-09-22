@@ -26,7 +26,8 @@
       "area": "Área / sector / conjunto",
       "split": "Reparto",
       "total": "Equipos",
-      "coverage": "Cobertura"
+      "coverage": "Cobertura",
+      "tag": "Tag del equipo"
     }
   },
   "empty": {
@@ -36,5 +37,8 @@
   "filter": {
     "search": "Buscar área",
     "allStatuses": "Todos los estados"
+  },
+  "driver": {
+    "hint": "Peor lectura del área, en {{tag}}"
   }
 }

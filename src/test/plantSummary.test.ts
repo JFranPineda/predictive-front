@@ -21,6 +21,7 @@ const node = (over: Partial<SummaryNode> = {}): SummaryNode => ({
   worst: OPERATIONAL,
   counts: [],
   children: [],
+  driver: null,
   ...over,
 });
 

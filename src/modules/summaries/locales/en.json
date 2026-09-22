@@ -26,7 +26,8 @@
       "area": "Area / sector / train",
       "split": "Breakdown",
       "total": "Equipment",
-      "coverage": "Coverage"
+      "coverage": "Coverage",
+      "tag": "Equipment tag"
     }
   },
   "empty": {
@@ -36,5 +37,8 @@
   "filter": {
     "search": "Search area",
     "allStatuses": "All statuses"
+  },
+  "driver": {
+    "hint": "The area's worst reading, on {{tag}}"
   }
 }

@@ -136,6 +136,7 @@ function Selector({
                   >
                     <button
                       onClick={() => onTogglePoint(option)}
+                      disabled={!on && full}
                       title={t('chart.togglePoint', { point: option.number })}
                       className="flex items-center gap-1.5 rounded px-1.5 py-0.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
@@ -146,7 +147,11 @@ function Selector({
                       />
                       {option.number}
                     </button>
-                    {option.axes.map(({ axis, seriesId }) => {
+                    {/* No letter when there is no axis: the point itself is
+                        the whole switch. */}
+                    {option.axes
+                      .filter(({ axis }) => axis !== '')
+                      .map(({ axis, seriesId }) => {
                       const active = selected.includes(seriesId);
                       return (
                         <button
@@ -167,7 +172,7 @@ function Selector({
                           {axis}
                         </button>
                       );
-                    })}
+                      })}
                   </div>
                 );
               })}

@@ -83,16 +83,19 @@ export function buildSeries(block: MatrixBlock, mode: ThemeMode): ChartSeries[] 
   const palette = PALETTE[mode];
   const slots = colourSlots(block.rows);
   return block.rows.map((row) => {
+    // A magnitude read once on the bearing has no axis to distinguish, so it
+    // keeps the solid line and drops the letter from the switch.
+    const axis = block.per_axis ? row.axis : '';
     const style = AXIS_STYLE[row.axis] ?? AXIS_STYLE.N!;
     return {
       id: String(row.point_id),
       label: row.label,
       component: row.component,
       number: row.number,
-      axis: row.axis,
+      axis,
       color: palette[(slots.get(row.number) ?? 0) % palette.length]!,
-      dash: style.dash,
-      symbol: style.symbol,
+      dash: block.per_axis ? style.dash : 'solid',
+      symbol: block.per_axis ? style.symbol : 'circle',
       points: row.cells.map((cell) => ({
         value: cell?.value == null ? null : Number(cell.value),
         statusCode: cell?.status_code ?? null,

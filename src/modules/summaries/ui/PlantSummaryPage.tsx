@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatPercent } from '@app/i18n/format';
+import { formatNumber, formatPercent } from '@app/i18n/format';
 import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -128,6 +128,7 @@ export default function PlantSummaryPage() {
           <span className="w-24">{t('tree.column.status')}</span>
           <span className="flex-1">{t('tree.column.area')}</span>
           <span className="w-56">{t('tree.column.split')}</span>
+          <span className="w-28 text-right">{t('tree.column.tag')}</span>
           <span className="w-20 text-right">{t('tree.column.total')}</span>
           <span className="w-28 text-right">{t('tree.column.coverage')}</span>
         </div>
@@ -179,14 +180,34 @@ function NodeRow({ node, depth }: { node: SummaryNode; depth: number }) {
           {node.label}
         </span>
 
-        <span className="flex h-2 w-56 shrink-0 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-          {segments.map((segment) => (
+        <span className="relative flex h-2 w-56 shrink-0 items-center overflow-visible">
+          <span className="flex h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+            {segments.map((segment) => (
+              <span
+                key={segment.code}
+                title={segment.label}
+                style={{ width: `${segment.percent}%`, backgroundColor: segment.color }}
+              />
+            ))}
+          </span>
+          {/* The reading behind the colour, sitting on the bar it explains.
+              A red area says something is wrong; this says how wrong. */}
+          {node.driver && (
             <span
-              key={segment.code}
-              title={segment.label}
-              style={{ width: `${segment.percent}%`, backgroundColor: segment.color }}
-            />
-          ))}
+              title={t('driver.hint', { tag: node.driver.equipment_tag })}
+              className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[11px] font-semibold tabular-nums shadow-sm"
+              style={{
+                backgroundColor: node.worst.color,
+                color: readableOn(node.worst.color),
+              }}
+            >
+              {formatNumber(node.driver.value, 2)} {node.driver.unit}
+            </span>
+          )}
+        </span>
+
+        <span className="w-28 shrink-0 truncate text-right font-mono text-[11px] text-slate-400">
+          {node.driver?.equipment_tag ?? ''}
         </span>
 
         <span className="w-20 shrink-0 text-right tabular-nums text-slate-500">

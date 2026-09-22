@@ -36,6 +36,7 @@ function block(points: { number: number; component: string }[] = FOUR_POINTS): M
     unit: 'mm/s',
     aggregation: 'rms',
     decimals: 2,
+    per_axis: true,
     rows,
   };
 }

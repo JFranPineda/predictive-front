@@ -13,6 +13,17 @@ export interface StatusCount {
   count: number;
 }
 
+/** The number behind the colour, and the machine it belongs to. */
+export interface Driver {
+  value: number;
+  unit: string;
+  magnitude_code: string;
+  /** Thickness and viscosity get worse as they fall. */
+  higher_is_worse: boolean;
+  equipment_id: number;
+  equipment_tag: string;
+}
+
 export interface SummaryNode {
   key: string;
   label: string;
@@ -23,6 +34,7 @@ export interface SummaryNode {
   worst: Status;
   counts: StatusCount[];
   children: SummaryNode[];
+  driver: Driver | null;
 }
 
 export interface TechniqueSummary {

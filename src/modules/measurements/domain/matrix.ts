@@ -32,6 +32,8 @@ export interface MatrixBlock {
   unit: string;
   aggregation: string;
   decimals: number;
+  /** False when the magnitude is read once per bearing, not per axis. */
+  per_axis: boolean;
   rows: MatrixRow[];
 }
 
