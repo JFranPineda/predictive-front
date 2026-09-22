@@ -134,5 +134,18 @@
       "stopped": "Machine stopped",
       "retired": "Machine retired"
     }
+  },
+  "chart": {
+    "title": "Trends",
+    "hint": "Pick what to compare; up to {{max}} at a time",
+    "counter": "{{count}} of {{max}}",
+    "pickOne": "Pick a point to see its trend",
+    "togglePoint": "Point {{point}}: all three axes at once",
+    "axis": {
+      "H": "Horizontal",
+      "V": "Vertical",
+      "A": "Axial",
+      "N": "No axis"
+    }
   }
 }

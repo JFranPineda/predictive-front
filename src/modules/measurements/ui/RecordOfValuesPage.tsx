@@ -21,6 +21,7 @@ import {
   type MatrixColumn,
 } from '../domain/matrix';
 import { useMatrixQuery, useSaveMatrixColumnMutation } from '../infrastructure/endpoints';
+import { TrendChart } from './TrendChart';
 
 /**
  * The record of values, laid out as `TABLA DE TENDENCIAS.xls` lays it out and
@@ -270,6 +271,7 @@ function Block({
           </tbody>
         </table>
       </div>
+      <TrendChart block={block} columns={columns} />
     </section>
   );
 }

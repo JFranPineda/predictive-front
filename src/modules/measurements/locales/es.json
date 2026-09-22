@@ -134,5 +134,18 @@
       "stopped": "Equipo parado",
       "retired": "Equipo retirado"
     }
+  },
+  "chart": {
+    "title": "Tendencias",
+    "hint": "Elige qué comparar; hasta {{max}} a la vez",
+    "counter": "{{count}} de {{max}}",
+    "pickOne": "Elige un punto para ver su tendencia",
+    "togglePoint": "Punto {{point}}: los tres ejes a la vez",
+    "axis": {
+      "H": "Horizontal",
+      "V": "Vertical",
+      "A": "Axial",
+      "N": "Sin eje"
+    }
   }
 }

@@ -14,7 +14,7 @@ export default defineConfig({
   },
   server: {
     port: Number(process.env.VITE_PORT ?? 5173),
-    // Same-origin in dev, so no CORS and no token in a cross-site request.
+    allowedHosts: ['.trycloudflare.com'],
     proxy: { '/api': process.env.VITE_API_PROXY ?? 'http://localhost:8000' },
   },
   build: {
@@ -24,6 +24,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // ECharts is heavier than the rest of the vendor bundle put
+          // together, and only the record of values draws. Its own chunk
+          // keeps it out of the boot path for everyone else.
+          if (id.includes('node_modules/echarts') || id.includes('node_modules/zrender')) {
+            return 'echarts';
+          }
           if (id.includes('node_modules')) return 'vendor';
           const match = /src\/modules\/([^/]+)\//.exec(id);
           return match ? `module-${match[1]}` : undefined;
