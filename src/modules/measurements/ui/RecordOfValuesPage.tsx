@@ -184,8 +184,11 @@ function Block({
 
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
-      <header className="bg-slate-800 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white dark:bg-slate-700">
-        {block.title} ( {block.unit} — {block.aggregation} )
+      <header className="bg-slate-800 px-4 py-2 text-sm font-semibold tracking-wide text-white dark:bg-slate-700">
+        {/* Only the title is uppercased. A unit's case is part of the unit:
+            uppercasing turned dB into "DB" and gE into "GE". */}
+        <span className="uppercase">{block.title}</span> ( {block.unit} —{' '}
+        <span className="uppercase">{block.aggregation}</span> )
       </header>
 
       <div className="overflow-x-auto">
