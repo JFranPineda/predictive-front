@@ -27,7 +27,7 @@
       "split": "Reparto",
       "total": "Equipos",
       "coverage": "Cobertura",
-      "tag": "Tag del equipo"
+      "tag": "Equipo · responsable"
     }
   },
   "empty": {
@@ -39,6 +39,8 @@
     "allStatuses": "Todos los estados"
   },
   "driver": {
-    "hint": "Peor lectura del área, en {{tag}}"
+    "hint": "Peor lectura del área, en {{tag}}",
+    "measured": "Medido el {{when}}",
+    "recorded": "Registrado el {{when}}"
   }
 }

@@ -22,6 +22,12 @@ export interface Driver {
   higher_is_worse: boolean;
   equipment_id: number;
   equipment_tag: string;
+  /** Who took the reading behind the colour. */
+  recorded_by: string;
+  /** When it entered the system — the moment the board changed. */
+  recorded_at: string | null;
+  /** When it was measured in the plant; earlier if typed in at the office. */
+  measured_at: string | null;
 }
 
 export interface SummaryNode {

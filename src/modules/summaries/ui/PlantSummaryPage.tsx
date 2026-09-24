@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber, formatPercent } from '@app/i18n/format';
+import { formatDateTime, formatNumber, formatPercent } from '@app/i18n/format';
 import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -128,7 +128,7 @@ export default function PlantSummaryPage() {
           <span className="w-24">{t('tree.column.status')}</span>
           <span className="flex-1">{t('tree.column.area')}</span>
           <span className="w-56">{t('tree.column.split')}</span>
-          <span className="w-28 text-right">{t('tree.column.tag')}</span>
+          <span className="w-40 text-right">{t('tree.column.tag')}</span>
           <span className="w-20 text-right">{t('tree.column.total')}</span>
           <span className="w-28 text-right">{t('tree.column.coverage')}</span>
         </div>
@@ -149,7 +149,7 @@ export default function PlantSummaryPage() {
 }
 
 function NodeRow({ node, depth }: { node: SummaryNode; depth: number }) {
-  const { t } = useTranslation('summaries');
+  const { t, i18n } = useTranslation('summaries');
   const [open, setOpen] = useState(false);
   const segments = barSegments(node.counts, node.total);
   const hasChildren = node.children.length > 0;
@@ -206,8 +206,32 @@ function NodeRow({ node, depth }: { node: SummaryNode; depth: number }) {
           )}
         </span>
 
-        <span className="w-28 shrink-0 truncate text-right font-mono text-[11px] text-slate-400">
-          {node.driver?.equipment_tag ?? ''}
+        {/* Which machine, who read it, and when it reached the board — what a
+            manager asks before anything else about a red area. */}
+        <span className="flex w-40 shrink-0 flex-col items-end text-right">
+          <span className="font-mono text-[11px] text-slate-400">
+            {node.driver?.equipment_tag ?? ''}
+          </span>
+          {node.driver?.recorded_by && (
+            <span
+              className="flex max-w-full flex-col items-end text-[11px] leading-tight text-slate-500 dark:text-slate-400"
+              title={[
+                node.driver.recorded_at &&
+                  t('driver.recorded', { when: formatDateTime(node.driver.recorded_at) }),
+                node.driver.measured_at &&
+                  t('driver.measured', { when: formatDateTime(node.driver.measured_at) }),
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            >
+              <span className="max-w-full truncate">{node.driver.recorded_by}</span>
+              {node.driver.recorded_at && (
+                <span className="tabular-nums">
+                  {shortStamp(node.driver.recorded_at, i18n.language)}
+                </span>
+              )}
+            </span>
+          )}
         </span>
 
         <span className="w-20 shrink-0 text-right tabular-nums text-slate-500">
@@ -252,4 +276,17 @@ function rollUpTotals(summary: TechniqueSummary | undefined) {
     coverage: total ? evaluated / total : 0,
     counts: [...tally.values()].sort((a, b) => b.status.severity - a.status.severity),
   };
+}
+
+/**
+ * Day, month and time — the year is the current one on a live board, and the
+ * full stamp, with the measurement time beside it, is in the tooltip.
+ */
+function shortStamp(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(iso));
 }

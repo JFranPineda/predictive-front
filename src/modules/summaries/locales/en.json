@@ -27,7 +27,7 @@
       "split": "Breakdown",
       "total": "Equipment",
       "coverage": "Coverage",
-      "tag": "Equipment tag"
+      "tag": "Machine · recorded by"
     }
   },
   "empty": {
@@ -39,6 +39,8 @@
     "allStatuses": "All statuses"
   },
   "driver": {
-    "hint": "The area's worst reading, on {{tag}}"
+    "hint": "The area's worst reading, on {{tag}}",
+    "measured": "Measured on {{when}}",
+    "recorded": "Recorded on {{when}}"
   }
 }
