@@ -34,7 +34,14 @@
     "signIn": "Entrar",
     "failed": "No se pudo iniciar sesión",
     "signOut": "Cerrar sesión",
-    "sessionExpired": "Tu sesión terminó. Vuelve a entrar."
+    "sessionExpired": "Tu sesión terminó. Vuelve a entrar.",
+    "mode": {
+      "corporate": "Credencial corporativa",
+      "code": "Código de técnico"
+    },
+    "codeHint": "Los 8 caracteres que te entregó tu jefe. No distingue mayúsculas.",
+    "codeFailed": "Código no válido",
+    "throttled": "Demasiados intentos. Espera un minuto."
   },
   "language": {
     "title": "Idioma",

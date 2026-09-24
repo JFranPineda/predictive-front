@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { formatDate } from '@app/i18n/format';
 import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -14,54 +15,94 @@ import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 import { TableToolbar } from '@shared/ui/TableToolbar';
 
-import { ROLES, type CompanyUser } from '../domain/roles';
+import {
+  accessKindOf,
+  byMatrixOrder,
+  isFieldRole,
+  SHIFTS,
+  validationOf,
+  type CompanyUser,
+  type RolePermissions,
+} from '../domain/roles';
 import {
   useCompanyUsersQuery,
   useRemoveUserMutation,
+  useRolesQuery,
   useUpdateUserMutation,
 } from '../infrastructure/endpoints';
-import { readUserError } from './UserFormModal';
+import { PermissionsPanel } from './PermissionsPanel';
+import { AccessBadge, RoleSummary, useRoleLabel, ValidationBadge } from './RoleSummary';
 import { UserEditModal } from './UserEditModal';
-import { UserFormModal } from './UserFormModal';
+import { readUserError, UserFormModal } from './UserFormModal';
 
+/**
+ * Who has access, how, and to what.
+ *
+ * The page used to show a role name and nothing behind it, and could not hand
+ * out any role the company made itself. It now reads as the plant's access
+ * matrix: the profiles on top, each person's access and validation in the
+ * table, and what they can actually do one click away.
+ */
 export default function UsersPage() {
   const { t } = useTranslation(['users', 'common']);
   const currentUserId = useAppSelector((state) => state.session.userId);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('security.manage_user');
   const { data, isLoading, isError } = useCompanyUsersQuery();
+  const roles = useRolesQuery();
+  const roleLabel = useRoleLabel();
   const [updateUser, updating] = useUpdateUserMutation();
   const [removeUser] = useRemoveUserMutation();
+  const [error, setError] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState<CompanyUser | null>(null);
+  const [inspecting, setInspecting] = useState<CompanyUser | null>(null);
 
-  async function revoke(id: number) {
+  async function run(action: () => Promise<unknown>) {
     setError(null);
     try {
-      await removeUser(id).unwrap();
+      await action();
     } catch (cause) {
       setError(readUserError(cause) ?? t('form.genericError'));
     }
   }
-  const [error, setError] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
-  const [editing, setEditing] = useState<CompanyUser | null>(null);
 
   const loaded = data ?? [];
+  const catalogue = roles.data?.roles ?? [];
+  const roleByCode = useMemo(
+    () => new Map(catalogue.map((role) => [role.code, role])),
+    [catalogue],
+  );
+
   const specs: FilterSpec<CompanyUser>[] = [
     {
       key: 'role',
       label: t('filter.allRoles'),
       valueOf: (row) => row.role,
-      labelOf: (value) => t(`role.${value}`, { defaultValue: value }),
+      labelOf: (value) => {
+        const role = roleByCode.get(value);
+        return role ? roleLabel(role) : value;
+      },
     },
     {
-      key: 'kind',
-      label: t('filter.allKinds'),
-      valueOf: (row) => (row.is_external ? 'external' : 'internal'),
-      labelOf: (value) => t(value),
+      key: 'access',
+      label: t('filter.allAccess'),
+      valueOf: (row) => accessKindOf(row.base_role, row.permissions),
+      labelOf: (value) => t(`access.${value}`),
+    },
+    {
+      key: 'shift',
+      label: t('filter.allShifts'),
+      valueOf: (row) => row.shift || 'none',
+      labelOf: (value) => (value === 'none' ? t('shift.none') : t('shift.label', { shift: value })),
     },
   ];
   const table = useTableFilter(loaded, (row) => `${row.full_name} ${row.email}`, specs);
-  const rows = table.filtered;
+
+  // The company's own profiles are the matrix; the shipped roles are there
+  // for the people who hold them, not as the thing to read first.
+  const profiles = catalogue.filter((role) => !role.is_system);
+  const shown = [...(profiles.length > 0 ? profiles : catalogue)].sort(byMatrixOrder);
 
   const columns: Column<CompanyUser>[] = [
     {
@@ -82,68 +123,78 @@ export default function UsersPage() {
     {
       key: 'role',
       header: t('column.role'),
-      render: (row) =>
-        canManage && row.id !== currentUserId ? (
-          <select
-            value={row.role}
-            disabled={updating.isLoading}
-            onChange={(event) => void updateUser({ id: row.id, role: event.target.value })}
-            className="rounded-lg border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800"
-          >
-            {ROLES.map((role) => (
-              <option key={role} value={role}>
-                {t(`role.${role}`)}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <span>{t(`role.${row.role}`, { defaultValue: row.role_name })}</span>
-        ),
-    },
-    {
-      key: 'kind',
-      header: t('column.kind'),
-      render: (row) =>
-        row.is_external ? (
-          <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium uppercase text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-            {t('external')}
-          </span>
-        ) : (
-          <span className="text-xs text-slate-400">{t('internal')}</span>
-        ),
-    },
-    {
-      key: 'scope',
-      header: t('column.scope'),
+      // The role and the access it grants read as one thing, so they share a
+      // cell: what the person is, and what that lets them do.
       render: (row) => (
-        <span className="text-slate-500">
-          {row.area_restrictions.length > 0
-            ? t('scope.areas', { count: row.area_restrictions.length })
-            : t('scope.all')}
+        <span className="flex flex-col items-start gap-1">
+          {canManage && row.id !== currentUserId ? (
+            <select
+              value={row.role}
+              disabled={updating.isLoading}
+              onChange={(event) =>
+                void run(() => updateUser({ id: row.id, role: event.target.value }).unwrap())
+              }
+              className="max-w-52 rounded-lg border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800"
+            >
+              {catalogue.map((role) => (
+                <option key={role.code} value={role.code}>
+                  {roleLabel(role)}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <span>{roleLabel({ code: row.role, name: row.role_name })}</span>
+          )}
+          <AccessBadge kind={accessKindOf(row.base_role, row.permissions)} />
         </span>
       ),
     },
     {
-      key: 'edit',
-      header: '',
-      render: (row) =>
-        canManage ? (
-          <span className="flex gap-3">
-            <button onClick={() => setEditing(row)} className="text-xs font-medium text-sky-600">
-              {t('common:action.edit')}
-            </button>
-            {/* Access to this company, not the person: their name stays on
-                every reading and conclusion they signed. */}
-            <button
-              disabled={row.id === currentUserId}
-              title={t('action.revokeHint')}
-              onClick={() => void revoke(row.id)}
-              className="text-xs font-medium text-red-600 disabled:cursor-not-allowed disabled:text-slate-400"
-            >
-              {t('action.revoke')}
-            </button>
-          </span>
-        ) : null,
+      key: 'validation',
+      header: t('column.validation'),
+      render: (row) => (
+        <span className="flex flex-col items-start gap-1">
+          <ValidationBadge validation={validationOf(row.base_role)} short />
+          {isFieldRole(row.base_role) &&
+            (row.has_access_code ? (
+              <span className="whitespace-nowrap text-[11px] text-emerald-700 dark:text-emerald-400">
+                {t('code.issuedOn', {
+                  date: row.access_code_set_at ? formatDate(row.access_code_set_at) : '',
+                })}
+              </span>
+            ) : (
+              <span className="whitespace-nowrap text-[11px] font-medium text-amber-700 dark:text-amber-400">
+                {t('code.none')}
+              </span>
+            ))}
+        </span>
+      ),
+    },
+    {
+      key: 'shift',
+      header: t('column.shift'),
+      render: (row) => {
+        if (!isFieldRole(row.base_role)) return <span className="text-slate-300">—</span>;
+        if (!canManage) {
+          return <span>{row.shift ? t('shift.label', { shift: row.shift }) : t('shift.none')}</span>;
+        }
+        return (
+          <select
+            value={row.shift}
+            onChange={(event) =>
+              void run(() => updateUser({ id: row.id, shift: event.target.value }).unwrap())
+            }
+            className="rounded-lg border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800"
+          >
+            <option value="">{t('shift.none')}</option>
+            {SHIFTS.map((shift) => (
+              <option key={shift} value={shift}>
+                {t('shift.label', { shift })}
+              </option>
+            ))}
+          </select>
+        );
+      },
     },
     {
       key: 'state',
@@ -160,7 +211,7 @@ export default function UsersPage() {
         return (
           <button
             disabled={updating.isLoading}
-            onClick={() => void updateUser({ id: row.id, is_active: !row.is_active })}
+            onClick={() => void run(() => updateUser({ id: row.id, is_active: !row.is_active }).unwrap())}
             className="rounded-lg border border-slate-200 px-2 py-1 text-xs font-medium hover:bg-slate-100 disabled:opacity-40 dark:border-slate-700 dark:hover:bg-slate-800"
           >
             {t(row.is_active ? 'action.deactivate' : 'action.activate')}
@@ -168,9 +219,39 @@ export default function UsersPage() {
         );
       },
     },
+    {
+      key: 'actions',
+      header: '',
+      render: (row) => (
+        <span className="flex justify-end gap-3 whitespace-nowrap">
+          <button onClick={() => setInspecting(row)} className="text-xs font-medium text-sky-600">
+            {t('action.permissions')}
+          </button>
+          {canManage && (
+            <>
+              <button onClick={() => setEditing(row)} className="text-xs font-medium text-sky-600">
+                {t('common:action.edit')}
+              </button>
+              {/* Access to this company, not the person: their name stays on
+                  every reading and conclusion they signed. */}
+              <button
+                disabled={row.id === currentUserId}
+                title={t('action.revokeHint')}
+                onClick={() => void run(() => removeUser(row.id).unwrap())}
+                className="text-xs font-medium text-red-600 disabled:cursor-not-allowed disabled:text-slate-400"
+              >
+                {t('action.revoke')}
+              </button>
+            </>
+          )}
+        </span>
+      ),
+    },
   ];
 
   if (isLoading) return <Spinner label={t('loading')} />;
+
+  const field = loaded.filter((row) => isFieldRole(row.base_role));
 
   return (
     <Page>
@@ -193,15 +274,37 @@ export default function UsersPage() {
           <MetricRow>
             <Metric label={t('metric.total')} value={loaded.length} />
             <Metric
-              label={t('metric.external')}
-              value={loaded.filter((row) => row.is_external).length}
-              hint={t('metric.externalHint')}
+              label={t('metric.field')}
+              value={field.length}
+              hint={t('metric.fieldHint')}
+            />
+            <Metric
+              label={t('metric.withoutCode')}
+              value={field.filter((row) => !row.has_access_code).length}
+              hint={t('metric.withoutCodeHint')}
+              tone={field.some((row) => !row.has_access_code) ? 'warn' : 'good'}
             />
             <Metric
               label={t('metric.inactive')}
               value={loaded.filter((row) => !row.is_active).length}
             />
           </MetricRow>
+
+          <Card title={t('profiles.title')} description={t('profiles.hint')}>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {shown.map((role) => (
+                <ProfileCard
+                  key={role.code}
+                  role={role}
+                  members={loaded.filter((row) => row.role === role.code)}
+                  active={table.active.role === role.code}
+                  onPick={() =>
+                    table.setFilter('role', table.active.role === role.code ? '' : role.code)
+                  }
+                />
+              ))}
+            </div>
+          </Card>
 
           <Card
             title={t('table.title')}
@@ -221,14 +324,14 @@ export default function UsersPage() {
                 onClear={table.clear}
                 activeCount={table.activeCount}
                 total={loaded.length}
-                shown={rows.length}
+                shown={table.filtered.length}
               />
             }
             padded={false}
           >
             <DataTable
               columns={columns}
-              rows={rows}
+              rows={table.filtered}
               rowKey={(row) => row.id}
               empty={<div className="p-6"><EmptyState title={t('empty')} /></div>}
             />
@@ -244,6 +347,47 @@ export default function UsersPage() {
           onClose={() => setEditing(null)}
         />
       )}
+      {inspecting && (
+        <PermissionsPanel
+          user={inspecting}
+          role={roleByCode.get(inspecting.role)}
+          catalogue={roles.data}
+          onClose={() => setInspecting(null)}
+        />
+      )}
     </Page>
+  );
+}
+
+/** One profile of the matrix. Clicking it narrows the table to its people. */
+function ProfileCard({
+  role,
+  members,
+  active,
+  onPick,
+}: {
+  role: RolePermissions;
+  members: CompanyUser[];
+  active: boolean;
+  onPick: () => void;
+}) {
+  const { t } = useTranslation('users');
+  const label = useRoleLabel();
+  return (
+    <button
+      onClick={onPick}
+      aria-pressed={active}
+      className={`rounded-xl border p-4 text-left transition-colors ${
+        active
+          ? 'border-sky-500 bg-sky-50/60 dark:border-sky-600 dark:bg-sky-950/30'
+          : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
+      }`}
+    >
+      <p className="mb-2 font-medium">{label(role)}</p>
+      <RoleSummary role={role} compact />
+      <p className="mt-3 text-xs text-slate-400">
+        {t('profiles.members', { count: members.length })}
+      </p>
+    </button>
   );
 }

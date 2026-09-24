@@ -1,7 +1,7 @@
 {
   "title": "Users",
   "loading": "Loading users…",
-  "subtitle": "An external inspector sees the equipment but only edits the service they performed.",
+  "subtitle": "Who gets in, how, and what they can do. Management reads the plant; a technician writes only his own visits.",
   "external": "external",
   "column": {
     "person": "Person",
@@ -9,7 +9,11 @@
     "role": "Role",
     "scope": "Scope",
     "state": "State",
-    "kind": "Kind"
+    "kind": "Kind",
+    "access": "Access",
+    "shift": "Shift",
+    "code": "Code",
+    "validation": "Validation"
   },
   "role": {
     "company_admin": "Administrator",
@@ -33,13 +37,18 @@
     "activate": "Activate",
     "deactivate": "Deactivate",
     "revoke": "Revoke access",
-    "revokeHint": "Removes access to this company; their signature stays on the reports they wrote"
+    "revokeHint": "Removes access to this company; their signature stays on the reports they wrote",
+    "permissions": "Permissions"
   },
   "metric": {
     "total": "Users",
     "external": "External",
     "externalHint": "contractors with limited access",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "field": "Field staff",
+    "fieldHint": "sign in with a personal code",
+    "withoutCode": "Without a code",
+    "withoutCodeHint": "technicians who cannot sign in yet"
   },
   "table": {
     "title": "Company access",
@@ -62,7 +71,10 @@
     "passwordShort": "Needs at least {{count}} characters",
     "create": "Create access",
     "genericError": "Could not create",
-    "externalNotice": "An external inspector will see the equipment but can only edit the visits they perform, and only while those are open."
+    "externalNotice": "An external inspector will see the equipment but can only edit the visits they perform, and only while those are open.",
+    "shift": "Shift",
+    "shiftHint": "One of the three 8-hour relays",
+    "codeNotice": "After creating them, issue their personal code from “Edit”: it is how they sign in on the plant floor."
   },
   "roles": {
     "title": "Permissions",
@@ -80,7 +92,9 @@
       "change": "edit",
       "delete": "delete",
       "other": "action"
-    }
+    },
+    "base": "Behaviour",
+    "baseHint": "Decides whether it can alter field data, and whose. Permissions decide which screens it sees."
   },
   "edit": {
     "title": "Edit {{name}}",
@@ -91,11 +105,152 @@
     "scopeHint": "With none ticked they see the whole plant. Ticking some restricts them to those.",
     "scopeAll": "Access to the whole plant",
     "scopeSome": "Restricted to {{count}} areas",
-    "revoke": "Revoke access"
+    "revoke": "Revoke access",
+    "ownRole": "You cannot change your own role"
   },
   "filter": {
     "search": "Name or email",
     "allRoles": "All roles",
-    "allKinds": "Internal and external"
+    "allKinds": "Internal and external",
+    "allAccess": "All access types",
+    "allShifts": "All shifts"
+  },
+  "access": {
+    "read": "Read only",
+    "read_audit": "Read only + audit",
+    "read_write": "Read and write",
+    "admin": "Administration"
+  },
+  "validation": {
+    "corporate": "Corporate credential",
+    "personal_code": "Personal access code"
+  },
+  "base": {
+    "client_viewer": "Read only",
+    "planner": "Planning (no field data)",
+    "technician": "Field technician",
+    "external_inspector": "External inspector",
+    "engineer": "Engineering",
+    "company_admin": "Company administration"
+  },
+  "behaviour": {
+    "client_viewer": "Sees the whole plant and cannot alter any field data.",
+    "planner": "Can move the plan (reschedule orders); cannot alter any field data.",
+    "technician": "Records readings and activities only on visits he is part of, and only while they are open.",
+    "external_inspector": "Contractor: sees the asset and writes only his own visit while it is open.",
+    "engineer": "Corrects and closes any visit in scope; signs reports.",
+    "company_admin": "Runs the company: users, roles and any visit in scope.",
+    "platform_admin": "Platform administration."
+  },
+  "summary": {
+    "basedOn": "Behaves as: {{base}}",
+    "permissionCount_one": "{{count}} permission",
+    "permissionCount_other": "{{count}} permissions"
+  },
+  "profiles": {
+    "title": "Access profiles",
+    "hint": "The plant's access matrix. Pick a profile to see its people.",
+    "members_one": "{{count}} person",
+    "members_other": "{{count}} people"
+  },
+  "shift": {
+    "none": "No shift",
+    "label": "Shift {{shift}}"
+  },
+  "code": {
+    "title": "Access code",
+    "none": "No code",
+    "issuedOn": "Issued {{date}}",
+    "issuedAt": "Issued on {{when}}",
+    "onlyOnce": "Write it down now: it will not be shown again. If lost, issue another.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "hint": "The technician signs in with this code instead of e-mail and password. Issuing a new one invalidates the old.",
+    "issue": "Issue code",
+    "reissue": "Issue a new code",
+    "revoke": "Revoke"
+  },
+  "panel": {
+    "title": "What {{name}} can do",
+    "hint": "Effective permissions of their role, grouped by module.",
+    "fieldData": "Field data",
+    "nothing": "This role has no permissions."
+  },
+  "module": {
+    "assets": "Assets",
+    "blueprints": "Blueprints",
+    "core": "System",
+    "diagnostics": "Diagnostics",
+    "licensing": "Licence",
+    "measurements": "Measurements",
+    "media": "Media",
+    "nameplate": "Nameplate",
+    "oil_analysis": "Oil analysis",
+    "operating_data": "Operating data",
+    "reports": "Reports",
+    "security": "Users and permissions",
+    "services": "Services",
+    "summaries": "Dashboards",
+    "thermography": "Thermography",
+    "thresholds": "Thresholds",
+    "ultrasound": "Ultrasound",
+    "vibration": "Vibration"
+  },
+  "audit": {
+    "title": "Audit",
+    "subtitle": "Who changed what, and when. Nothing here can be edited.",
+    "table": "Change log",
+    "readOnly": "Read only: an audit you can edit audits nothing.",
+    "loading": "Loading audit…",
+    "allFamilies": "All changes",
+    "everyone": "Everyone",
+    "empty": "No changes recorded",
+    "emptyHint": "Recorded and corrected readings, access changes and code sign-ins show up here.",
+    "more": "Load older",
+    "anonymous": "Unidentified",
+    "family": {
+      "reading": "Readings",
+      "user": "Access",
+      "role": "Roles",
+      "auth": "Sign-ins"
+    },
+    "action": {
+      "reading.captured": "Recorded readings",
+      "reading.corrected": "Corrected a reading",
+      "user.invited": "Granted access",
+      "user.access_changed": "Changed an access",
+      "user.access_code_issued": "Issued a code",
+      "user.access_code_revoked": "Revoked a code",
+      "role.created": "Created a role",
+      "role.permissions_changed": "Changed permissions",
+      "auth.code_login": "Signed in by code",
+      "auth.code_login_failed": "Code refused"
+    },
+    "field": {
+      "readings": "readings",
+      "worst": "worst state",
+      "equipment": "machine",
+      "value": "value",
+      "status": "state",
+      "role": "role",
+      "shift": "shift",
+      "is_active": "active",
+      "email": "e-mail",
+      "base_role": "behaviour",
+      "permissions": "permissions",
+      "added": "added",
+      "removed": "removed"
+    },
+    "value": {
+      "operational": "Operational",
+      "alarm": "Alarm",
+      "shutdown": "Shutdown",
+      "true": "yes",
+      "false": "no"
+    }
+  },
+  "validationShort": {
+    "corporate": "Credential",
+    "personal_code": "Personal code"
   }
 }

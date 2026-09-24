@@ -24,9 +24,13 @@ export const sessionApi = baseApi.injectEndpoints({
     }),
     login: build.mutation<{ access: string; refresh: string }, { email: string; password: string }>({
       query: (body) => ({ url: 'auth/login/', method: 'POST', body }),
+    }),
+    /** A field technician's personal code, instead of e-mail and password. */
+    codeLogin: build.mutation<{ access: string; refresh: string }, { code: string }>({
+      query: (body) => ({ url: 'auth/code-login/', method: 'POST', body }),
       invalidatesTags: ['Bootstrap'],
     }),
   }),
 });
 
-export const { useBootstrapQuery, useLoginMutation } = sessionApi;
+export const { useBootstrapQuery, useLoginMutation, useCodeLoginMutation } = sessionApi;

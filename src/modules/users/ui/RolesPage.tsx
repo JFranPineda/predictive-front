@@ -5,18 +5,19 @@ import { useAppSelector } from '@app/hooks';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { ErrorState } from '@shared/ui/ErrorState';
-import { FormField, TextInput } from '@shared/ui/Form';
+import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
-import { ACTION_ORDER, type RolePermissions } from '../domain/roles';
+import { ACTION_ORDER, BASE_ROLES, type RolePermissions } from '../domain/roles';
 import {
   useCreateRoleMutation,
   useDeleteRoleMutation,
   useRolesQuery,
   useUpdateRoleMutation,
 } from '../infrastructure/endpoints';
+import { RoleSummary } from './RoleSummary';
 import { readUserError } from './UserFormModal';
 
 /**
@@ -40,6 +41,9 @@ export default function RolesPage() {
   const [granted, setGranted] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [newRole, setNewRole] = useState('');
+  // Every company role says how it stands towards field data; read-only is
+  // the default so that forgetting to choose never grants write access.
+  const [newBase, setNewBase] = useState<string>('client_viewer');
 
   const role: RolePermissions | undefined =
     data?.roles.find((row) => row.id === selected) ?? data?.roles[0];
@@ -101,12 +105,23 @@ export default function RolesPage() {
                     placeholder={t('roles.newPlaceholder')}
                   />
                 </FormField>
+                <FormField label={t('roles.base')} hint={t('roles.baseHint')}>
+                  <Select value={newBase} onChange={(event) => setNewBase(event.target.value)}>
+                    {BASE_ROLES.map((base) => (
+                      <option key={base} value={base}>
+                        {t(`base.${base}`)}
+                      </option>
+                    ))}
+                  </Select>
+                </FormField>
                 <Button
                   variant="primary"
                   disabled={!newRole.trim()}
                   onClick={() =>
                     void run(async () => {
-                      await createRole({ name: newRole, permissions: [] }).unwrap();
+                      await createRole({
+                        name: newRole, permissions: [], base_role: newBase,
+                      }).unwrap();
                       setNewRole('');
                     })
                   }
@@ -147,11 +162,33 @@ export default function RolesPage() {
                 )
               }
             >
+              <div className="mb-5 space-y-3">
+                <RoleSummary role={{ ...role, permissions: [...granted] }} />
+                {canManage && !role.is_system && (
+                  <FormField label={t('roles.base')} hint={t('roles.baseHint')}>
+                    <Select
+                      value={role.base_role}
+                      onChange={(event) =>
+                        void run(() =>
+                          updateRole({ id: role.id, base_role: event.target.value }).unwrap(),
+                        )
+                      }
+                    >
+                      {BASE_ROLES.map((base) => (
+                        <option key={base} value={base}>
+                          {t(`base.${base}`)}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormField>
+                )}
+                <p className="text-xs text-slate-500">{t(`behaviour.${role.base_role}`)}</p>
+              </div>
               <div className="space-y-5">
                 {data?.modules.map((module) => (
                   <section key={module.code}>
                     <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-400">
-                      {module.code}
+                      {t(`module.${module.code}`, { defaultValue: module.code })}
                     </h3>
                     <div className="grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
                       {[...module.permissions]

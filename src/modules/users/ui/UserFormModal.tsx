@@ -1,34 +1,52 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
 
-import { ROLES } from '../domain/roles';
-import { useCreateUserMutation } from '../infrastructure/endpoints';
+import { isFieldRole, SHIFTS, type RolePermissions } from '../domain/roles';
+import { useCreateUserMutation, useRolesQuery } from '../infrastructure/endpoints';
+import { RoleSummary, useRoleLabel } from './RoleSummary';
 
 const MIN_PASSWORD = 10;
 
+/**
+ * Brings a person into the company.
+ *
+ * The roles on offer are the company's own, not a fixed list: a list pinned
+ * to the seven shipped roles is what made every profile the company built
+ * impossible to give to anybody.
+ */
 export function UserFormModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation(['users', 'common']);
+  const roles = useRolesQuery();
   const [create, { isLoading }] = useCreateUserMutation();
+  const roleLabel = useRoleLabel();
   const [error, setError] = useState<string | null>(null);
   const [draft, setDraft] = useState({
     email: '',
     first_name: '',
     last_name: '',
     initials: '',
-    role: 'technician',
+    role: '',
     password: '',
+    shift: '',
   });
 
+  const available = roles.data?.roles ?? [];
+  const chosen: RolePermissions | undefined = useMemo(
+    () => available.find((role) => role.code === draft.role) ?? available[0],
+    [available, draft.role],
+  );
+  const field = chosen ? isFieldRole(chosen.base_role) : false;
   const passwordTooShort = draft.password.length > 0 && draft.password.length < MIN_PASSWORD;
 
   async function submit() {
+    if (!chosen) return;
     setError(null);
     try {
-      await create(draft).unwrap();
+      await create({ ...draft, role: chosen.code, shift: field ? draft.shift : '' }).unwrap();
       onClose();
     } catch (cause) {
       setError(readUserError(cause) ?? t('form.genericError'));
@@ -46,8 +64,7 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
           <Button
             variant="primary"
             disabled={
-              isLoading ||
-              !draft.email.includes('@') ||
+              isLoading || !chosen || !draft.email.includes('@') ||
               draft.password.length < MIN_PASSWORD
             }
             onClick={() => void submit()}
@@ -71,12 +88,12 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
 
         <FormField label={t('form.role')} hint={t('form.roleHint')}>
           <Select
-            value={draft.role}
+            value={chosen?.code ?? ''}
             onChange={(event) => setDraft({ ...draft, role: event.target.value })}
           >
-            {ROLES.map((role) => (
-              <option key={role} value={role}>
-                {t(`role.${role}`)}
+            {available.map((role) => (
+              <option key={role.code} value={role.code}>
+                {roleLabel(role)}
               </option>
             ))}
           </Select>
@@ -116,11 +133,30 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
             onChange={(event) => setDraft({ ...draft, password: event.target.value })}
           />
         </FormField>
+
+        {field && (
+          <FormField label={t('form.shift')} hint={t('form.shiftHint')}>
+            <Select
+              value={draft.shift}
+              onChange={(event) => setDraft({ ...draft, shift: event.target.value })}
+            >
+              <option value="">{t('shift.none')}</option>
+              {SHIFTS.map((shift) => (
+                <option key={shift} value={shift}>
+                  {t('shift.label', { shift })}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+        )}
       </div>
 
-      {draft.role === 'external_inspector' && (
-        <p className="rounded-lg bg-amber-50 p-3 text-xs text-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
-          {t('form.externalNotice')}
+      {/* What is being granted, read before it is granted. */}
+      {chosen && <RoleSummary role={chosen} />}
+
+      {field && (
+        <p className="rounded-lg bg-sky-50 p-3 text-xs text-sky-900 dark:bg-sky-950/40 dark:text-sky-200">
+          {t('form.codeNotice')}
         </p>
       )}
     </Modal>
@@ -129,6 +165,8 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
 
 export function readUserError(cause: unknown): string | null {
   const data = (cause as { data?: unknown })?.data;
+  // DRF's ValidationError arrives as a bare list of messages.
+  if (Array.isArray(data) && typeof data[0] === 'string') return data[0];
   if (data && typeof data === 'object') {
     const payload = data as Record<string, unknown>;
     if (typeof payload.title === 'string') return payload.title;

@@ -1,7 +1,7 @@
 {
   "title": "Usuarios",
   "loading": "Cargando usuarios…",
-  "subtitle": "Un inspector externo ve el equipo pero solo edita el servicio que ejecutó él.",
+  "subtitle": "Quién entra, cómo, y qué puede hacer. La gerencia lee la planta; el técnico escribe solo sus visitas.",
   "external": "externo",
   "column": {
     "person": "Persona",
@@ -9,7 +9,11 @@
     "role": "Rol",
     "scope": "Alcance",
     "state": "Estado",
-    "kind": "Tipo"
+    "kind": "Tipo",
+    "access": "Acceso",
+    "shift": "Turno",
+    "code": "Código",
+    "validation": "Validación"
   },
   "role": {
     "company_admin": "Administrador",
@@ -33,13 +37,18 @@
     "activate": "Activar",
     "deactivate": "Desactivar",
     "revoke": "Quitar acceso",
-    "revokeHint": "Quita el acceso a esta empresa; su firma sigue en los reportes que escribió"
+    "revokeHint": "Quita el acceso a esta empresa; su firma sigue en los reportes que escribió",
+    "permissions": "Permisos"
   },
   "metric": {
     "total": "Usuarios",
     "external": "Externos",
     "externalHint": "contratistas con acceso limitado",
-    "inactive": "Inactivos"
+    "inactive": "Inactivos",
+    "field": "Personal de campo",
+    "fieldHint": "entran con código único",
+    "withoutCode": "Sin código",
+    "withoutCodeHint": "técnicos que aún no pueden entrar"
   },
   "table": {
     "title": "Acceso a la compañía",
@@ -62,7 +71,10 @@
     "passwordShort": "Necesita al menos {{count}} caracteres",
     "create": "Crear acceso",
     "genericError": "No se pudo crear",
-    "externalNotice": "Un inspector externo verá los equipos pero solo podrá editar las visitas que él mismo ejecute, y solo mientras estén abiertas."
+    "externalNotice": "Un inspector externo verá los equipos pero solo podrá editar las visitas que él mismo ejecute, y solo mientras estén abiertas.",
+    "shift": "Turno",
+    "shiftHint": "Uno de los tres relevos de 8 horas",
+    "codeNotice": "Tras crearlo, emite su código único desde «Editar»: es con lo que entrará en planta."
   },
   "roles": {
     "title": "Permisos",
@@ -80,7 +92,9 @@
       "change": "editar",
       "delete": "eliminar",
       "other": "acción"
-    }
+    },
+    "base": "Comportamiento",
+    "baseHint": "Define si puede alterar datos de campo, y de quién. Los permisos definen qué pantallas ve."
   },
   "edit": {
     "title": "Editar a {{name}}",
@@ -91,11 +105,152 @@
     "scopeHint": "Sin marcar ninguna ve toda la planta. Marcar algunas lo restringe a esas.",
     "scopeAll": "Acceso a toda la planta",
     "scopeSome": "Restringido a {{count}} áreas",
-    "revoke": "Quitar acceso"
+    "revoke": "Quitar acceso",
+    "ownRole": "No puedes cambiar tu propio rol"
   },
   "filter": {
     "search": "Nombre o correo",
     "allRoles": "Todos los roles",
-    "allKinds": "Internos y externos"
+    "allKinds": "Internos y externos",
+    "allAccess": "Todos los accesos",
+    "allShifts": "Todos los turnos"
+  },
+  "access": {
+    "read": "Solo lectura",
+    "read_audit": "Solo lectura + auditoría",
+    "read_write": "Lectura y escritura",
+    "admin": "Administración"
+  },
+  "validation": {
+    "corporate": "Credencial corporativa",
+    "personal_code": "Código único personalizado"
+  },
+  "base": {
+    "client_viewer": "Solo lectura",
+    "planner": "Planificación (sin datos de campo)",
+    "technician": "Técnico de campo",
+    "external_inspector": "Inspector externo",
+    "engineer": "Ingeniería",
+    "company_admin": "Administración de la compañía"
+  },
+  "behaviour": {
+    "client_viewer": "Ve toda la planta y no puede alterar ningún dato de campo.",
+    "planner": "Puede mover el plan (reprogramar órdenes); no puede alterar ningún dato de campo.",
+    "technician": "Registra lecturas y actividades solo en las visitas en que participa, y solo mientras estén abiertas.",
+    "external_inspector": "Contratista: ve el activo y escribe solo su propia visita mientras esté abierta.",
+    "engineer": "Corrige y cierra cualquier visita de su alcance; firma informes.",
+    "company_admin": "Administra la compañía: usuarios, roles y cualquier visita de su alcance.",
+    "platform_admin": "Administración de la plataforma."
+  },
+  "summary": {
+    "basedOn": "Se comporta como: {{base}}",
+    "permissionCount_one": "{{count}} permiso",
+    "permissionCount_other": "{{count}} permisos"
+  },
+  "profiles": {
+    "title": "Perfiles de acceso",
+    "hint": "La matriz de la planta. Pulsa un perfil para ver a sus personas.",
+    "members_one": "{{count}} persona",
+    "members_other": "{{count}} personas"
+  },
+  "shift": {
+    "none": "Sin turno",
+    "label": "Turno {{shift}}"
+  },
+  "code": {
+    "title": "Código de acceso",
+    "none": "Sin código",
+    "issuedOn": "Emitido {{date}}",
+    "issuedAt": "Emitido el {{when}}",
+    "onlyOnce": "Anótalo ahora: no se volverá a mostrar. Si se pierde, emite otro.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "hint": "El técnico entra con este código en vez de correo y contraseña. Emitir uno nuevo invalida el anterior.",
+    "issue": "Emitir código",
+    "reissue": "Emitir código nuevo",
+    "revoke": "Revocar"
+  },
+  "panel": {
+    "title": "Qué puede hacer {{name}}",
+    "hint": "Permisos efectivos de su rol, agrupados por módulo.",
+    "fieldData": "Datos de campo",
+    "nothing": "Este rol no tiene permisos asignados."
+  },
+  "module": {
+    "assets": "Activos",
+    "blueprints": "Planos",
+    "core": "Sistema",
+    "diagnostics": "Diagnóstico",
+    "licensing": "Licencia",
+    "measurements": "Mediciones",
+    "media": "Multimedia",
+    "nameplate": "Placa",
+    "oil_analysis": "Análisis de aceite",
+    "operating_data": "Datos operativos",
+    "reports": "Informes",
+    "security": "Usuarios y permisos",
+    "services": "Servicios",
+    "summaries": "Tableros",
+    "thermography": "Termografía",
+    "thresholds": "Umbrales",
+    "ultrasound": "Ultrasonido",
+    "vibration": "Vibraciones"
+  },
+  "audit": {
+    "title": "Auditoría",
+    "subtitle": "Quién cambió qué y cuándo. Nada de aquí se puede editar.",
+    "table": "Registro de cambios",
+    "readOnly": "Solo lectura: una auditoría que se puede editar no audita nada.",
+    "loading": "Cargando auditoría…",
+    "allFamilies": "Todos los cambios",
+    "everyone": "Todas las personas",
+    "empty": "Sin cambios registrados",
+    "emptyHint": "Aquí aparecen las lecturas registradas y corregidas, los cambios de acceso y los inicios de sesión por código.",
+    "more": "Cargar anteriores",
+    "anonymous": "Sin identificar",
+    "family": {
+      "reading": "Lecturas",
+      "user": "Accesos",
+      "role": "Roles",
+      "auth": "Inicios de sesión"
+    },
+    "action": {
+      "reading.captured": "Registró lecturas",
+      "reading.corrected": "Corrigió una lectura",
+      "user.invited": "Dio acceso",
+      "user.access_changed": "Cambió un acceso",
+      "user.access_code_issued": "Emitió un código",
+      "user.access_code_revoked": "Revocó un código",
+      "role.created": "Creó un rol",
+      "role.permissions_changed": "Cambió permisos",
+      "auth.code_login": "Entró con código",
+      "auth.code_login_failed": "Código rechazado"
+    },
+    "field": {
+      "readings": "lecturas",
+      "worst": "peor estado",
+      "equipment": "equipo",
+      "value": "valor",
+      "status": "estado",
+      "role": "rol",
+      "shift": "turno",
+      "is_active": "activo",
+      "email": "correo",
+      "base_role": "comportamiento",
+      "permissions": "permisos",
+      "added": "añadidos",
+      "removed": "retirados"
+    },
+    "value": {
+      "operational": "Operativo",
+      "alarm": "Alarma",
+      "shutdown": "Parada",
+      "true": "sí",
+      "false": "no"
+    }
+  },
+  "validationShort": {
+    "corporate": "Credencial",
+    "personal_code": "Código único"
   }
 }

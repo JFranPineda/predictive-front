@@ -34,7 +34,14 @@
     "signIn": "Sign in",
     "failed": "Could not sign in",
     "signOut": "Sign out",
-    "sessionExpired": "Your session ended. Please sign in again."
+    "sessionExpired": "Your session ended. Please sign in again.",
+    "mode": {
+      "corporate": "Corporate credential",
+      "code": "Technician code"
+    },
+    "codeHint": "The 8 characters your supervisor gave you. Not case-sensitive.",
+    "codeFailed": "Invalid code",
+    "throttled": "Too many attempts. Wait a minute."
   },
   "language": {
     "title": "Language",

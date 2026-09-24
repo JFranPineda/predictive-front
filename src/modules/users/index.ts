@@ -20,6 +20,11 @@ const definition: ModuleDefinition = {
       component: lazy(() => import('./ui/UsersPage')),
       permission: 'security.view_user',
     },
+    {
+      path: '/settings/audit',
+      component: lazy(() => import('./ui/AuditPage')),
+      permission: 'core.view_audit',
+    },
   ],
   translations: { namespace: 'users', bundle: { es, en } },
   registerEndpoints: () => void usersApi,
