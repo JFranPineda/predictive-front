@@ -22,7 +22,9 @@ export function Card({
     >
       {(title || actions) && (
         <header className="flex flex-wrap items-start gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
-          <div className="min-w-0 flex-1">
+          {/* A floor on the title is what lets a wide toolbar wrap under it:
+              with `min-w-0` the title shrank to one word per line instead. */}
+          <div className="min-w-48 flex-1">
             {title && <h2 className="font-medium">{title}</h2>}
             {description && <p className="mt-0.5 text-xs text-slate-500">{description}</p>}
           </div>
