@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { useTechniquesQuery } from '@modules/thresholds';
+import { byFamily, useTechniquesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 
 const CONTROL =
@@ -41,10 +41,14 @@ export function OrderFilters({
         className={CONTROL}
       >
         <option value="">{t('orders.allTechniques')}</option>
-        {techniques.data?.map((technique) => (
-          <option key={technique.code} value={technique.code}>
-            {technique.name}
-          </option>
+        {byFamily(techniques.data ?? []).map(([family, rows]) => (
+          <optgroup key={family} label={t(`common:family.${family}`)}>
+            {rows.map((technique) => (
+              <option key={technique.code} value={technique.code}>
+                {technique.name}
+              </option>
+            ))}
+          </optgroup>
         ))}
       </select>
       <select

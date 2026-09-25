@@ -46,6 +46,8 @@ export interface SummaryNode {
 export interface TechniqueSummary {
   technique_code: string;
   technique_name: string;
+  /** MPd Predictivo or END: tabs are grouped by it (V3-19). */
+  technique_family: 'mpd' | 'ndt' | 'internal';
   generated_at: string;
   nodes: SummaryNode[];
 }

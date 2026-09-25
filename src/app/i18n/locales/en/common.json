@@ -85,5 +85,10 @@
       "plants": "plants",
       "users": "users"
     }
+  },
+  "family": {
+    "mpd": "Predictive maintenance",
+    "ndt": "NDT · Non-destructive testing",
+    "internal": "Internal"
   }
 }

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatDateTime, formatNumber, formatPercent } from '@app/i18n/format';
+import { byFamily } from '@modules/thresholds';
 import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -50,21 +51,30 @@ export default function PlantSummaryPage() {
     <Page>
       <PageHeader title={t('title')} description={t('subtitle')}>
         {summaries.length > 1 && (
-          <div className="flex gap-2">
-            {summaries.map((summary) => (
-              <button
-                key={summary.technique_code}
-                onClick={() => setTechnique(summary.technique_code)}
-                className={[
-                  'rounded-lg px-3 py-1.5 text-sm',
-                  summary.technique_code === active?.technique_code
-                    ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                    : 'border border-slate-300 dark:border-slate-700',
-                ].join(' ')}
-              >
-                {summary.technique_name}
-              </button>
-            ))}
+          <div className="space-y-2">
+            {byFamily(summaries.map((summary) => ({ ...summary, family: summary.technique_family }))).map(
+              ([family, rows]) => (
+                <div key={family} className="flex flex-wrap items-center gap-2">
+                  <span className="w-full text-[11px] font-medium uppercase tracking-wider text-slate-400 sm:w-40">
+                    {t(`common:family.${family}`)}
+                  </span>
+                  {rows.map((summary) => (
+                    <button
+                      key={summary.technique_code}
+                      onClick={() => setTechnique(summary.technique_code)}
+                      className={[
+                        'rounded-lg px-3 py-1.5 text-sm',
+                        summary.technique_code === active?.technique_code
+                          ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                          : 'border border-slate-300 dark:border-slate-700',
+                      ].join(' ')}
+                    >
+                      {summary.technique_name}
+                    </button>
+                  ))}
+                </div>
+              ),
+            )}
           </div>
         )}
       </PageHeader>

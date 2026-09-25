@@ -18,9 +18,13 @@ export interface MachineClass {
   description: string;
 }
 
+export type TechniqueFamily = 'mpd' | 'ndt' | 'internal';
+
 export interface TechniqueRef {
   code: string;
   name: string;
+  /** MPd Predictivo, END, or internal (never ordered). */
+  family: TechniqueFamily;
 }
 
 export interface Standard {

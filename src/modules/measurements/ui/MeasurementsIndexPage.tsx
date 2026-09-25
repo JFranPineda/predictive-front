@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { formatDate } from '@app/i18n/format';
-import { useMagnitudesQuery, useTechniquesQuery } from '@modules/thresholds';
+import { byFamily, useMagnitudesQuery, useTechniquesQuery } from '@modules/thresholds';
 import { useDebouncedValue } from '@shared/hooks/useDebouncedValue';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -112,20 +112,27 @@ export default function MeasurementsIndexPage() {
   return (
     <Page>
       <PageHeader title={t('index.title')} description={t('index.subtitle')}>
-        <div className="flex flex-wrap gap-2">
-          {techniques.data?.map((row) => (
-            <button
-              key={row.code}
-              onClick={() => pick(row.code)}
-              className={[
-                'rounded-lg px-3 py-1.5 text-sm',
-                row.code === technique
-                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                  : 'border border-slate-300 dark:border-slate-700',
-              ].join(' ')}
-            >
-              {row.name}
-            </button>
+        <div className="space-y-2">
+          {byFamily(techniques.data ?? []).map(([family, rows]) => (
+            <div key={family} className="flex flex-wrap items-center gap-2">
+              <span className="w-full text-[11px] font-medium uppercase tracking-wider text-slate-400 sm:w-40">
+                {t(`common:family.${family}`)}
+              </span>
+              {rows.map((row) => (
+                <button
+                  key={row.code}
+                  onClick={() => pick(row.code)}
+                  className={[
+                    'rounded-lg px-3 py-1.5 text-sm',
+                    row.code === technique
+                      ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                      : 'border border-slate-300 dark:border-slate-700',
+                  ].join(' ')}
+                >
+                  {row.name}
+                </button>
+              ))}
+            </div>
           ))}
         </div>
       </PageHeader>

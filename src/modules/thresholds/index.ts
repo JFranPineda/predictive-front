@@ -14,7 +14,8 @@ export {
   useTechniquesQuery,
   useUnitsQuery,
 } from './infrastructure/endpoints';
-export type { ConditionStatus, Magnitude, Standard, UnitRef } from './domain/types';
+export { byFamily } from './domain/families';
+export type { ConditionStatus, Magnitude, Standard, TechniqueFamily, TechniqueRef, UnitRef } from './domain/types';
 
 const definition: ModuleDefinition = {
   code: 'thresholds',

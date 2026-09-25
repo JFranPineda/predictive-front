@@ -41,3 +41,19 @@ describe('operating values at their precision (V3-30)', () => {
     expect(stepFor(2)).toBe('0.01');
   });
 });
+
+describe('service families (V3-19)', () => {
+  it('groups MPd before END and leaves internal services out', async () => {
+    const { byFamily } = await import('@modules/thresholds');
+    const groups = byFamily([
+      { code: 'ndt_thickness', family: 'ndt' as const },
+      { code: 'vibration', family: 'mpd' as const },
+      { code: 'maintenance', family: 'internal' as const },
+      { code: 'alignment', family: 'mpd' as const },
+    ]);
+    expect(groups.map(([family, rows]) => [family, rows.map((row) => row.code)])).toEqual([
+      ['mpd', ['vibration', 'alignment']],
+      ['ndt', ['ndt_thickness']],
+    ]);
+  });
+});

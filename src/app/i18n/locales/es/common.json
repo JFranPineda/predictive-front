@@ -85,5 +85,10 @@
       "plants": "plantas",
       "users": "usuarios"
     }
+  },
+  "family": {
+    "mpd": "MPd Predictivo",
+    "ndt": "END · Ensayos no destructivos",
+    "internal": "Interno"
   }
 }

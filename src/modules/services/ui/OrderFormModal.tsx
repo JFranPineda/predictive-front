@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePlantsQuery } from '@modules/assets';
-import { useTechniquesQuery } from '@modules/thresholds';
+import { byFamily, useTechniquesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -107,10 +107,14 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
             disabled={Boolean(order)}
             onChange={(event) => set({ technique: event.target.value })}
           >
-            {techniques.data?.map((technique) => (
-              <option key={technique.code} value={technique.code}>
-                {technique.name}
-              </option>
+            {byFamily(techniques.data ?? []).map(([family, rows]) => (
+              <optgroup key={family} label={t(`common:family.${family}`)}>
+                {rows.map((technique) => (
+                  <option key={technique.code} value={technique.code}>
+                    {technique.name}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </Select>
         </FormField>
