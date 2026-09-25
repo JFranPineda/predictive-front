@@ -16,8 +16,13 @@ const definition: ModuleDefinition = {
       permission: 'measurements.view_reading',
     },
     {
-      path: '/measurements/:equipmentId',
+      path: '/measurements/groups/:groupId',
       component: lazy(() => import('./ui/RecordOfValuesPage')),
+      permission: 'measurements.view_reading',
+    },
+    {
+      path: '/measurements/:equipmentId',
+      component: lazy(() => import('./ui/LegacyEquipmentRedirect')),
       permission: 'measurements.view_reading',
     },
     {
@@ -31,8 +36,13 @@ const definition: ModuleDefinition = {
       permission: 'measurements.add_reading',
     },
     {
-      path: '/measurements/:equipmentId/spectra',
+      path: '/measurements/groups/:groupId/spectra',
       component: lazy(() => import('./ui/SpectraPage')),
+      permission: 'measurements.view_reading',
+    },
+    {
+      path: '/measurements/:equipmentId/spectra',
+      component: lazy(() => import('./ui/LegacySpectraRedirect')),
       permission: 'measurements.view_reading',
     },
     {

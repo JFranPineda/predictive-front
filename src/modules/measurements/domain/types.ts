@@ -18,7 +18,12 @@ export interface Spectrum {
   id: number;
   point_id: number;
   point_label: string;
+  point_number: number;
+  point_axis: string;
   equipment_id: number;
+  equipment_name: string;
+  /** The machine's slot in its train: spectra list in the train's order. */
+  component_order: number;
   taken_at: string;
   spectrum_type: string;
   visit_id: number | null;
@@ -35,6 +40,11 @@ export interface Spectrum {
   thumb_url: string | null;
   caption: string;
   diagnosis: { id: number; code: string; name: string }[];
+}
+
+export interface SpectrumPage {
+  items: Spectrum[];
+  next_cursor: string | null;
 }
 
 export interface SpectrumCurve {

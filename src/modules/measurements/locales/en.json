@@ -9,29 +9,36 @@
   },
   "index": {
     "title": "Measurements",
-    "subtitle": "Pick the service to see what it measures and which equipment it covers.",
-    "search": "TAG or name",
-    "loading": "Loading equipment…",
+    "subtitle": "Pick the service to see what it measures and which trains it applies to.",
+    "search": "Train or code",
+    "loading": "Loading trains…",
     "open": "View trend",
     "points": "{{count}} points",
-    "pick": "Pick an equipment",
+    "pick": "Pick a train",
     "column": {
-      "tag": "TAG",
-      "equipment": "Equipment",
       "group": "Train",
       "area": "Area",
-      "status": "Status"
+      "status": "Status",
+      "kind": "Kind",
+      "points": "Points measured",
+      "lastIntervention": "Last intervention"
     },
-    "empty": "No equipment matches",
+    "empty": "No train has readings of this service",
     "format": "{{service}} format",
     "formatHint": "What this service records at each point. Its evidence is {{evidence}}.",
     "noMagnitudes": "This service has no magnitudes configured",
-    "noMagnitudesHint": "Create them in Settings → Magnitudes.",
+    "noMagnitudesHint": "Create them in Settings → Measurement types.",
     "metric": {
-      "equipment": "Equipment",
-      "magnitudes": "Magnitudes",
-      "areas": "Areas"
-    }
+      "magnitudes": "Measurement types",
+      "areas": "Areas",
+      "trains": "Trains"
+    },
+    "lastInterventionHint": "The most recent date anyone intervened on the train: a visit of any service, or maintenance.",
+    "interventionBy": "{{what}} · {{who}}",
+    "order": "Sort",
+    "byName": "By name",
+    "byIntervention": "Latest intervention first",
+    "more": "Load more trains"
   },
   "notMeasured": "could not be measured",
   "trend": {
@@ -48,8 +55,8 @@
     "saveFailed": "Some column could not be saved",
     "legend": "One row per point, one column per round. Only open rounds you performed can be edited; the padlock marks the closed ones. Clearing a cell means “could not be measured”, not zero.",
     "scope": {
-      "group": "Whole train",
-      "equipment": "This equipment only"
+      "label": "What to show",
+      "group": "The whole train"
     },
     "column": {
       "component": "Component",
@@ -58,7 +65,8 @@
     },
     "export": "Export to Excel",
     "exporting": "Building…",
-    "exportFailed": "Could not build the file"
+    "exportFailed": "Could not build the file",
+    "notFound": "That equipment does not exist or is out of your reach."
   },
   "side": {
     "free_end": "Free end",
@@ -84,19 +92,19 @@
     "newHint": "A reading taken with an expired instrument cannot be defended"
   },
   "spectra": {
-    "title": "Spectra",
-    "subtitle": "The instrument's capture, the numbers, or both",
+    "title": "Train spectra",
+    "subtitle": "Every point of the train, in train order. Open one to see the capture and edit its finding.",
     "empty": "This machine has no spectra",
-    "emptyHint": "Import the CSV the instrument exports",
+    "emptyHint": "Upload the image the software exports, the CSV, or both.",
     "loading": "Loading spectra…",
     "loadingCurve": "Loading the curve…",
     "import": "Import a spectrum",
-    "importHint": "Takes the SEMAPI and SKF CSV, preamble and decimal comma included",
+    "importHint": "Upload the image the software exports (for instance SKF's waterfall), the CSV, or both.",
     "point": "Point",
     "typeLabel": "Type",
     "rpm": "RPM at capture",
     "file": "File",
-    "fileHint": "Two columns: frequency and amplitude",
+    "fileHint": "SEMAPI or SKF CSV: two columns, frequency and amplitude",
     "upload": "Import",
     "uploadFailed": "Could not import the file",
     "openCurve": "View the curve ({{lines}} lines)",
@@ -109,8 +117,22 @@
       "envelope": "Envelope",
       "acceleration": "Acceleration",
       "demodulation": "Demodulation",
-      "waveform": "Waveform"
-    }
+      "waveform": "Waveform",
+      "waterfall": "Waterfall"
+    },
+    "capture": "Capture (image)",
+    "captureHint": "PNG or JPG as the software exports it",
+    "needOne": "Upload at least a capture or a data file",
+    "imported": "Spectrum imported",
+    "finding": "Finding",
+    "findingHint": "What it shows. In the report, the text under the capture.",
+    "noFinding": "No finding written",
+    "numericOnly": "Data only · {{lines}} lines",
+    "openCapture": "Open capture",
+    "confirmDelete": "Delete this spectrum?",
+    "diagnosis": "Diagnosis",
+    "curve": "Spectrum curve",
+    "more": "Load more spectra"
   },
   "capture": {
     "title": "Round capture · {{equipment}}",

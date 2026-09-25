@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { formatDate } from '@app/i18n/format';
 import { Button } from '@shared/ui/Button';
+import { Select } from '@shared/ui/Form';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Page } from '@shared/ui/Page';
@@ -20,7 +21,8 @@ import {
   type MatrixCell,
   type MatrixColumn,
 } from '../domain/matrix';
-import { useMatrixQuery, useSaveMatrixColumnMutation } from '../infrastructure/endpoints';
+import { machineLabel } from '../domain/trains';
+import { useSaveMatrixColumnMutation, useTrainMatrixQuery } from '../infrastructure/endpoints';
 import { TrendChart } from './TrendChart';
 
 /**
@@ -31,13 +33,17 @@ import { TrendChart } from './TrendChart';
  * one grid, the history is visible while typing — which is the point, because
  * a value only means something next to the ones before it — and each column
  * saves through its own visit, so the ownership rule still holds.
+ *
+ * The page belongs to the train (V3-06); the scope list narrows it to one of
+ * its machines (V3-08), and the choice lives in the URL so it can be shared.
  */
 export default function RecordOfValuesPage() {
   const { t } = useTranslation(['measurements', 'common', 'nameplate']);
-  const { equipmentId } = useParams();
-  const id = Number(equipmentId);
-  const [scope, setScope] = useState<'group' | 'equipment'>('group');
-  const { data, isLoading, isError } = useMatrixQuery({ equipment: id, scope });
+  const { groupId } = useParams();
+  const group = Number(groupId);
+  const [params, setParams] = useSearchParams();
+  const machine = Number(params.get('equipment')) || undefined;
+  const { data, isLoading, isError } = useTrainMatrixQuery({ group, equipment: machine });
   const [saveColumn, saving] = useSaveMatrixColumnMutation();
   const [draft, setDraft] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
@@ -97,33 +103,35 @@ export default function RecordOfValuesPage() {
   return (
     <Page>
       <PageHeader
-        title={t('record.title')}
-        description={`${data.equipment.tag} · ${data.equipment.group} · ${data.equipment.area}`}
+        title={data.train.name}
+        description={`${t('record.title')} · ${data.equipment.area}`}
         actions={
           <>
-            <div className="flex rounded-lg border border-slate-200 p-0.5 text-sm dark:border-slate-700">
-              {(['group', 'equipment'] as const).map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setScope(option)}
-                  className={[
-                    'rounded-md px-3 py-1',
-                    scope === option
-                      ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                      : 'text-slate-500',
-                  ].join(' ')}
-                >
-                  {t(`record.scope.${option}`)}
-                </button>
+            <Select
+              value={machine ?? ''}
+              aria-label={t('record.scope.label')}
+              onChange={(event) => {
+                const next = new URLSearchParams(params);
+                if (event.target.value) next.set('equipment', event.target.value);
+                else next.delete('equipment');
+                setParams(next, { replace: true });
+              }}
+              className="w-auto"
+            >
+              <option value="">{t('record.scope.group')}</option>
+              {data.train.equipments.map((row) => (
+                <option key={row.id} value={row.id}>
+                  {machineLabel(row)}
+                </option>
               ))}
-            </div>
-            <Button onClick={() => setEditingPlate(true)}>{t('nameplate:open')}</Button>
+            </Select>
+            {machine && <Button onClick={() => setEditingPlate(true)}>{t('nameplate:open')}</Button>}
             <Button
               disabled={isDownloading}
               onClick={() =>
                 void download(
-                  `equipments/${id}/matrix/export/?scope=${scope}`,
-                  `registro-${data?.equipment.tag ?? id}.xlsx`,
+                  `asset-groups/${group}/matrix/export/${machine ? `?equipment=${machine}` : ''}`,
+                  `registro-${data.train.name}.xlsx`,
                 )
               }
             >
@@ -155,8 +163,8 @@ export default function RecordOfValuesPage() {
 
       <p className="text-xs text-slate-400">{t('record.legend')}</p>
 
-      {editingPlate && (
-        <NameplateModal equipmentId={id} onClose={() => setEditingPlate(false)} />
+      {editingPlate && machine && (
+        <NameplateModal equipmentId={machine} onClose={() => setEditingPlate(false)} />
       )}
     </Page>
   );

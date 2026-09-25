@@ -7,6 +7,7 @@ import en from './locales/en.json';
 import es from './locales/es.json';
 
 export { FaultPicker } from './ui/FaultPicker';
+export { useFaultModesQuery } from './infrastructure/endpoints';
 export type { FaultMode } from './infrastructure/endpoints';
 
 /** The picker belongs inside the service form; the catalogue behind it is a

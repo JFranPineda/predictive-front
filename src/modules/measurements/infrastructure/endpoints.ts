@@ -1,13 +1,22 @@
 import { baseApi } from '@app/api/baseApi';
 
 import type { EquipmentMatrix } from '../domain/matrix';
+import type { MeasurementTrainPage, TrainOrder } from '../domain/trains';
 import type { TrendSeries } from '../domain/trend';
-import type { Instrument, Spectrum, SpectrumCurve } from '../domain/types';
+import type { Instrument, Spectrum, SpectrumCurve, SpectrumPage } from '../domain/types';
 
 export const measurementsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    spectra: build.query<Spectrum[], { equipment?: number; point?: number; visit?: number }>({
+    /** A train's spectra, one page at a time; pages append under one key. */
+    spectra: build.query<SpectrumPage, { group?: number; equipment?: number; visit?: number; cursor?: string }>({
       query: (params) => ({ url: 'spectra/', params }),
+      serializeQueryArgs: ({ queryArgs }) => JSON.stringify({ ...queryArgs, cursor: undefined }),
+      merge: (cache, incoming, { arg }) => {
+        if (!arg.cursor) return incoming;
+        cache.items.push(...incoming.items);
+        cache.next_cursor = incoming.next_cursor;
+      },
+      forceRefetch: ({ currentArg, previousArg }) => currentArg?.cursor !== previousArg?.cursor,
       providesTags: ['Spectrum'],
     }),
     /** The curve is its own request: a list must never carry 3200 pairs. */
@@ -16,11 +25,18 @@ export const measurementsApi = baseApi.injectEndpoints({
     }),
     createSpectrum: build.mutation<Spectrum, FormData>({
       query: (body) => ({ url: 'spectra/', method: 'POST', body }),
-      invalidatesTags: ['Spectrum'],
+      // The capture also lands in the machine's gallery.
+      invalidatesTags: ['Spectrum', 'Media'],
     }),
     updateSpectrum: build.mutation<
       Spectrum,
-      { id: number; caption?: string; spectrum_type?: string; rpm_at_capture?: number }
+      {
+        id: number;
+        caption?: string;
+        spectrum_type?: string;
+        rpm_at_capture?: number | null;
+        diagnosis?: number[];
+      }
     >({
       query: ({ id, ...body }) => ({ url: `spectra/${id}/`, method: 'PATCH', body }),
       invalidatesTags: ['Spectrum'],
@@ -52,12 +68,26 @@ export const measurementsApi = baseApi.injectEndpoints({
       query: ({ equipment, ...params }) => ({ url: `equipments/${equipment}/trend/`, params }),
       providesTags: ['Reading'],
     }),
-    matrix: build.query<EquipmentMatrix, { equipment: number; scope?: string; technique?: string }>({
-      query: ({ equipment, ...params }) => ({
-        url: `equipments/${equipment}/matrix/`,
-        params,
+    trainMatrix: build.query<EquipmentMatrix, { group: number; equipment?: number }>({
+      query: ({ group, equipment }) => ({
+        url: `asset-groups/${group}/matrix/`,
+        params: equipment ? { equipment } : {},
       }),
       providesTags: ['Reading'],
+    }),
+    measurementTrains: build.query<
+      MeasurementTrainPage,
+      { technique: string; q?: string; order?: TrainOrder; offset?: number }
+    >({
+      query: (params) => ({ url: 'measurement-trains/', params }),
+      serializeQueryArgs: ({ queryArgs }) => JSON.stringify({ ...queryArgs, offset: undefined }),
+      merge: (cache, incoming, { arg }) => {
+        if (!arg.offset) return incoming;
+        cache.items.push(...incoming.items);
+        cache.next_offset = incoming.next_offset;
+      },
+      forceRefetch: ({ currentArg, previousArg }) => currentArg?.offset !== previousArg?.offset,
+      providesTags: ['Reading', 'Equipment'],
     }),
     saveMatrixColumn: build.mutation<
       { saved: number },
@@ -87,6 +117,8 @@ export const measurementsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useTrainMatrixQuery,
+  useMeasurementTrainsQuery,
   useSpectraQuery,
   useSpectrumCurveQuery,
   useCreateSpectrumMutation,
@@ -97,7 +129,6 @@ export const {
   useUpdateInstrumentMutation,
   useDeleteInstrumentMutation,
   useTrendQuery,
-  useMatrixQuery,
   useSaveMatrixColumnMutation,
   useRecordReadingsMutation,
 } = measurementsApi;

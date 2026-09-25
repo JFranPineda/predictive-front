@@ -123,7 +123,7 @@
     "measurableHint": "A machine that is off or retired is not measured"
   },
   "magnitudes": {
-    "title": "Magnitudes",
+    "title": "Measurement types",
     "loading": "Loading magnitudes…",
     "subtitle": "What each service measures. The magnitude fixes the service and therefore which standards may judge it.",
     "table": "Catalogue",

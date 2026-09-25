@@ -48,9 +48,18 @@ export interface MatrixColumn {
   can_edit: boolean;
 }
 
+export interface TrainMachineRef {
+  id: number;
+  name: string;
+  tag: string;
+  type: string;
+}
+
 export interface EquipmentMatrix {
   equipment: { id: number; name: string; tag: string; group: string; area: string };
   scope: string;
+  /** The train and its machines, in order: what the scope list offers. */
+  train: { id: number; name: string; equipments: TrainMachineRef[] };
   columns: MatrixColumn[];
   blocks: MatrixBlock[];
 }

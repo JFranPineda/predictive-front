@@ -123,7 +123,7 @@
     "measurableHint": "Un equipo apagado o retirado no se mide"
   },
   "magnitudes": {
-    "title": "Medidas",
+    "title": "Tipos de medición",
     "loading": "Cargando medidas…",
     "subtitle": "Qué se mide en cada servicio. La medida fija el servicio y, con él, qué normas pueden juzgarla.",
     "table": "Catálogo",

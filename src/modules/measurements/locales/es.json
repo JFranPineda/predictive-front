@@ -9,29 +9,36 @@
   },
   "index": {
     "title": "Mediciones",
-    "subtitle": "Elige el servicio para ver qué mide y sobre qué equipos se aplica.",
-    "search": "TAG o nombre",
-    "loading": "Cargando equipos…",
+    "subtitle": "Elige el servicio para ver qué mide y en qué conjuntos se aplica.",
+    "search": "Conjunto o código",
+    "loading": "Cargando conjuntos…",
     "open": "Ver tendencia",
     "points": "{{count}} puntos",
-    "pick": "Elige un equipo",
+    "pick": "Elige un conjunto",
     "column": {
-      "tag": "TAG",
-      "equipment": "Equipo",
       "group": "Conjunto",
       "area": "Área",
-      "status": "Estado"
+      "status": "Estado",
+      "kind": "Tipo",
+      "points": "Puntos medidos",
+      "lastIntervention": "Última intervención"
     },
-    "empty": "No hay equipos que coincidan",
+    "empty": "Ningún conjunto tiene lecturas de este servicio",
     "format": "Formato de {{service}}",
     "formatHint": "Lo que este servicio registra en cada punto. Como evidencia produce {{evidence}}.",
     "noMagnitudes": "Este servicio no tiene medidas configuradas",
-    "noMagnitudesHint": "Créalas en Configuración → Medidas.",
+    "noMagnitudesHint": "Créalas en Configuración → Tipos de medición.",
     "metric": {
-      "equipment": "Equipos",
-      "magnitudes": "Medidas",
-      "areas": "Áreas"
-    }
+      "magnitudes": "Tipos de medición",
+      "areas": "Áreas",
+      "trains": "Conjuntos"
+    },
+    "lastInterventionHint": "La fecha más reciente en que alguien intervino el conjunto: una visita de cualquier servicio o un mantenimiento.",
+    "interventionBy": "{{what}} · {{who}}",
+    "order": "Ordenar",
+    "byName": "Por nombre",
+    "byIntervention": "Última intervención primero",
+    "more": "Cargar más conjuntos"
   },
   "notMeasured": "no se pudo medir",
   "trend": {
@@ -48,8 +55,8 @@
     "saveFailed": "Alguna columna no se pudo guardar",
     "legend": "Una fila por punto, una columna por ronda. Solo se editan las rondas abiertas que ejecutaste tú; el candado marca las cerradas. Vaciar una celda significa «no se pudo medir», no cero.",
     "scope": {
-      "group": "Todo el conjunto",
-      "equipment": "Solo este equipo"
+      "label": "Qué ver",
+      "group": "Todo el conjunto"
     },
     "column": {
       "component": "Componente",
@@ -58,7 +65,8 @@
     },
     "export": "Exportar a Excel",
     "exporting": "Generando…",
-    "exportFailed": "No se pudo generar el archivo"
+    "exportFailed": "No se pudo generar el archivo",
+    "notFound": "Ese equipo no existe o no está a tu alcance."
   },
   "side": {
     "free_end": "Lado libre",
@@ -84,19 +92,19 @@
     "newHint": "Una lectura tomada con un instrumento vencido no se puede defender"
   },
   "spectra": {
-    "title": "Espectros",
-    "subtitle": "La captura del instrumento, los números, o ambos",
+    "title": "Espectros del conjunto",
+    "subtitle": "Todos los puntos del conjunto, en el orden del tren. Abre uno para ver la captura y editar su hallazgo.",
     "empty": "Este equipo no tiene espectros",
-    "emptyHint": "Importa el CSV que exporta el instrumento",
+    "emptyHint": "Sube la imagen que exporta el software, el CSV, o ambos.",
     "loading": "Cargando espectros…",
     "loadingCurve": "Cargando la curva…",
     "import": "Importar espectro",
-    "importHint": "Acepta el CSV de SEMAPI y SKF, con preámbulo y coma decimal",
+    "importHint": "Sube la imagen que exporta el software (por ejemplo, la cascada de SKF), el CSV, o ambos.",
     "point": "Punto",
     "typeLabel": "Tipo",
     "rpm": "RPM al capturar",
     "file": "Archivo",
-    "fileHint": "Dos columnas: frecuencia y amplitud",
+    "fileHint": "CSV de SEMAPI o SKF: dos columnas, frecuencia y amplitud",
     "upload": "Importar",
     "uploadFailed": "No se pudo importar el archivo",
     "openCurve": "Ver la curva ({{lines}} líneas)",
@@ -109,8 +117,22 @@
       "envelope": "Envolvente",
       "acceleration": "Aceleración",
       "demodulation": "Demodulación",
-      "waveform": "Forma de onda"
-    }
+      "waveform": "Forma de onda",
+      "waterfall": "Cascada"
+    },
+    "capture": "Captura (imagen)",
+    "captureHint": "PNG o JPG tal como lo exporta el software",
+    "needOne": "Sube al menos una captura o un archivo de datos",
+    "imported": "Espectro importado",
+    "finding": "Hallazgo",
+    "findingHint": "Lo que muestra. En el informe, es el texto bajo la captura.",
+    "noFinding": "Sin hallazgo escrito",
+    "numericOnly": "Solo datos · {{lines}} líneas",
+    "openCapture": "Abrir captura",
+    "confirmDelete": "¿Eliminar este espectro?",
+    "diagnosis": "Diagnóstico",
+    "curve": "Curva del espectro",
+    "more": "Cargar más espectros"
   },
   "capture": {
     "title": "Captura de ronda · {{equipment}}",

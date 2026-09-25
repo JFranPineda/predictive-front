@@ -2,8 +2,10 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { useEquipmentsQuery, type Equipment } from '@modules/assets';
+import { formatDate } from '@app/i18n/format';
 import { useMagnitudesQuery, useTechniquesQuery } from '@modules/thresholds';
+import { useDebouncedValue } from '@shared/hooks/useDebouncedValue';
+import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -13,6 +15,9 @@ import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 import { StatusBadge } from '@shared/ui/StatusBadge';
+
+import type { MeasurementTrain, TrainOrder } from '../domain/trains';
+import { useMeasurementTrainsQuery } from '../infrastructure/endpoints';
 
 /**
  * Measurements, organised by service.
@@ -27,43 +32,60 @@ export default function MeasurementsIndexPage() {
   const navigate = useNavigate();
   const [technique, setTechnique] = useState('vibration');
   const [search, setSearch] = useState('');
+  const [order, setOrder] = useState<TrainOrder>('name');
+  const [offset, setOffset] = useState<number | undefined>();
   const techniques = useTechniquesQuery();
   const magnitudes = useMagnitudesQuery();
-  const { data, isLoading, isError } = useEquipmentsQuery({
-    search: search || undefined,
-    page_size: 100,
-  });
+  const query = { technique, q: useDebouncedValue(search) || undefined, order };
+  const { data, isLoading, isFetching, isError } = useMeasurementTrainsQuery({ ...query, offset });
 
   const format = useMemo(
     () => (magnitudes.data ?? []).filter((row) => row.technique_code === technique),
     [magnitudes.data, technique],
   );
 
-  const columns: Column<Equipment>[] = [
+  const columns: Column<MeasurementTrain>[] = [
+    { key: 'group', header: t('index.column.group'), render: (row) => <span className="font-medium">{row.name}</span> },
     {
-      key: 'tag',
-      header: t('index.column.tag'),
-      render: (row) => (
-        <span className="font-mono text-xs font-medium">{row.client_tag || row.asset_code}</span>
-      ),
-    },
-    { key: 'name', header: t('index.column.equipment'), render: (row) => row.name },
-    {
-      key: 'group',
-      header: t('index.column.group'),
-      render: (row) => <span className="text-slate-500">{row.asset_group.name}</span>,
+      key: 'kind',
+      header: t('index.column.kind'),
+      render: (row) => <span className="text-slate-500">{row.kind || '—'}</span>,
     },
     {
       key: 'area',
       header: t('index.column.area'),
-      render: (row) => <span className="text-slate-500">{row.area.code}</span>,
+      render: (row) => (
+        <span className="text-slate-500" title={row.area.name}>
+          {row.area.code}
+        </span>
+      ),
     },
     {
       key: 'status',
       header: t('index.column.status'),
+      render: (row) => <StatusBadge label={row.status.name} color={row.status.color} />,
+    },
+    {
+      key: 'points',
+      header: t('index.column.points'),
+      numeric: true,
+      render: (row) => row.measured_points,
+    },
+    {
+      key: 'lastIntervention',
+      header: t('index.column.lastIntervention'),
+      headerHint: t('index.lastInterventionHint'),
       render: (row) =>
-        row.condition_status ? (
-          <StatusBadge label={row.condition_status.name} color={row.condition_status.color} />
+        row.last_intervention ? (
+          <span
+            className="whitespace-nowrap"
+            title={t('index.interventionBy', {
+              what: row.last_intervention.what,
+              who: row.last_intervention.who || '—',
+            })}
+          >
+            {formatDate(row.last_intervention.at)}
+          </span>
         ) : (
           <span className="text-slate-300">—</span>
         ),
@@ -71,13 +93,20 @@ export default function MeasurementsIndexPage() {
     {
       key: 'open',
       header: '',
-      render: () => <span className="text-xs font-medium text-sky-600">{t('index.open')} →</span>,
+      render: () => (
+        <span className="whitespace-nowrap text-xs font-medium text-sky-600">{t('index.open')} →</span>
+      ),
     },
   ];
 
+  const pick = (next: string) => {
+    setTechnique(next);
+    setOffset(undefined);
+  };
+
   if (isLoading) return <Spinner label={t('index.loading')} />;
 
-  const rows = data?.results ?? [];
+  const rows = data?.items ?? [];
   const activeTechnique = techniques.data?.find((row) => row.code === technique);
 
   return (
@@ -87,7 +116,7 @@ export default function MeasurementsIndexPage() {
           {techniques.data?.map((row) => (
             <button
               key={row.code}
-              onClick={() => setTechnique(row.code)}
+              onClick={() => pick(row.code)}
               className={[
                 'rounded-lg px-3 py-1.5 text-sm',
                 row.code === technique
@@ -106,16 +135,13 @@ export default function MeasurementsIndexPage() {
       ) : (
         <>
           <MetricRow>
-            <Metric label={t('index.metric.equipment')} value={data?.count ?? rows.length} />
+            <Metric label={t('index.metric.trains')} value={data?.count ?? 0} />
             <Metric
               label={t('index.metric.magnitudes')}
               value={format.length}
               hint={format.map((row) => row.unit_code).join(' · ')}
             />
-            <Metric
-              label={t('index.metric.areas')}
-              value={new Set(rows.map((row) => row.area.code)).size}
-            />
+            <Metric label={t('index.metric.areas')} value={data?.areas ?? 0} />
           </MetricRow>
 
           <Card
@@ -148,12 +174,31 @@ export default function MeasurementsIndexPage() {
           <Card
             title={t('index.pick')}
             actions={
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t('index.search')}
-                className="w-56 rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
-              />
+              <div className="flex flex-wrap gap-2">
+                <select
+                  value={order}
+                  aria-label={t('index.order')}
+                  onChange={(event) => {
+                    setOrder(event.target.value as TrainOrder);
+                    setOffset(undefined);
+                  }}
+                  className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
+                >
+                  <option value="name">{t('index.byName')}</option>
+                  <option value="last_intervention">{t('index.byIntervention')}</option>
+                </select>
+                <input
+                  type="search"
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                    setOffset(undefined);
+                  }}
+                  placeholder={t('index.search')}
+                  aria-label={t('index.search')}
+                  className="w-56 rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
+                />
+              </div>
             }
             padded={false}
           >
@@ -161,9 +206,16 @@ export default function MeasurementsIndexPage() {
               columns={columns}
               rows={rows}
               rowKey={(row) => row.id}
-              onRowClick={(row) => navigate(`/measurements/${row.id}`)}
+              onRowClick={(row) => void navigate(`/measurements/groups/${row.id}`)}
               empty={<div className="p-6"><EmptyState title={t('index.empty')} /></div>}
             />
+            {data?.next_offset && (
+              <div className="border-t border-slate-100 p-3 text-center dark:border-slate-800">
+                <Button disabled={isFetching} onClick={() => setOffset(data.next_offset ?? undefined)}>
+                  {t('index.more')}
+                </Button>
+              </div>
+            )}
           </Card>
         </>
       )}
