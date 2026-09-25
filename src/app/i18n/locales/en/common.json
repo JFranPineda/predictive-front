@@ -76,5 +76,14 @@
     "idleBody": "You have not used the system for the last few minutes. For security, the session closes after 10 minutes of inactivity.",
     "stay": "Stay signed in",
     "endedIdle": "Signed out for inactivity. What you were typing into a capture was kept on this device."
+  },
+  "plan": {
+    "nearLimit": "The plan is at {{used}} of {{allowed}} {{resource}}.",
+    "see": "See licence",
+    "resource": {
+      "equipment": "machines",
+      "plants": "plants",
+      "users": "users"
+    }
   }
 }

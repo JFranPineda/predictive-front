@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { usePlanUsageQuery, usageRatio } from '@app/plan/planApi';
 import { Card, Field } from '@shared/ui/Card';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Metric, MetricRow } from '@shared/ui/Metric';
@@ -83,7 +84,46 @@ export default function LicensePage() {
         </dl>
       </Card>
 
+      <PlanUsageCard />
+
       <p className="text-xs leading-relaxed text-slate-400">{t('note')}</p>
     </Page>
+  );
+}
+
+/** "553 / 600 equipos": what the plan allows and how much is taken. */
+function PlanUsageCard() {
+  const { t } = useTranslation(['licensing', 'common']);
+  const { data } = usePlanUsageQuery();
+  if (!data?.resources.length) return null;
+
+  return (
+    <Card title={t('usage.title')} description={t('usage.hint')}>
+      <ul className="space-y-3">
+        {data.resources.map((row) => (
+          <li key={row.resource}>
+            <div className="flex justify-between text-sm">
+              <span className="capitalize">{t(`common:plan.resource.${row.resource}`, { defaultValue: row.resource })}</span>
+              <span className="tabular-nums">
+                {row.allowed === null ? t('usage.unlimited', { used: row.used }) : `${row.used} / ${row.allowed}`}
+              </span>
+            </div>
+            {row.allowed !== null && (
+              <div
+                role="progressbar"
+                aria-valuenow={row.used}
+                aria-valuemax={row.allowed}
+                className="mt-1 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"
+              >
+                <div
+                  className={row.near_limit ? 'h-full bg-amber-500' : 'h-full bg-emerald-500'}
+                  style={{ width: `${Math.round(usageRatio(row) * 100)}%` }}
+                />
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 }

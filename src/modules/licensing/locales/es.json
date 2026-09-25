@@ -35,5 +35,10 @@
   "daysHint": {
     "left": "días de vigencia",
     "overdue": "días vencida"
+  },
+  "usage": {
+    "title": "Uso del plan",
+    "hint": "Cuentan los equipos no retirados. Al llegar al tope se bloquea el alta de equipos, no las lecturas.",
+    "unlimited": "{{used}} · sin tope"
   }
 }

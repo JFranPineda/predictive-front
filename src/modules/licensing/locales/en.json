@@ -35,5 +35,10 @@
   "daysHint": {
     "left": "days remaining",
     "overdue": "days expired"
+  },
+  "usage": {
+    "title": "Plan usage",
+    "hint": "Machines that are not retired count. At the ceiling, adding machines is blocked; readings never are.",
+    "unlimited": "{{used}} · no ceiling"
   }
 }

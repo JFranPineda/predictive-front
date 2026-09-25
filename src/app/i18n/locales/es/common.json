@@ -76,5 +76,14 @@
     "idleBody": "No has usado el sistema en los últimos minutos. Por seguridad, la sesión se cierra a los 10 minutos de inactividad.",
     "stay": "Seguir conectado",
     "endedIdle": "Sesión cerrada por inactividad. Lo que estabas digitando en una captura se guardó en este equipo."
+  },
+  "plan": {
+    "nearLimit": "El plan va por {{used}} de {{allowed}} {{resource}}.",
+    "see": "Ver licencia",
+    "resource": {
+      "equipment": "equipos",
+      "plants": "plantas",
+      "users": "usuarios"
+    }
   }
 }

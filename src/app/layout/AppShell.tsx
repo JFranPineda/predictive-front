@@ -10,6 +10,7 @@ import { ThemeToggle } from '@shared/ui/ThemeToggle';
 
 import { BackButton } from './BackButton';
 import { BrandLogo } from './BrandLogo';
+import { PlanNotice } from './PlanNotice';
 
 interface Props {
   menu: MenuEntry[];
@@ -74,6 +75,7 @@ export function AppShell({ menu, user, companies }: Props) {
       <main className="flex-1 overflow-auto">
         {/* Same frame as <Page>, so the button lines up with the title below. */}
         <div className="mx-auto max-w-7xl px-8 pt-4 empty:hidden">
+          <PlanNotice />
           <BackButton menuRoutes={menu.map((item) => item.route)} />
         </div>
         <Outlet />
