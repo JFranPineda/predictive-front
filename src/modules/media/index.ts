@@ -6,6 +6,7 @@ import { mediaApi } from './infrastructure/endpoints';
 import en from './locales/en.json';
 import es from './locales/es.json';
 
+export { LatestImagePanel } from './ui/LatestImagePanel';
 export { MediaGallery } from './ui/MediaGallery';
 export { captureKindFor } from './domain/types';
 export type { MediaAsset, MediaKind } from './domain/types';

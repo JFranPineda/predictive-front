@@ -68,7 +68,11 @@
     "exportFailed": "Could not build the file",
     "notFound": "That equipment does not exist or is out of your reach.",
     "ungraded": "n/s",
-    "ungradedHint": "No standard: no threshold judges this magnitude, so the value has no status colour."
+    "ungradedHint": "No standard: no threshold judges this magnitude, so the value has no status colour.",
+    "schematic": "Train schematic",
+    "noSchematic": "No schematic yet. The drawing of the train with its points marked.",
+    "sitePhoto": "Equipment photo",
+    "noSitePhoto": "No photo yet. A real photograph of the installed train."
   },
   "side": {
     "free_end": "Free end",

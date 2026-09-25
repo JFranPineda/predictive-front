@@ -9,6 +9,7 @@ import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
+import { LatestImagePanel } from '@modules/media';
 import { NameplateModal } from '@modules/nameplate';
 import { useDownload } from '@shared/hooks/useDownload';
 import { Spinner } from '@shared/ui/Spinner';
@@ -147,6 +148,25 @@ export default function RecordOfValuesPage() {
 
       {error && <ErrorState title={error} />}
       {downloadError && <ErrorState title={t('record.exportFailed')} />}
+
+      {/* The report opens with the train's schematic and a real photo of it:
+          the analyst reads the points against the drawing (V3-14). */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <LatestImagePanel
+          ownerType="group"
+          ownerId={group}
+          kind="schematic"
+          title={t('record.schematic')}
+          emptyHint={t('record.noSchematic')}
+        />
+        <LatestImagePanel
+          ownerType="group"
+          ownerId={group}
+          kind="site_photo"
+          title={t('record.sitePhoto')}
+          emptyHint={t('record.noSitePhoto')}
+        />
+      </div>
 
       {data.blocks.length === 0 ? (
         <EmptyState title={t('trend.empty')} body={t('trend.emptyBody')} />

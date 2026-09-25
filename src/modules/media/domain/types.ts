@@ -10,7 +10,9 @@ export type MediaKind =
   | 'ultrasound_capture'
   | 'blueprint'
   | 'nameplate'
-  | 'document';
+  | 'document'
+  | 'schematic'
+  | 'site_photo';
 
 export interface MediaAsset {
   id: number;

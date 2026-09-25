@@ -68,7 +68,11 @@
     "exportFailed": "No se pudo generar el archivo",
     "notFound": "Ese equipo no existe o no está a tu alcance.",
     "ungraded": "s/n",
-    "ungradedHint": "Sin norma: ningún umbral juzga esta magnitud, así que el valor no tiene color de estado."
+    "ungradedHint": "Sin norma: ningún umbral juzga esta magnitud, así que el valor no tiene color de estado.",
+    "schematic": "Esquema del conjunto",
+    "noSchematic": "Sin esquema todavía. El plano del tren con sus puntos marcados.",
+    "sitePhoto": "Foto del equipo",
+    "noSitePhoto": "Sin foto todavía. Una foto real del conjunto instalado."
   },
   "side": {
     "free_end": "Lado libre",

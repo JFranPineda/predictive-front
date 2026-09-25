@@ -38,7 +38,9 @@
     "ultrasound_capture": "Ultrasonido",
     "document": "Documentos",
     "blueprint": "Planos",
-    "nameplate": "Placas"
+    "nameplate": "Placas",
+    "schematic": "Esquemas",
+    "site_photo": "Fotos del equipo"
   },
   "detail": {
     "failed": "No se pudo completar la acción",
@@ -48,5 +50,12 @@
     "document": "Documento: ábrelo para verlo o descargarlo.",
     "caption": "Descripción",
     "captionHint": "Lo que muestra la imagen. En una captura, es el diagnóstico que se leerá en el reporte."
+  },
+  "latest": {
+    "upload": "Subir",
+    "replace": "Reemplazar",
+    "enlarge": "Ampliar",
+    "older_one": "Ver {{count}} anterior",
+    "older_other": "Ver {{count}} anteriores"
   }
 }

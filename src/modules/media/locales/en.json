@@ -38,7 +38,9 @@
     "ultrasound_capture": "Ultrasound",
     "document": "Documents",
     "blueprint": "Blueprints",
-    "nameplate": "Nameplates"
+    "nameplate": "Nameplates",
+    "schematic": "Schematics",
+    "site_photo": "Equipment photos"
   },
   "detail": {
     "failed": "The action could not be completed",
@@ -48,5 +50,12 @@
     "document": "Document: open it to view or download it.",
     "caption": "Description",
     "captionHint": "What the image shows. On a capture, it is the diagnosis the report will carry."
+  },
+  "latest": {
+    "upload": "Upload",
+    "replace": "Replace",
+    "enlarge": "Enlarge",
+    "older_one": "See {{count}} earlier",
+    "older_other": "See {{count}} earlier"
   }
 }
