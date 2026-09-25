@@ -10,8 +10,15 @@ export interface MatrixCell {
   value: string | null;
   status_code: string | null;
   status_color: string | null;
+  /** False for a value no standard judged: shown as "sin norma", never as healthy. */
+  graded: boolean;
   quality: string;
   visit_id: number | null;
+}
+
+/** A value was recorded and nothing judged it (V3-11: acceleration has no standard). */
+export function isUngraded(cell: Pick<MatrixCell, 'value' | 'graded'>): boolean {
+  return cell.value !== null && !cell.graded;
 }
 
 export interface MatrixRow {

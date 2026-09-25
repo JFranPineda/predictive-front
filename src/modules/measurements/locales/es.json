@@ -66,7 +66,9 @@
     "export": "Exportar a Excel",
     "exporting": "Generando…",
     "exportFailed": "No se pudo generar el archivo",
-    "notFound": "Ese equipo no existe o no está a tu alcance."
+    "notFound": "Ese equipo no existe o no está a tu alcance.",
+    "ungraded": "s/n",
+    "ungradedHint": "Sin norma: ningún umbral juzga esta magnitud, así que el valor no tiene color de estado."
   },
   "side": {
     "free_end": "Lado libre",
@@ -153,7 +155,8 @@
       "no_access": "Sin acceso",
       "stopped": "Equipo parado",
       "retired": "Equipo retirado"
-    }
+    },
+    "notOnPoint": "Este punto no lee esta magnitud en la ronda"
   },
   "chart": {
     "title": "Tendencias",

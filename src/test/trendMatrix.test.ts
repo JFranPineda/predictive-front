@@ -96,6 +96,7 @@ describe('record-of-values grid', () => {
       value: null,
       status_code: null,
       status_color: null,
+      graded: false,
       quality: 'ok',
       visit_id: visit,
     });
@@ -114,7 +115,7 @@ describe('record-of-values grid', () => {
 
   it('drops edits on a cell with no visit behind it', () => {
     const orphan: MatrixCell = {
-      reading_id: 9, value: null, status_code: null, status_color: null,
+      reading_id: 9, value: null, status_code: null, status_color: null, graded: false,
       quality: 'ok', visit_id: null,
     };
     expect(groupByVisit([{ cell: orphan, value: '1' }]).size).toBe(0);

@@ -12,6 +12,7 @@ import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
+import { plannedColumns, readsOn } from '../domain/capture';
 import { useRecordReadingsMutation } from '../infrastructure/endpoints';
 
 const NOT_MEASURED = ['equipment_off', 'no_access', 'stopped', 'retired'] as const;
@@ -54,12 +55,16 @@ export default function CapturePage() {
   );
 
   const technique = visit.data?.technique_code;
-  const columns = useMemo(
-    () => (magnitudes.data ?? []).filter((row) => row.technique_code === technique),
-    [magnitudes.data, technique],
-  );
   // The visit already carries the layout of the machine it is for.
   const rows: VisitPoint[] = useMemo(() => visit.data?.points ?? [], [visit.data]);
+  const columns = useMemo(
+    () =>
+      plannedColumns(
+        (magnitudes.data ?? []).filter((row) => row.technique_code === technique),
+        rows,
+      ),
+    [magnitudes.data, technique, rows],
+  );
 
   if (visit.isLoading || magnitudes.isLoading) return <Spinner label={t('capture.loading')} />;
   if (!visit.data) return <EmptyState title={t('capture.noVisit')} />;
@@ -68,7 +73,7 @@ export default function CapturePage() {
     setError(null);
     setResult(null);
     const readings = rows.flatMap((point) =>
-      columns.map((magnitude) => {
+      columns.filter((magnitude) => readsOn(point, magnitude.code)).map((magnitude) => {
         const key = `${point.point_id}:${magnitude.code}`;
         const raw = (values[key] ?? '').trim();
         // A blank is "not measured", which is a row the coverage KPI counts —
@@ -144,6 +149,13 @@ export default function CapturePage() {
                     </td>
                     {columns.map((magnitude) => {
                       const key = `${point.point_id}:${magnitude.code}`;
+                      if (!readsOn(point, magnitude.code)) {
+                        return (
+                          <td key={key} className="px-3 py-1.5 text-center text-slate-300" title={t('capture.notOnPoint')}>
+                            —
+                          </td>
+                        );
+                      }
                       return (
                         <td key={key} className="px-3 py-1.5">
                           <input

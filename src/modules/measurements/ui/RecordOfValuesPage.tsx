@@ -15,6 +15,7 @@ import { Spinner } from '@shared/ui/Spinner';
 
 import {
   groupByVisit,
+  isUngraded,
   spansOf,
   trimValue,
   type MatrixBlock,
@@ -255,7 +256,7 @@ function Block({
                   return (
                     <td
                       key={column.key}
-                      className="border border-slate-200 p-0 dark:border-slate-700"
+                      className="relative border border-slate-200 p-0 dark:border-slate-700"
                       style={
                         cell.status_color ? { backgroundColor: `${cell.status_color}1a` } : undefined
                       }
@@ -265,9 +266,14 @@ function Block({
                         readOnly={!column.can_edit}
                         value={draft[cell.reading_id] ?? ''}
                         onChange={(event) => onChange(cell.reading_id, event.target.value)}
-                        title={cell.status_code ?? undefined}
+                        title={isUngraded(cell) ? t('record.ungradedHint') : (cell.status_code ?? undefined)}
                         className="w-20 bg-transparent px-2 py-1 text-right tabular-nums outline-none read-only:text-slate-500 focus:bg-white focus:ring-2 focus:ring-sky-400 dark:focus:bg-slate-900"
                       />
+                      {isUngraded(cell) && (
+                        <span className="pointer-events-none absolute left-1 top-0.5 text-[9px] font-medium uppercase text-slate-400">
+                          {t('record.ungraded')}
+                        </span>
+                      )}
                     </td>
                   );
                 })}

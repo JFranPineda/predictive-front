@@ -23,8 +23,8 @@ function block(points: { number: number; component: string }[] = FOUR_POINTS): M
       component,
       component_id: component === 'MOTOR' ? 1 : 2,
       cells: [
-        { reading_id: 1, value: '2.10', status_code: 'operational', status_color: '#16a34a', quality: 'ok', visit_id: 1 },
-        { reading_id: 2, value: '4.80', status_code: 'alarm', status_color: '#f59e0b', quality: 'ok', visit_id: 2 },
+        { reading_id: 1, value: '2.10', status_code: 'operational', status_color: '#16a34a', graded: true, quality: 'ok', visit_id: 1 },
+        { reading_id: 2, value: '4.80', status_code: 'alarm', status_color: '#f59e0b', graded: true, quality: 'ok', visit_id: 2 },
         null,
       ],
     })),

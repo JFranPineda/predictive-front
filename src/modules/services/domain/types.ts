@@ -103,6 +103,8 @@ export interface VisitReadingValue {
   decimals: number;
   aggregation: string;
   status: { code: string; name: string; color: string; kind: string } | null;
+  /** False when no standard judged the value (acceleration has none). */
+  graded: boolean;
   quality: string;
   not_measured_reason: string | null;
 }

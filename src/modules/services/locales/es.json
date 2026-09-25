@@ -103,7 +103,9 @@
     "addPerformer": "Añadir ejecutante",
     "pickPerformer": "Elegir persona…",
     "removeLastPerformer": "Quitar el último",
-    "capture": "Capturar la ronda completa"
+    "capture": "Capturar la ronda completa",
+    "ungraded": "Sin norma",
+    "ungradedHint": "Ningún umbral juzga esta magnitud: el valor queda sin estado."
   },
   "subtitle": "Cada visita con quien la ejecutó y lo que anotó. Solo puedes editar las tuyas mientras sigan abiertas.",
   "empty": "No hay visitas registradas",

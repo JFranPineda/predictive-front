@@ -140,7 +140,9 @@
       "direction": "Direction",
       "order": "Order"
     },
-    "orderHint": "Where its table sits in the record of values: the lowest number goes first."
+    "orderHint": "Where its table sits in the record of values: the lowest number goes first.",
+    "templateOnly": "Only where the template asks",
+    "templateOnlyHint": "Read only on the points whose train-kind template lists it; elsewhere the round neither offers it nor counts it as not measured."
   },
   "units": {
     "new": "New unit",

@@ -140,7 +140,9 @@
       "direction": "Sentido",
       "order": "Orden"
     },
-    "orderHint": "Posición de su tabla en el registro de valores: la de menor número va primero."
+    "orderHint": "Posición de su tabla en el registro de valores: la de menor número va primero.",
+    "templateOnly": "Solo donde la plantilla lo pida",
+    "templateOnlyHint": "Se lee únicamente en los puntos cuya plantilla del tipo de conjunto la incluye; en los demás, la ronda no la ofrece ni la cuenta como no medida."
   },
   "units": {
     "new": "Nueva unidad",

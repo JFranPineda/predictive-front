@@ -54,6 +54,8 @@ export interface Magnitude {
   decimals: number;
   /** Where its table sits in the record of values. */
   display_order: number;
+  /** Read only on the points whose kind template lists it (acceleration). */
+  template_only: boolean;
   higher_is_worse: boolean;
 }
 

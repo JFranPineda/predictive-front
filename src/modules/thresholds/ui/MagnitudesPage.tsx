@@ -57,6 +57,20 @@ export default function MagnitudesPage() {
         <span>
           <span className="block font-medium">{row.name}</span>
           <span className="block font-mono text-[11px] text-slate-400">{row.code}</span>
+          {canManage ? (
+            <label className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500" title={t('magnitudes.templateOnlyHint')}>
+              <input
+                type="checkbox"
+                checked={row.template_only}
+                onChange={(event) => void updateMagnitude({ id: row.id, template_only: event.target.checked })}
+              />
+              {t('magnitudes.templateOnly')}
+            </label>
+          ) : (
+            row.template_only && (
+              <span className="mt-1 block text-[11px] text-slate-500">{t('magnitudes.templateOnly')}</span>
+            )
+          )}
         </span>
       ),
     },

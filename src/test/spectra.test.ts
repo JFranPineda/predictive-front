@@ -31,3 +31,23 @@ describe('spectra of a train (V3-09)', () => {
     expect(firstLine('')).toBe('');
   });
 });
+
+describe('acceleration only where the template asks (V3-11)', () => {
+  it('offers a column only if some point of the round reads it', async () => {
+    const { plannedColumns, readsOn } = await import('@modules/measurements/domain/capture');
+    const points = [
+      { point_id: 1, values: [{ magnitude_code: 'vel_rms' }, { magnitude_code: 'accel_rms' }] },
+      { point_id: 2, values: [{ magnitude_code: 'vel_rms' }] },
+    ];
+    const columns = plannedColumns([{ code: 'vel_rms' }, { code: 'accel_rms' }, { code: 'env_accel' }], points);
+    expect(columns.map((column) => column.code)).toEqual(['vel_rms', 'accel_rms']);
+    expect(readsOn(points[1]!, 'accel_rms')).toBe(false);
+  });
+
+  it('marks a value no standard judged', async () => {
+    const { isUngraded } = await import('@modules/measurements/domain/matrix');
+    expect(isUngraded({ value: '0.42', graded: false })).toBe(true);
+    expect(isUngraded({ value: '2.1', graded: true })).toBe(false);
+    expect(isUngraded({ value: null, graded: false })).toBe(false);
+  });
+});

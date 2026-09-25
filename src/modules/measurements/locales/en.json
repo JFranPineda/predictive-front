@@ -66,7 +66,9 @@
     "export": "Export to Excel",
     "exporting": "Building…",
     "exportFailed": "Could not build the file",
-    "notFound": "That equipment does not exist or is out of your reach."
+    "notFound": "That equipment does not exist or is out of your reach.",
+    "ungraded": "n/s",
+    "ungradedHint": "No standard: no threshold judges this magnitude, so the value has no status colour."
   },
   "side": {
     "free_end": "Free end",
@@ -153,7 +155,8 @@
       "no_access": "No access",
       "stopped": "Machine stopped",
       "retired": "Machine retired"
-    }
+    },
+    "notOnPoint": "This point does not read this magnitude in the round"
   },
   "chart": {
     "title": "Trends",

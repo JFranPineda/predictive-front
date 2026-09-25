@@ -40,7 +40,10 @@ export const thresholdsApi = baseApi.injectEndpoints({
       query: (body) => ({ url: 'magnitudes/', method: 'POST', body }),
       invalidatesTags: ['Magnitude'],
     }),
-    updateMagnitude: build.mutation<Magnitude, { id: number; display_order?: number }>({
+    updateMagnitude: build.mutation<
+      Magnitude,
+      { id: number; display_order?: number; template_only?: boolean }
+    >({
       query: ({ id, ...body }) => ({ url: `magnitudes/${id}/`, method: 'PATCH', body }),
       // The record of values orders its tables by this.
       invalidatesTags: ['Magnitude', 'Reading'],

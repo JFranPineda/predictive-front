@@ -206,6 +206,11 @@ export default function VisitDetailPage() {
                                 size="sm"
                               />
                             )}
+                            {value.value !== null && !value.graded && (
+                              <span className="text-[10px] uppercase text-slate-400" title={t('visit.ungradedHint')}>
+                                {t('visit.ungraded')}
+                              </span>
+                            )}
                           </div>
                         </td>
                       );
