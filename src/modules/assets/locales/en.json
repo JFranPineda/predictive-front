@@ -171,5 +171,22 @@
     "custom": "Other"
   },
   "openGallery": "Gallery",
-  "openSpectra": "Spectra"
+  "openSpectra": "Spectra",
+  "trains": {
+    "title": "Assets",
+    "subtitle": "One row per rotating train, with its machines inside. The colour is the worst of its machines; a machine that is off does not show its last verdict.",
+    "table": "Trains",
+    "search": "Train, TAG or machine",
+    "allKinds": "All train kinds",
+    "clear": "Clear filters",
+    "empty": "No train matches",
+    "more": "Load more trains",
+    "kind": "Train kind",
+    "machines": "Machines",
+    "machineCount_one": "{{count}} machine",
+    "machineCount_other": "{{count}} machines",
+    "metric": {
+      "trains": "Trains"
+    }
+  }
 }

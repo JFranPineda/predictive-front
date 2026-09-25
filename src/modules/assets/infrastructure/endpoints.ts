@@ -9,6 +9,8 @@ import type {
   GroupPoints,
   MeasurementPoint,
   Plant,
+  TrainPage,
+  TrainQuery,
 } from '../domain/types';
 
 interface Page<T> {
@@ -30,6 +32,21 @@ export const assetsApi = baseApi.injectEndpoints({
     >({
       query: (params) => ({ url: 'equipments/', params }),
       providesTags: ['Equipment'],
+    }),
+    /**
+     * Trains, one page at a time. Pages accumulate under a key that ignores
+     * the cursor, so "load more" appends instead of refetching.
+     */
+    trainOverview: build.query<TrainPage, TrainQuery>({
+      query: (params) => ({ url: 'asset-groups/overview/', params }),
+      serializeQueryArgs: ({ queryArgs }) => JSON.stringify({ ...queryArgs, cursor: undefined }),
+      merge: (cache, incoming, { arg }) => {
+        if (!arg.cursor) return incoming;
+        cache.items.push(...incoming.items);
+        cache.next_cursor = incoming.next_cursor;
+      },
+      forceRefetch: ({ currentArg, previousArg }) => currentArg?.cursor !== previousArg?.cursor,
+      providesTags: ['Equipment', 'AssetGroup'],
     }),
     equipment: build.query<Equipment, number>({
       query: (id) => `equipments/${id}/`,
@@ -167,6 +184,7 @@ export const assetsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useTrainOverviewQuery,
   useUpdatePlantMutation,
   useDeletePlantMutation,
   useUpdateSectorMutation,

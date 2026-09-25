@@ -166,3 +166,41 @@ export const POINT_SIDES = [
 ] as const;
 
 export const POINT_AXES = ['H', 'V', 'A', 'N'] as const;
+
+/** The colour a train (or one of its machines) shows: condition, or why not. */
+export interface TrainStatus {
+  code: string;
+  name: string;
+  color: string;
+  is_condition: boolean;
+}
+
+export type TrainMachine = Equipment & { effective_status: TrainStatus };
+
+/** One row of the assets list: a train with its machines inside (V3-05). */
+export interface TrainRow {
+  id: number;
+  code: string;
+  name: string;
+  kind: { code: string; name: string } | null;
+  area: { id: number; code: string; name: string };
+  sector: { id: number; name: string };
+  status: TrainStatus;
+  equipment_count: number;
+  equipments: TrainMachine[];
+}
+
+export interface TrainQuery {
+  q?: string;
+  area?: string;
+  kind?: string;
+  type?: string;
+  status?: string;
+  cursor?: string;
+}
+
+export interface TrainPage {
+  items: TrainRow[];
+  next_cursor: string | null;
+  totals: { trains: number; equipments: number; alarm: number; shutdown: number; not_measured: number };
+}

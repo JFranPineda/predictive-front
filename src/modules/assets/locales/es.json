@@ -171,5 +171,22 @@
     "custom": "Otro"
   },
   "openGallery": "Galería",
-  "openSpectra": "Espectros"
+  "openSpectra": "Espectros",
+  "trains": {
+    "title": "Activos",
+    "subtitle": "Una fila por conjunto rotativo, con sus equipos dentro. El color es el peor de sus equipos; un equipo apagado no muestra su último veredicto.",
+    "table": "Conjuntos",
+    "search": "Conjunto, TAG o equipo",
+    "allKinds": "Todos los tipos de conjunto",
+    "clear": "Limpiar filtros",
+    "empty": "Ningún conjunto coincide",
+    "more": "Cargar más conjuntos",
+    "kind": "Tipo de conjunto",
+    "machines": "Equipos",
+    "machineCount_one": "{{count}} equipo",
+    "machineCount_other": "{{count}} equipos",
+    "metric": {
+      "trains": "Conjuntos"
+    }
+  }
 }

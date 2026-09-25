@@ -32,7 +32,7 @@ const definition: ModuleDefinition = {
     },
     {
       path: '/assets',
-      component: lazy(() => import('./ui/EquipmentListPage')),
+      component: lazy(() => import('./ui/TrainListPage')),
       permission: 'assets.view_equipment',
     },
   ],

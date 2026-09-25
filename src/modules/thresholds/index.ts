@@ -8,12 +8,13 @@ import es from './locales/es.json';
 import { thresholdsApi } from './infrastructure/endpoints';
 
 export {
+  useConditionStatusesQuery,
   useMagnitudesQuery,
   useStandardsQuery,
   useTechniquesQuery,
   useUnitsQuery,
 } from './infrastructure/endpoints';
-export type { Magnitude, Standard, UnitRef } from './domain/types';
+export type { ConditionStatus, Magnitude, Standard, UnitRef } from './domain/types';
 
 const definition: ModuleDefinition = {
   code: 'thresholds',
