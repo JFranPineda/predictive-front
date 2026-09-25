@@ -26,6 +26,7 @@ export interface ServiceAuthorship {
   equipment_id: number;
   equipment_name: string;
   equipment_tag: string;
+  group_name: string;
   area_label: string;
   technique_code: string;
   technique_name: string;
@@ -40,6 +41,13 @@ export interface ServiceAuthorship {
   can_edit: boolean;
 }
 
+export type OrderStatus = 'planned' | 'in_progress' | 'done' | 'cancelled';
+
+export interface NamedRef {
+  id: number;
+  name: string;
+}
+
 export interface ServiceOrder {
   id: number;
   code: string;
@@ -47,14 +55,43 @@ export interface ServiceOrder {
   technique_code: string;
   technique_name: string;
   plant: string;
+  plant_id: number;
   scheduled_from: string;
   scheduled_to: string;
-  status: 'planned' | 'in_progress' | 'done' | 'cancelled';
-  lead_analyst: string | null;
+  status: OrderStatus;
+  /** The company that executes the service (1A-MIG, a contractor). */
+  provider: NamedRef | null;
+  lead_analyst: NamedRef | null;
   supervisor: string | null;
+  /** Equipment visited in this order. */
   visit_count: number;
-  /** Visits still editable by whoever performed them. */
-  open_count: number;
+}
+
+export interface ServiceOrderPage {
+  results: ServiceOrder[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+  /** Over the whole filtered ledger, never just the page on screen. */
+  totals: { orders: number; visits: number };
+  can_change_status: boolean;
+}
+
+export interface ServiceOrderQuery {
+  q?: string;
+  technique?: string;
+  status?: string;
+  from?: string;
+  to?: string;
+  page?: number;
+}
+
+export interface ServiceProvider {
+  id: number;
+  name: string;
+  tax_id: string;
+  is_active: boolean;
+  order_count: number;
 }
 
 export interface VisitReadingValue {
@@ -101,6 +138,8 @@ export interface VisitDetail {
   entries: (AuthoredEntry & { status: string | null; from_this_visit: boolean })[];
   /** What this service found, from its technique's catalogue. */
   fault_modes: { code: string; name: string; reference: string }[];
+  /** A problem outside the catalogue, described; null when "Otros" is not marked. */
+  other_fault: string | null;
   is_closed: boolean;
   report_issued: boolean;
   can_edit: boolean;

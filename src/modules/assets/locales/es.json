@@ -140,7 +140,11 @@
     },
     "pointCount": "Puntos",
     "pointCountHint": "Cuántos puntos se miden en este componente",
-    "rebuildLayout": "Regenerar plantilla desde los componentes"
+    "rebuildLayout": "Regenerar plantilla desde los componentes",
+    "drift": "{{label}} declara {{declared}} puntos y la plantilla tiene {{actual}}.",
+    "rebuildComponent": "Reconstruir {{label}}",
+    "whenNewKind": "Un tipo lo comparten todos los conjuntos que lo usan: cambiarlo afecta a los conjuntos que se creen después. Si un tren tiene una forma propia (la línea de chumaceras de una máquina papelera, por ejemplo), crea un tipo nuevo para él, o ajusta solo ese conjunto con «Puntos» en Estructura.",
+    "magnitudesHint": "Un punto puede medir magnitudes de varios servicios: si el conjunto también recibe ultrasonido o termografía, añade aquí su magnitud (por ejemplo, «Nivel de ultrasonido»). Los conjuntos ya creados la reciben con «Aplicar plantilla del tipo», sin perder sus lecturas."
   },
   "points": {
     "title": "Puntos de {{group}}",

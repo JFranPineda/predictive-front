@@ -4,6 +4,8 @@ import type { ReactNode } from 'react';
 export interface Column<T> {
   key: string;
   header: string;
+  /** Explains a header whose meaning is not obvious, on hover. */
+  headerHint?: string;
   /** Right-align numbers; it is what makes a column of figures readable. */
   numeric?: boolean;
   width?: string;
@@ -43,7 +45,13 @@ export function DataTable<T>({
                   column.numeric ? 'text-right' : 'text-left',
                 )}
               >
-                {column.header}
+                {column.headerHint ? (
+                  <span title={column.headerHint} className="cursor-help underline decoration-dotted">
+                    {column.header}
+                  </span>
+                ) : (
+                  column.header
+                )}
               </th>
             ))}
           </tr>

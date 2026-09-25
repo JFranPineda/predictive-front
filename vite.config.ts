@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 
+const apiTarget = process.env.VITE_API_PROXY ?? 'http://localhost:8000';
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
@@ -15,7 +17,13 @@ export default defineConfig({
   server: {
     port: Number(process.env.VITE_PORT ?? 5173),
     allowedHosts: ['.trycloudflare.com'],
-    proxy: { '/api': process.env.VITE_API_PROXY ?? 'http://localhost:8000' },
+    // `/media` is where the local store serves originals and thumbnails.
+    // Without it Vite answers with the SPA's index.html: every image breaks
+    // and a click on one lands on the login page.
+    proxy: {
+      '/api': apiTarget,
+      '/media': apiTarget,
+    },
   },
   build: {
     // Each module is its own chunk: an uninstalled module ships zero bytes.

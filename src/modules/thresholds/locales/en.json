@@ -137,8 +137,10 @@
       "unit": "Unit",
       "aggregation": "Aggregation",
       "decimals": "Decimals",
-      "direction": "Direction"
-    }
+      "direction": "Direction",
+      "order": "Order"
+    },
+    "orderHint": "Where its table sits in the record of values: the lowest number goes first."
   },
   "units": {
     "new": "New unit",

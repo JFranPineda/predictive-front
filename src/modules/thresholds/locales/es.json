@@ -137,8 +137,10 @@
       "unit": "Unidad",
       "aggregation": "Agregación",
       "decimals": "Decimales",
-      "direction": "Sentido"
-    }
+      "direction": "Sentido",
+      "order": "Orden"
+    },
+    "orderHint": "Posición de su tabla en el registro de valores: la de menor número va primero."
   },
   "units": {
     "new": "Nueva unidad",

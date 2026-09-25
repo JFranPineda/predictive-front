@@ -112,15 +112,9 @@ export default function VisitDetailPage() {
         description={t('visit.description', {
           area: data.equipment.area_label,
           group: data.equipment.asset_group,
+          equipment: data.equipment.name,
+          tag: data.equipment.tag,
         })}
-        actions={
-          <Link
-            to="/services/authorship"
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
-          >
-            {t('visit.back')}
-          </Link>
-        }
       />
 
       {!data.can_edit && (
@@ -346,6 +340,7 @@ export default function VisitDetailPage() {
           visitId={id}
           technique={data.technique_code}
           selected={data.fault_modes}
+          other={data.other_fault}
           canEdit={data.can_edit}
         />
       </div>

@@ -37,7 +37,6 @@
   "trend": {
     "subtitle": "Matriz de valores por punto y fecha, como la hoja de tendencias del cliente.",
     "hint": "Cada celda se colorea con el estado que obtuvo esa lectura. Un punto vacío es una toma que no existe; un guion es una toma que no se pudo hacer.",
-    "back": "← Volver",
     "empty": "Este equipo no tiene lecturas",
     "emptyBody": "Aparecerán cuando se registre la primera visita."
   },
@@ -67,7 +66,7 @@
     "opposite_coupling": "Lado opuesto a acople",
     "inboard": "Interior",
     "outboard": "Exterior",
-    "custom": "General"
+    "custom": "Otro"
   },
   "instruments": {
     "title": "Instrumentos",
@@ -125,7 +124,6 @@
     "send": "Registrar la ronda",
     "recorded": "{{count}} lecturas registradas y graduadas",
     "failed": "No se pudo registrar la ronda",
-    "backToVisit": "Volver a la visita",
     "nothingToCapture": "No hay nada que capturar",
     "nothingHint": "Este equipo no tiene puntos activos, o la técnica de la orden no mide magnitudes",
     "reasonOption": {

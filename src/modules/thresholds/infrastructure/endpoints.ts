@@ -40,6 +40,11 @@ export const thresholdsApi = baseApi.injectEndpoints({
       query: (body) => ({ url: 'magnitudes/', method: 'POST', body }),
       invalidatesTags: ['Magnitude'],
     }),
+    updateMagnitude: build.mutation<Magnitude, { id: number; display_order?: number }>({
+      query: ({ id, ...body }) => ({ url: `magnitudes/${id}/`, method: 'PATCH', body }),
+      // The record of values orders its tables by this.
+      invalidatesTags: ['Magnitude', 'Reading'],
+    }),
     createStandard: build.mutation<Standard, StandardDraft>({
       query: (body) => ({ url: 'standards/new/', method: 'POST', body }),
       invalidatesTags: ['Standard'],
@@ -125,6 +130,7 @@ export const {
   useUnitsQuery,
   useMagnitudesQuery,
   useCreateMagnitudeMutation,
+  useUpdateMagnitudeMutation,
   useCreateUnitMutation,
   useCreateStandardMutation,
   useUpdateStandardMutation,

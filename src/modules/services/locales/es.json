@@ -31,17 +31,16 @@
   "orders": {
     "title": "Órdenes de servicio",
     "loading": "Cargando órdenes…",
-    "subtitle": "Cada orden agrupa las visitas de una ronda. Las abiertas todavía las puede editar quien las ejecutó.",
+    "subtitle": "Cada orden agrupa los equipos inspeccionados en una ronda. Busca por código, OT, técnica, empresa o analista.",
     "seeExecution": "Ver quién las ejecutó →",
     "column": {
       "code": "Código",
       "technique": "Técnica",
-      "window": "Ventana",
-      "lead": "Analista",
       "clientOrder": "OT cliente",
-      "visits": "Visitas",
-      "open": "Abiertas",
-      "status": "Estado"
+      "visits": "Equipos inspeccionados",
+      "status": "Estado",
+      "serviceDate": "Fecha de servicio",
+      "provider": "Empresa"
     },
     "status": {
       "planned": "Programada",
@@ -50,15 +49,18 @@
       "cancelled": "Anulada"
     },
     "table": "Órdenes",
-    "empty": "No hay órdenes de servicio",
-    "openHint": "visitas que todavía puede editar quien las ejecutó",
+    "empty": "Ninguna orden coincide",
     "metric": {
       "orders": "Órdenes",
-      "visits": "Visitas",
-      "open": "Abiertas",
-      "openHint": "pendientes de cerrar"
+      "visits": "Equipos inspeccionados"
     },
-    "cancel": "Anular"
+    "cancel": "Anular",
+    "visitsHint": "Equipos visitados en esta orden. No es número de personas.",
+    "search": "Buscar por orden, OT, técnica, empresa o analista",
+    "allTechniques": "Todas las técnicas",
+    "allStatuses": "Todos los estados",
+    "clearFilters": "Limpiar filtros",
+    "page": "Página {{page}}"
   },
   "viewOnly": "Ver detalle",
   "side": {
@@ -72,8 +74,7 @@
     "loading": "Cargando la visita…",
     "notFound": "No se encontró la visita",
     "notFoundBody": "Puede haberse eliminado, o no pertenece a tu alcance.",
-    "description": "{{area}} · {{group}}",
-    "back": "← Volver a ejecución",
+    "description": "Conjunto: {{group}} · Equipo: {{equipment}} {{tag}} · Área: {{area}}",
     "readOnly": "Esta visita es de solo lectura",
     "readings": "Lecturas de la visita",
     "readingsHint": "Una fila por punto. Al guardar, el sistema vuelve a aplicar la norma del equipo y recalcula el estado.",
@@ -133,7 +134,11 @@
     "from": "Desde",
     "to": "Hasta",
     "create": "Crear orden",
-    "edit": "Editar orden"
+    "edit": "Editar orden",
+    "save": "Guardar cambios",
+    "locked": "No se cambia en una orden existente: sus visitas cuelgan de este dato.",
+    "provider": "Empresa",
+    "analyst": "Analista"
   },
   "operating": {
     "title": "Datos operativos",
@@ -148,5 +153,20 @@
     "photos": "Fotos",
     "diary": "Conclusiones",
     "faults": "Problemas"
+  },
+  "providers": {
+    "title": "Empresas",
+    "subtitle": "Quién ejecuta los servicios: 1A-MIG o un contratista. Una empresa con órdenes se desactiva, no se borra.",
+    "new": "Nueva empresa",
+    "name": "Nombre",
+    "taxId": "RUC",
+    "orders": "Órdenes",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "empty": "No hay empresas registradas"
+  },
+  "card": {
+    "group": "Conjunto",
+    "equipment": "Equipo"
   }
 }

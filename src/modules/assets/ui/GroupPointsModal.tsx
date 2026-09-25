@@ -14,7 +14,7 @@ import {
   useGroupPointsQuery,
   useUpdatePointMutation,
 } from '../infrastructure/endpoints';
-import { readKindError } from './GroupKindsPage';
+import { readKindError } from './kindErrors';
 
 /**
  * The measuring layout of one train, as it actually exists.

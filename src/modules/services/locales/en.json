@@ -31,17 +31,16 @@
   "orders": {
     "title": "Service orders",
     "loading": "Loading orders…",
-    "subtitle": "Each order groups one round of visits. Open ones can still be edited by whoever performed them.",
+    "subtitle": "Each order groups the equipment inspected in one round. Search by code, work order, technique, company or analyst.",
     "seeExecution": "See who performed them →",
     "column": {
       "code": "Code",
       "technique": "Technique",
-      "window": "Window",
-      "lead": "Analyst",
       "clientOrder": "Customer WO",
-      "visits": "Visits",
-      "open": "Open",
-      "status": "Status"
+      "visits": "Equipment inspected",
+      "status": "Status",
+      "serviceDate": "Service date",
+      "provider": "Company"
     },
     "status": {
       "planned": "Planned",
@@ -50,15 +49,18 @@
       "cancelled": "Cancelled"
     },
     "table": "Orders",
-    "empty": "No service orders",
-    "openHint": "visits whoever performed them can still edit",
+    "empty": "No order matches",
     "metric": {
       "orders": "Orders",
-      "visits": "Visits",
-      "open": "Open",
-      "openHint": "pending closure"
+      "visits": "Equipment inspected"
     },
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "visitsHint": "Equipment visited in this order. Not a head count.",
+    "search": "Search by order, work order, technique, company or analyst",
+    "allTechniques": "All techniques",
+    "allStatuses": "All statuses",
+    "clearFilters": "Clear filters",
+    "page": "Page {{page}}"
   },
   "viewOnly": "View detail",
   "side": {
@@ -72,8 +74,7 @@
     "loading": "Loading the visit…",
     "notFound": "Visit not found",
     "notFoundBody": "It may have been removed, or it is outside your scope.",
-    "description": "{{area}} · {{group}}",
-    "back": "← Back to execution",
+    "description": "Train: {{group}} · Equipment: {{equipment}} {{tag}} · Area: {{area}}",
     "readOnly": "This visit is read-only",
     "readings": "Visit readings",
     "readingsHint": "One row per point. On save the system re-applies the equipment's standard and recalculates the status.",
@@ -133,7 +134,11 @@
     "from": "From",
     "to": "To",
     "create": "Create order",
-    "edit": "Edit order"
+    "edit": "Edit order",
+    "save": "Save changes",
+    "locked": "Not changed on an existing order: its visits hang off it.",
+    "provider": "Company",
+    "analyst": "Analyst"
   },
   "operating": {
     "title": "Operating data",
@@ -148,5 +153,20 @@
     "photos": "Photos",
     "diary": "Conclusions",
     "faults": "Problems"
+  },
+  "providers": {
+    "title": "Companies",
+    "subtitle": "Who executes the services: 1A-MIG or a contractor. A company with orders is deactivated, not deleted.",
+    "new": "New company",
+    "name": "Name",
+    "taxId": "Tax ID",
+    "orders": "Orders",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "empty": "No companies registered"
+  },
+  "card": {
+    "group": "Train",
+    "equipment": "Equipment"
   }
 }

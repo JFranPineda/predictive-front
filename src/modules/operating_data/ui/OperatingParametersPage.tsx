@@ -24,7 +24,7 @@ const EMPTY = {
   name: '',
   unit_code: '',
   technique_code: '',
-  decimals: 1,
+  decimals: 0,
   is_cumulative: false,
 };
 

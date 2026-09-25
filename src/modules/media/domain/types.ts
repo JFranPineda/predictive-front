@@ -27,6 +27,9 @@ export interface MediaAsset {
   state: string;
   uploaded_by: string;
   created_at: string;
+  /** Decided by the server for the current user, never guessed here. */
+  can_edit: boolean;
+  can_delete: boolean;
 }
 
 /** What each service captures as its measurement evidence. */

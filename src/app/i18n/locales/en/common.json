@@ -1,9 +1,10 @@
 {
   "app": {
-    "name": "Predictive"
+    "name": "1A-MIG"
   },
   "nav": {
-    "settings": "Settings"
+    "settings": "Settings",
+    "back": "Back"
   },
   "action": {
     "save": "Save",
@@ -69,5 +70,11 @@
     "all": "{{count}} records",
     "shown": "{{shown}} of {{total}}",
     "clear": "Clear"
+  },
+  "session": {
+    "idleTitle": "Your session will close in 1 minute",
+    "idleBody": "You have not used the system for the last few minutes. For security, the session closes after 10 minutes of inactivity.",
+    "stay": "Stay signed in",
+    "endedIdle": "Signed out for inactivity. What you were typing into a capture was kept on this device."
   }
 }

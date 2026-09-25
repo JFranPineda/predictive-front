@@ -19,6 +19,7 @@ import {
   useFaultModesQuery,
   useUpdateFaultModeMutation,
 } from '../infrastructure/endpoints';
+import { OtherFaultsCard } from './OtherFaultsCard';
 
 const EMPTY = { name: '', technique_code: 'vibration', signature: '', reference: '' };
 
@@ -192,6 +193,7 @@ export default function FaultModesPage() {
           </Button>
         </Card>
       )}
+      <OtherFaultsCard />
     </Page>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useMagnitudesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -10,8 +11,10 @@ import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
+import { describeMagnitudes } from '../domain/magnitudeGroups';
 import type { AssetGroupKind } from '../domain/types';
 import { useDeleteGroupKindMutation, useGroupKindsQuery } from '../infrastructure/endpoints';
+import { readKindError } from './kindErrors';
 import { KindFormModal } from './KindFormModal';
 
 /**
@@ -120,6 +123,7 @@ export default function GroupKindsPage() {
 /** The layout as the report reads it: one row per point, columns per axis. */
 function PointLayout({ kind }: { kind: AssetGroupKind }) {
   const { t } = useTranslation('assets');
+  const catalogue = useMagnitudesQuery().data ?? [];
   const numbers = [...new Set(kind.point_templates.map((row) => row.number))].sort((a, b) => a - b);
 
   if (numbers.length === 0) {
@@ -130,10 +134,10 @@ function PointLayout({ kind }: { kind: AssetGroupKind }) {
     <table className="w-full text-xs">
       <thead>
         <tr className="border-b border-slate-100 text-left uppercase tracking-wide text-slate-400 dark:border-slate-800">
-          <th className="py-1">{t('kinds.column.point')}</th>
-          <th>{t('kinds.column.component')}</th>
-          <th>{t('kinds.column.side')}</th>
-          <th>{t('kinds.column.axes')}</th>
+          <th className="py-1 pr-3">{t('kinds.column.point')}</th>
+          <th className="pr-3">{t('kinds.column.component')}</th>
+          <th className="pr-3">{t('kinds.column.side')}</th>
+          <th className="pr-3">{t('kinds.column.axes')}</th>
           <th>{t('kinds.column.magnitudes')}</th>
         </tr>
       </thead>
@@ -144,27 +148,15 @@ function PointLayout({ kind }: { kind: AssetGroupKind }) {
           const magnitudes = [...new Set(rows.flatMap((row) => row.magnitudes))];
           return (
             <tr key={number} className="border-b border-slate-50 dark:border-slate-800/60">
-              <td className="py-1 font-mono font-medium">{number}</td>
-              <td className="text-slate-500">{first.component_label || '—'}</td>
-              <td className="text-slate-500">{t(`side.${first.side}`, { defaultValue: first.side })}</td>
-              <td className="font-mono">{rows.map((row) => row.axis).join(' ')}</td>
-              <td className="text-slate-500">{magnitudes.join(', ') || '—'}</td>
+              <td className="py-1 pr-3 font-mono font-medium">{number}</td>
+              <td className="pr-3 text-slate-500">{first.component_label || '—'}</td>
+              <td className="pr-3 text-slate-500">{t(`side.${first.side}`, { defaultValue: first.side })}</td>
+              <td className="whitespace-nowrap pr-3 font-mono">{rows.map((row) => row.axis).join(' ')}</td>
+              <td className="leading-snug text-slate-500">{describeMagnitudes(magnitudes, catalogue) || '—'}</td>
             </tr>
           );
         })}
       </tbody>
     </table>
   );
-}
-
-export function readKindError(cause: unknown): string | null {
-  const data = (cause as { data?: unknown })?.data;
-  if (typeof data === 'string') return data;
-  if (Array.isArray(data)) return String(data[0]);
-  if (data && typeof data === 'object') {
-    const first = Object.values(data as Record<string, unknown>)[0];
-    if (Array.isArray(first)) return String(first[0]);
-    if (typeof first === 'string') return first;
-  }
-  return null;
 }

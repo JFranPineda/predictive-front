@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useVisitQuery, type VisitPoint } from '@modules/services';
 import { useMagnitudesQuery } from '@modules/thresholds';
+import { useDraft } from '@shared/hooks/useDraft';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -27,18 +28,22 @@ const NOT_MEASURED = ['equipment_off', 'no_access', 'stopped', 'retired'] as con
  * presses again, the server returns the first answer instead of doubling the
  * round.
  */
+const EMPTY: Record<string, string> = {};
+
 export default function CapturePage() {
   const { visitId } = useParams();
   const id = Number(visitId);
   const { t } = useTranslation(['measurements', 'common']);
-  const navigate = useNavigate();
 
   const visit = useVisitQuery(id);
   const magnitudes = useMagnitudesQuery();
   const [record, { isLoading }] = useRecordReadingsMutation();
 
-  const [values, setValues] = useState<Record<string, string>>({});
-  const [reasons, setReasons] = useState<Record<string, string>>({});
+  const [values, setValues, discardValues] = useDraft<Record<string, string>>(`capture:${id}:values`, EMPTY);
+  const [reasons, setReasons, discardReasons] = useDraft<Record<string, string>>(
+    `capture:${id}:reasons`,
+    EMPTY,
+  );
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,6 +89,8 @@ export default function CapturePage() {
     try {
       const answer = await record({ visit: id, idempotencyKey, readings }).unwrap();
       setResult(t('capture.recorded', { count: answer.recorded }));
+      discardValues();
+      discardReasons();
     } catch (cause) {
       const body = (cause as { data?: unknown })?.data;
       setError(Array.isArray(body) ? String(body[0]) : t('capture.failed'));
@@ -95,11 +102,6 @@ export default function CapturePage() {
       <PageHeader
         title={t('capture.title', { equipment: visit.data.equipment.name })}
         description={t('capture.subtitle', { order: visit.data.service_order.code })}
-        actions={
-          <Button onClick={() => void navigate(`/services/visits/${id}`)}>
-            {t('capture.backToVisit')}
-          </Button>
-        }
       />
 
       {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}

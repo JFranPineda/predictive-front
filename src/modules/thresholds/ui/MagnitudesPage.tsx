@@ -16,6 +16,7 @@ import { Spinner } from '@shared/ui/Spinner';
 import type { Magnitude, UnitRef } from '../domain/types';
 import {
   useDeleteUnitMutation,
+  useUpdateMagnitudeMutation,
   useUpdateUnitMutation,
   useCreateMagnitudeMutation,
   useCreateUnitMutation,
@@ -44,6 +45,7 @@ export default function MagnitudesPage() {
   const [error, setError] = useState<string | null>(null);
   const [editingUnit, setEditingUnit] = useState<UnitRef | null>(null);
   const [deleteUnit] = useDeleteUnitMutation();
+  const [updateMagnitude] = useUpdateMagnitudeMutation();
 
   if (magnitudes.isLoading) return <Spinner label={t('magnitudes.loading')} />;
 
@@ -74,6 +76,28 @@ export default function MagnitudesPage() {
       render: (row) => <span className="font-mono text-xs">{row.aggregation}</span>,
     },
     { key: 'decimals', header: t('magnitudes.column.decimals'), numeric: true, render: (row) => row.decimals },
+    {
+      key: 'order',
+      header: t('magnitudes.column.order'),
+      headerHint: t('magnitudes.orderHint'),
+      numeric: true,
+      render: (row) =>
+        canManage ? (
+          <input
+            type="number"
+            min={0}
+            defaultValue={row.display_order}
+            aria-label={t('magnitudes.column.order')}
+            onBlur={(event) => {
+              const next = Number(event.target.value);
+              if (next !== row.display_order) void updateMagnitude({ id: row.id, display_order: next });
+            }}
+            className="w-16 rounded border border-slate-300 px-1.5 py-0.5 text-right text-sm tabular-nums dark:border-slate-700 dark:bg-slate-800"
+          />
+        ) : (
+          row.display_order
+        ),
+    },
     {
       key: 'direction',
       header: t('magnitudes.column.direction'),

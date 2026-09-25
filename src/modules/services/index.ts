@@ -21,6 +21,11 @@ const definition: ModuleDefinition = {
       permission: 'services.view',
     },
     {
+      path: '/settings/providers',
+      component: lazy(() => import('./ui/ProvidersPage')),
+      permission: 'services.manage_order',
+    },
+    {
       path: '/services/authorship',
       component: lazy(() => import('./ui/AuthorshipPage')),
       permission: 'services.view_authorship',

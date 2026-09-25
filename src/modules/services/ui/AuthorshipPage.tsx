@@ -113,13 +113,15 @@ function VisitCard({
   return (
     <Card padded={false}>
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
-        <Link
-          to={`/services/visits/${visit.visit_id}`}
-          className="font-medium hover:text-sky-600"
-        >
-          {visit.equipment_name}
+        <Link to={`/services/visits/${visit.visit_id}`} className="hover:text-sky-600">
+          <span className="text-xs uppercase tracking-wide text-slate-400">{t('card.group')} </span>
+          <span className="font-medium">{visit.group_name}</span>
         </Link>
-        <span className="font-mono text-xs text-slate-500">{visit.equipment_tag}</span>
+        <span className="text-sm">
+          <span className="text-xs uppercase tracking-wide text-slate-400">{t('card.equipment')} </span>
+          {visit.equipment_name}{' '}
+          <span className="font-mono text-xs text-slate-500">{visit.equipment_tag}</span>
+        </span>
         <span className="text-sm text-slate-500">{visit.area_label}</span>
         <span className="rounded bg-slate-100 px-2 py-0.5 text-xs dark:bg-slate-800">
           {visit.technique_name}

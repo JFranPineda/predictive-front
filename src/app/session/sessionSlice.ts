@@ -1,5 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
+import { DRAFT_PREFIX } from '@shared/hooks/useDraft';
+
 export interface MenuEntry {
   label: string;
   route: string;
@@ -25,6 +27,11 @@ export interface ModuleSummary {
   permissions: [string, string][];
 }
 
+/** Why the last session ended: the login screen says so when it was inactivity. */
+export type LogoutReason = 'signed_out' | 'idle' | 'expired';
+
+const SESSION_KEYS = ['access', 'refresh', 'company', 'session.lastActivity'];
+
 interface SessionState {
   accessToken: string | null;
   refreshToken: string | null;
@@ -33,6 +40,7 @@ interface SessionState {
    * ownership checks need is duplicated here. */
   userId: number | null;
   permissions: string[];
+  endedBy: LogoutReason | null;
 }
 
 const initialState: SessionState = {
@@ -41,6 +49,7 @@ const initialState: SessionState = {
   companyId: Number(localStorage.getItem('company')) || null,
   userId: null,
   permissions: [],
+  endedBy: null,
 };
 
 const sessionSlice = createSlice({
@@ -50,6 +59,7 @@ const sessionSlice = createSlice({
     tokensReceived(state, action: PayloadAction<{ access: string; refresh: string }>) {
       state.accessToken = action.payload.access;
       state.refreshToken = action.payload.refresh;
+      state.endedBy = null;
       localStorage.setItem('access', action.payload.access);
       localStorage.setItem('refresh', action.payload.refresh);
     },
@@ -61,12 +71,20 @@ const sessionSlice = createSlice({
       state.userId = action.payload.userId;
       state.permissions = action.payload.permissions;
     },
-    loggedOut(state) {
+    loggedOut(state, action: PayloadAction<LogoutReason | undefined>) {
+      const reason = action.payload ?? 'expired';
       state.accessToken = null;
       state.refreshToken = null;
       state.userId = null;
       state.permissions = [];
-      localStorage.clear();
+      state.endedBy = reason;
+      SESSION_KEYS.forEach((key) => localStorage.removeItem(key));
+      // Unsent field work survives an idle logout, not a deliberate sign-out.
+      if (reason === 'signed_out') {
+        Object.keys(localStorage)
+          .filter((key) => key.startsWith(DRAFT_PREFIX))
+          .forEach((key) => localStorage.removeItem(key));
+      }
     },
   },
 });

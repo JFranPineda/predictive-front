@@ -39,5 +39,14 @@
     "document": "Documents",
     "blueprint": "Blueprints",
     "nameplate": "Nameplates"
+  },
+  "detail": {
+    "failed": "The action could not be completed",
+    "uploaded": "Uploaded by {{who}} on {{when}}",
+    "confirmDelete": "Delete this file? This cannot be undone.",
+    "openOriginal": "Open original",
+    "document": "Document: open it to view or download it.",
+    "caption": "Description",
+    "captionHint": "What the image shows. On a capture, it is the diagnosis the report will carry."
   }
 }

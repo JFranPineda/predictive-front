@@ -40,6 +40,7 @@ export interface Standard {
 }
 
 export interface Magnitude {
+  id: number;
   code: string;
   name: string;
   technique_code: string;
@@ -47,6 +48,8 @@ export interface Magnitude {
   unit_code: string;
   aggregation: string;
   decimals: number;
+  /** Where its table sits in the record of values. */
+  display_order: number;
   higher_is_worse: boolean;
 }
 

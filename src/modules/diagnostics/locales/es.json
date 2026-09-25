@@ -21,5 +21,13 @@
     "anyTechnique": "General",
     "new": "Nuevo modo de falla",
     "newHint": "El servidor rechaza uno de otra técnica"
+  },
+  "other": "Otros",
+  "otherPlaceholder": "Qué se encontró (p. ej. vibración por tubería suelta)",
+  "otherRequired": "Describe el problema marcado como «Otros»",
+  "others": {
+    "title": "Anotado como «Otros»",
+    "hint": "Lo que las cuadrillas encontraron fuera del catálogo. Una descripción que se repite es un modo de falla que falta.",
+    "empty": "Nadie ha usado «Otros» todavía"
   }
 }

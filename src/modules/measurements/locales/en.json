@@ -37,7 +37,6 @@
   "trend": {
     "subtitle": "Point × date matrix, the same shape as the customer's trend sheet.",
     "hint": "Each cell is tinted with the status that reading got. An empty dot is a round that does not exist; a dash is a round that could not be measured.",
-    "back": "← Back",
     "empty": "This equipment has no readings",
     "emptyBody": "They will appear once the first visit is recorded."
   },
@@ -67,7 +66,7 @@
     "opposite_coupling": "Opposite coupling",
     "inboard": "Inboard",
     "outboard": "Outboard",
-    "custom": "General"
+    "custom": "Other"
   },
   "instruments": {
     "title": "Instruments",
@@ -125,7 +124,6 @@
     "send": "Record the round",
     "recorded": "{{count}} readings recorded and graded",
     "failed": "Could not record the round",
-    "backToVisit": "Back to the visit",
     "nothingToCapture": "Nothing to capture",
     "nothingHint": "This machine has no active points, or the order's technique measures nothing",
     "reasonOption": {

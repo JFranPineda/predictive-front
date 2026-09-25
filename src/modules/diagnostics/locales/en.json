@@ -21,5 +21,13 @@
     "anyTechnique": "General",
     "new": "New fault mode",
     "newHint": "The server refuses one from another technique"
+  },
+  "other": "Other",
+  "otherPlaceholder": "What was found (e.g. vibration from a loose pipe)",
+  "otherRequired": "Describe the problem marked as \"Other\"",
+  "others": {
+    "title": "Noted as \"Other\"",
+    "hint": "What crews found outside the catalogue. A description that keeps coming back is a missing fault mode.",
+    "empty": "Nobody has used \"Other\" yet"
   }
 }

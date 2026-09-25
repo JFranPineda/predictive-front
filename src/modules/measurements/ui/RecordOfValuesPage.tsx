@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { formatDate } from '@app/i18n/format';
 import { Button } from '@shared/ui/Button';
@@ -117,12 +117,6 @@ export default function RecordOfValuesPage() {
                 </button>
               ))}
             </div>
-            <Link
-              to="/measurements"
-              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
-            >
-              {t('trend.back')}
-            </Link>
             <Button onClick={() => setEditingPlate(true)}>{t('nameplate:open')}</Button>
             <Button
               disabled={isDownloading}

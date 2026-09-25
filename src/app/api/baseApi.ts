@@ -7,8 +7,12 @@ import {
 } from '@reduxjs/toolkit/query/react';
 
 import { currentLanguage } from '@app/i18n';
-import { loggedOut, tokensReceived } from '@app/session/sessionSlice';
+import { lastActivity } from '@app/session/activity';
+import { shouldRenew, tokenTimes } from '@app/session/idlePolicy';
+import { loggedOut } from '@app/session/sessionSlice';
 import type { RootState } from '@app/store';
+
+import { renewTokens } from './tokenRefresh';
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: '/api/v1/',
@@ -28,63 +32,34 @@ const rawBaseQuery = fetchBaseQuery({
 });
 
 /**
- * An expired access token is refreshed once and the request retried; only a
- * refusal to refresh ends the session.
+ * Renews ahead of expiry while the user is working, and once more on a 401;
+ * only a refused renewal ends the session.
  *
- * The session is meant to survive thirty minutes of *inactivity*, and the
- * server rotates the refresh token on every use, so somebody who keeps
- * working never sees this happen. Without the retry, the access token simply
- * expiring mid-form threw the user back to the login screen.
- *
- * A single in-flight refresh is shared: a page that fires six queries at once
- * must not send six refreshes and blacklist its own token five times over.
+ * Renewing only on a 401 let the access and the refresh token expire at the
+ * same instant, which logged out people mid-form exactly like people who had
+ * walked away. Inactivity itself is the session guard's call, not this one's.
  */
-let refreshing: Promise<boolean> | null = null;
-
 const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
   extraOptions,
 ) => {
+  const before = (api.getState() as RootState).session;
+  if (shouldRenew(Date.now(), tokenTimes(before.accessToken), lastActivity())) {
+    await renewTokens(api.dispatch, before.refreshToken);
+  }
+
   let result = await rawBaseQuery(args, api, extraOptions);
   if (result.error?.status !== 401) return result;
 
-  const state = api.getState() as RootState;
-  if (!state.session.refreshToken) {
-    api.dispatch(loggedOut());
-    return result;
-  }
-
-  refreshing ??= renewSession(api);
-  const renewed = await refreshing;
-  refreshing = null;
-
+  const renewed = await renewTokens(api.dispatch, (api.getState() as RootState).session.refreshToken);
   if (!renewed) {
-    api.dispatch(loggedOut());
+    api.dispatch(loggedOut('expired'));
     return result;
   }
   result = await rawBaseQuery(args, api, extraOptions);
   return result;
 };
-
-async function renewSession(api: Parameters<typeof rawBaseQuery>[1]): Promise<boolean> {
-  const state = api.getState() as RootState;
-  const response = await rawBaseQuery(
-    { url: 'auth/refresh/', method: 'POST', body: { refresh: state.session.refreshToken } },
-    api,
-    {},
-  );
-  const tokens = response.data as { access?: string; refresh?: string } | undefined;
-  if (!tokens?.access) return false;
-  api.dispatch(
-    tokensReceived({
-      access: tokens.access,
-      // Rotation is on, so the server hands back a fresh refresh token too.
-      refresh: tokens.refresh ?? state.session.refreshToken!,
-    }),
-  );
-  return true;
-}
 
 /**
  * One API slice for the whole app. Modules add their endpoints with
@@ -116,6 +91,7 @@ export const baseApi = createApi({
     'Instrument',
     'Unit',
     'ServiceOrder',
+    'ServiceProvider',
     'Summary',
     'User',
     'Role',

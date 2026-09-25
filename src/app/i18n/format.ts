@@ -38,6 +38,13 @@ export function formatDate(value: string | Date | null, locale = currentLocale()
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(value));
 }
 
+/** "18–20 sept 2026" for a window, a single date when it is one day. */
+export function formatDateRange(from: string, to: string, locale = currentLocale()): string {
+  const format = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
+  if (from === to) return format.format(new Date(`${from}T12:00:00`));
+  return format.formatRange(new Date(`${from}T12:00:00`), new Date(`${to}T12:00:00`));
+}
+
 export function formatDateTime(value: string | Date | null, locale = currentLocale()): string {
   if (!value) return '—';
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(

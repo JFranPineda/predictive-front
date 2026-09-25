@@ -2,10 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet } from 'react-router-dom';
 
 import { useAppDispatch } from '@app/hooks';
+import { SessionGuard } from '@app/session/SessionGuard';
 import { loggedOut } from '@app/session/sessionSlice';
 import type { Bootstrap } from '@app/session/sessionApi';
 import type { MenuEntry } from '@app/session/sessionSlice';
 import { ThemeToggle } from '@shared/ui/ThemeToggle';
+
+import { BackButton } from './BackButton';
+import { BrandLogo } from './BrandLogo';
 
 interface Props {
   menu: MenuEntry[];
@@ -26,8 +30,8 @@ export function AppShell({ menu, user, companies }: Props) {
     <div className="flex h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         <div className="px-5 py-5">
-          <p className="text-lg font-semibold tracking-tight">{t('app.name')}</p>
-          {company && <p className="mt-0.5 truncate text-xs text-slate-500">{company.name}</p>}
+          <BrandLogo className="w-full" />
+          {company && <p className="mt-2 truncate text-xs text-slate-500">{company.name}</p>}
         </div>
 
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3">
@@ -59,7 +63,7 @@ export function AppShell({ menu, user, companies }: Props) {
             </div>
           </div>
           <button
-            onClick={() => dispatch(loggedOut())}
+            onClick={() => dispatch(loggedOut('signed_out'))}
             className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
           >
             {t('auth.signOut')}
@@ -68,8 +72,13 @@ export function AppShell({ menu, user, companies }: Props) {
       </aside>
 
       <main className="flex-1 overflow-auto">
+        {/* Same frame as <Page>, so the button lines up with the title below. */}
+        <div className="mx-auto max-w-7xl px-8 pt-4 empty:hidden">
+          <BackButton menuRoutes={menu.map((item) => item.route)} />
+        </div>
         <Outlet />
       </main>
+      <SessionGuard />
     </div>
   );
 }

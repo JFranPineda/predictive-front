@@ -5,6 +5,7 @@ import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 
+import { atPrecision, stepFor } from '../domain/operatingValue';
 import {
   useSaveVisitOperatingMutation,
   useVisitOperatingQuery,
@@ -25,7 +26,7 @@ export function OperatingSection({ visitId, canEdit }: { visitId: number; canEdi
 
   useEffect(() => {
     if (!data) return;
-    setDraft(Object.fromEntries(data.map((row) => [row.code, row.value ?? ''])));
+    setDraft(Object.fromEntries(data.map((row) => [row.code, atPrecision(row.value, row.decimals)])));
   }, [data]);
 
   if (!data) return null;
@@ -37,7 +38,9 @@ export function OperatingSection({ visitId, canEdit }: { visitId: number; canEdi
     );
   }
 
-  const dirty = data.filter((row) => (row.value ?? '') !== (draft[row.code] ?? ''));
+  const dirty = data.filter(
+    (row) => atPrecision(row.value, row.decimals) !== atPrecision(draft[row.code], row.decimals),
+  );
 
   return (
     <Card
@@ -70,7 +73,9 @@ export function OperatingSection({ visitId, canEdit }: { visitId: number; canEdi
               {row.name}
             </span>
             <input
-              inputMode="decimal"
+              type="number"
+              step={stepFor(row.decimals)}
+              inputMode={row.decimals > 0 ? 'decimal' : 'numeric'}
               disabled={!canEdit}
               value={draft[row.code] ?? ''}
               onChange={(event) => setDraft({ ...draft, [row.code]: event.target.value })}

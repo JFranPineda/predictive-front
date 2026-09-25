@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { baseApi } from '@app/api/baseApi';
-import { useAppDispatch } from '@app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
+import { BrandLogo } from '@app/layout/BrandLogo';
 import { useCodeLoginMutation, useLoginMutation } from '@app/session/sessionApi';
 import { tokensReceived } from '@app/session/sessionSlice';
 
@@ -22,6 +23,7 @@ const INPUT =
 export function LoginPage() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const endedBy = useAppSelector((state) => state.session.endedBy);
   const [login, corporate] = useLoginMutation();
   const [codeLogin, byCode] = useCodeLoginMutation();
   const [mode, setMode] = useState<Mode>('corporate');
@@ -55,7 +57,14 @@ export function LoginPage() {
         onSubmit={(event) => void submit(event)}
         className="w-88 space-y-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
       >
-        <h1 className="text-lg font-semibold">{t('app.name')}</h1>
+        <h1>
+          <BrandLogo className="mx-auto w-56" />
+        </h1>
+        {endedBy === 'idle' && (
+          <p role="status" className="rounded-lg bg-amber-50 p-2 text-center text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+            {t('session.endedIdle')}
+          </p>
+        )}
 
         <div role="tablist" className="grid grid-cols-2 rounded-lg bg-slate-100 p-1 text-sm dark:bg-slate-800">
           {(['corporate', 'code'] as const).map((option) => (

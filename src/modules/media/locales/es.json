@@ -39,5 +39,14 @@
     "document": "Documentos",
     "blueprint": "Planos",
     "nameplate": "Placas"
+  },
+  "detail": {
+    "failed": "No se pudo completar la acción",
+    "uploaded": "Subida por {{who}} el {{when}}",
+    "confirmDelete": "¿Eliminar este archivo? No se puede deshacer.",
+    "openOriginal": "Abrir original",
+    "document": "Documento: ábrelo para verlo o descargarlo.",
+    "caption": "Descripción",
+    "captionHint": "Lo que muestra la imagen. En una captura, es el diagnóstico que se leerá en el reporte."
   }
 }

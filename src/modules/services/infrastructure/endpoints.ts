@@ -3,16 +3,38 @@ import { baseApi } from '@app/api/baseApi';
 import type {
   AuthoredEntry,
   EntryType,
+  NamedRef,
+  OrderStatus,
   ServiceAuthorship,
-  ServiceOrder,
+  ServiceOrderPage,
+  ServiceOrderQuery,
+  ServiceProvider,
   VisitDetail,
 } from '../domain/types';
 
 export const servicesApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    serviceOrders: build.query<{ results: ServiceOrder[]; count: number }, { status?: string }>({
+    serviceOrders: build.query<ServiceOrderPage, ServiceOrderQuery>({
       query: (params) => ({ url: 'service-orders/', params }),
       providesTags: ['ServiceOrder'],
+    }),
+    analysts: build.query<NamedRef[], void>({
+      query: () => 'service-orders/analysts/',
+    }),
+    serviceProviders: build.query<ServiceProvider[], { active?: boolean } | void>({
+      query: (args) => ({ url: 'service-providers/', params: args?.active ? { active: 1 } : {} }),
+      providesTags: ['ServiceProvider'],
+    }),
+    createServiceProvider: build.mutation<ServiceProvider, { name: string; tax_id?: string }>({
+      query: (body) => ({ url: 'service-providers/', method: 'POST', body }),
+      invalidatesTags: ['ServiceProvider'],
+    }),
+    updateServiceProvider: build.mutation<
+      ServiceProvider,
+      { id: number; name?: string; tax_id?: string; is_active?: boolean }
+    >({
+      query: ({ id, ...body }) => ({ url: `service-providers/${id}/`, method: 'PATCH', body }),
+      invalidatesTags: ['ServiceProvider', 'ServiceOrder'],
     }),
     authorship: build.query<
       { results: ServiceAuthorship[]; next: string | null },
@@ -52,7 +74,8 @@ export const servicesApi = baseApi.injectEndpoints({
         client_work_order?: string;
         scheduled_from?: string;
         scheduled_to?: string;
-        status?: string;
+        provider?: number | null;
+        lead_analyst?: number | null;
       }
     >({
       query: (body) => ({ url: 'service-orders/new/', method: 'POST', body }),
@@ -63,10 +86,12 @@ export const servicesApi = baseApi.injectEndpoints({
       {
         id: number;
         code?: string;
-        status?: string;
+        status?: OrderStatus;
         client_work_order?: string;
         scheduled_from?: string;
         scheduled_to?: string;
+        provider?: number | null;
+        lead_analyst?: number | null;
       }
     >({
       query: ({ id, ...body }) => ({ url: `service-orders/${id}/`, method: 'PATCH', body }),
@@ -179,6 +204,10 @@ export const {
   useVisitOperatingQuery,
   useSaveVisitOperatingMutation,
   useServiceOrdersQuery,
+  useAnalystsQuery,
+  useServiceProvidersQuery,
+  useCreateServiceProviderMutation,
+  useUpdateServiceProviderMutation,
   useAuthorshipQuery,
   useVisitQuery,
   useSaveVisitReadingsMutation,

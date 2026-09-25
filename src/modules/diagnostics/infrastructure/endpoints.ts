@@ -10,6 +10,17 @@ export interface FaultMode {
   reference: string;
 }
 
+/** A problem written under "Otros": what the catalogue grows from. */
+export interface OtherFault {
+  visit_id: number;
+  visited_at: string;
+  technique_code: string;
+  technique_name: string;
+  group_name: string;
+  equipment_name: string;
+  description: string;
+}
+
 export const diagnosticsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     faultModes: build.query<FaultMode[], { technique?: string }>({
@@ -28,13 +39,24 @@ export const diagnosticsApi = baseApi.injectEndpoints({
       query: (id) => ({ url: `fault-modes/${id}/`, method: 'DELETE' }),
       invalidatesTags: ['FaultMode'],
     }),
-    setVisitFaults: build.mutation<{ codes: string[] }, { visitId: number; codes: string[] }>({
-      query: ({ visitId, codes }) => ({
+    otherFaults: build.query<OtherFault[], { technique?: string }>({
+      query: (params) => ({ url: 'fault-modes/others/', params }),
+      providesTags: ['FaultMode'],
+    }),
+    setVisitFaults: build.mutation<
+      { codes: string[]; other: string | null },
+      { visitId: number; codes: string[]; other: string | null }
+    >({
+      query: ({ visitId, codes, other }) => ({
         url: `service-visits/${visitId}/faults/`,
         method: 'PUT',
-        body: { codes },
+        body: { codes, other },
       }),
-      invalidatesTags: (_r, _e, { visitId }) => [{ type: 'Visit', id: visitId }, 'ServiceOrder'],
+      invalidatesTags: (_r, _e, { visitId }) => [
+        { type: 'Visit', id: visitId },
+        'ServiceOrder',
+        'FaultMode',
+      ],
     }),
   }),
 });
@@ -45,4 +67,5 @@ export const {
   useUpdateFaultModeMutation,
   useDeleteFaultModeMutation,
   useSetVisitFaultsMutation,
+  useOtherFaultsQuery,
 } = diagnosticsApi;

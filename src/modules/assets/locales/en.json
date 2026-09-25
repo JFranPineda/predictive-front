@@ -140,7 +140,11 @@
     },
     "pointCount": "Points",
     "pointCountHint": "How many points are read on this component",
-    "rebuildLayout": "Rebuild layout from components"
+    "rebuildLayout": "Rebuild layout from components",
+    "drift": "{{label}} declares {{declared}} points and the template carries {{actual}}.",
+    "rebuildComponent": "Rebuild {{label}}",
+    "whenNewKind": "A kind is shared by every train that uses it: changing it affects the trains created afterwards. If one train has a shape of its own (a paper machine's line of bearing housings, for instance), create a new kind for it, or adjust just that train with \"Points\" in Structure.",
+    "magnitudesHint": "A point can measure magnitudes of several services: if the train also gets ultrasound or thermography, add its magnitude here (for instance, \"Ultrasound level\"). Existing trains receive it with \"Apply the kind's template\", keeping their readings."
   },
   "points": {
     "title": "Points of {{group}}",

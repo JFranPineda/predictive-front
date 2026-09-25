@@ -21,6 +21,7 @@ const visit = (over: Partial<ServiceAuthorship> = {}): ServiceAuthorship => ({
   equipment_id: 228,
   equipment_name: 'EB 228 MOTOR',
   equipment_tag: 'MB1141001B',
+  group_name: 'EB 228',
   area_label: '114 - BATERÍA',
   technique_code: 'vibration',
   technique_name: 'Vibraciones',

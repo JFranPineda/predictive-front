@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { formatDate, formatNumber } from '@app/i18n/format';
 import { useEquipmentQuery } from '@modules/assets';
@@ -41,14 +41,6 @@ export default function TrendMatrixPage() {
             : t('title')
         }
         description={t('trend.subtitle')}
-        actions={
-          <Link
-            to={`/measurements/${id}`}
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700"
-          >
-            {t('trend.back')}
-          </Link>
-        }
       />
 
       {isError ? (

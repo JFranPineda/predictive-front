@@ -10,6 +10,7 @@ import { Spinner } from '@shared/ui/Spinner';
 
 import type { MediaAsset, MediaKind, MediaVisitRef } from '../domain/types';
 import { useEquipmentMediaQuery } from '../infrastructure/endpoints';
+import { MediaDetailModal } from './MediaDetailModal';
 
 const KINDS: MediaKind[] = [
   'photo',
@@ -104,7 +105,7 @@ export default function EquipmentMediaPage() {
         <Button onClick={() => setCursor(next)}>{t('equipmentGallery.more')}</Button>
       )}
 
-      {opened && <Lightbox asset={opened} onClose={() => setOpened(null)} />}
+      {opened && <MediaDetailModal asset={opened} onClose={() => setOpened(null)} />}
     </Page>
   );
 }
@@ -176,24 +177,5 @@ function Tile({
         )}
       </button>
     </li>
-  );
-}
-
-/** The original is only ever downloaded here, never in the grid. */
-function Lightbox({ asset, onClose }: { asset: MediaAsset; onClose: () => void }) {
-  const { t } = useTranslation(['media', 'common']);
-  return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6"
-    >
-      <figure className="max-h-full max-w-4xl overflow-auto" onClick={(e) => e.stopPropagation()}>
-        <img src={asset.url} alt={asset.caption} className="max-h-[80vh] w-auto rounded-lg" />
-        <figcaption className="mt-2 text-sm text-slate-200">
-          {asset.caption || t('equipmentGallery.noCaption')}
-        </figcaption>
-        <Button onClick={onClose}>{t('common:action.close')}</Button>
-      </figure>
-    </div>
   );
 }
