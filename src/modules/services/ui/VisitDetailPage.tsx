@@ -143,8 +143,15 @@ export default function VisitDetailPage() {
         <ThermogramUploadCard visitId={id} equipmentId={data.equipment.id} />
       )}
 
-      <div id="readings" className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]">
-        {data.technique_code === 'alignment' ? (
+      <div
+        id="readings"
+        className={
+          data.evidence_only
+            ? 'grid gap-6'
+            : 'grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]'
+        }
+      >
+        {data.evidence_only ? null : data.technique_code === 'alignment' ? (
           <AlignmentPanel visitId={id} assetGroupId={data.equipment.asset_group_id} />
         ) : data.technique_code === 'topography' ? (
           <TopographyPanel

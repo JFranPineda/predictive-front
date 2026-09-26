@@ -135,6 +135,7 @@ export interface VisitDetail {
   };
   service_order: { code: string; client_work_order: string };
   technique_code: string;
+  evidence_only: boolean;
   technique_name: string;
   visited_at: string;
   instrument: string | null;
