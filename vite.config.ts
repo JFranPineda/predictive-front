@@ -20,9 +20,14 @@ export default defineConfig({
     // `/media` is where the local store serves originals and thumbnails.
     // Without it Vite answers with the SPA's index.html: every image breaks
     // and a click on one lands on the login page.
+    //
+    // The Host header is kept: the backend picks the customer from it
+    // (`ipsa.localhost` → tenant `ipsa`), as it does in production where the
+    // API shares the app's host. The string shorthand rewrote it to the
+    // target's, and every subdomain landed on the default tenant.
     proxy: {
-      '/api': apiTarget,
-      '/media': apiTarget,
+      '/api': { target: apiTarget, changeOrigin: false },
+      '/media': { target: apiTarget, changeOrigin: false },
     },
   },
   build: {

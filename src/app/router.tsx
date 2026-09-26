@@ -54,6 +54,8 @@ export function AppRoutes() {
   const moduleRoutes = routesFor(definitions, permissions);
   const menu = renderableMenu(data.menu, moduleRoutes);
   const first = moduleRoutes[0];
+  // Home is what the menu offers first, not whichever module loaded first.
+  const home = menu[0]?.route ?? first?.route.path;
 
   return (
     <Routes>
@@ -69,6 +71,10 @@ export function AppRoutes() {
             }
           />
         ))}
+        {/* No module owns the root: right after signing in (still on
+            /login) the user landed on "that screen does not exist". */}
+        {home && <Route path="/" element={<Navigate to={home} replace />} />}
+        {home && <Route path="/login" element={<Navigate to={home} replace />} />}
         {/* A typed-in URL for a module this build does not ship says so,
             instead of silently bouncing to another screen. */}
         <Route path="*" element={<NotFound fallback={first?.route.path} />} />
