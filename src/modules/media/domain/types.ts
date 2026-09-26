@@ -12,7 +12,8 @@ export type MediaKind =
   | 'nameplate'
   | 'document'
   | 'schematic'
-  | 'site_photo';
+  | 'site_photo'
+  | 'topography_plan';
 
 export interface MediaAsset {
   id: number;
@@ -41,6 +42,7 @@ export const CAPTURE_KIND_BY_TECHNIQUE: Record<string, MediaKind> = {
   ultrasound: 'ultrasound_capture',
   oil_analysis: 'document',
   insulating_oil: 'document',
+  topography: 'topography_plan',
 };
 
 export interface MediaPage {

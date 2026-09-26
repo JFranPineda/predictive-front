@@ -7,6 +7,7 @@ import { AlignmentPanel } from '@modules/alignment';
 import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
 import { ThermogramUploadCard } from '@modules/measurements';
+import { TopographyPanel } from '@modules/topography';
 import { useCompanyUsersQuery } from '@modules/users';
 import { Button } from '@shared/ui/Button';
 import { Card, Field } from '@shared/ui/Card';
@@ -145,6 +146,12 @@ export default function VisitDetailPage() {
       <div id="readings" className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]">
         {data.technique_code === 'alignment' ? (
           <AlignmentPanel visitId={id} assetGroupId={data.equipment.asset_group_id} />
+        ) : data.technique_code === 'topography' ? (
+          <TopographyPanel
+            visitId={id}
+            assetGroupId={data.equipment.asset_group_id}
+            canEdit={data.can_edit}
+          />
         ) : (
         <Card
           title={t('visit.readings')}

@@ -1,0 +1,24 @@
+{
+  "panel": {
+    "title": "Topography",
+    "hint": "One element per row, by its number on the plan."
+  },
+  "column": {
+    "element": "Element",
+    "level_h": "Level H",
+    "level_v": "Level V",
+    "parallel_h": "Parallel H",
+    "parallel_v": "Parallel V",
+    "observation": "Observation",
+    "history": "History",
+    "date": "Date"
+  },
+  "form": {
+    "newElement": "New element, e.g. R3",
+    "addElement": "Add element",
+    "genericError": "Could not save"
+  },
+  "history": {
+    "empty": "No history for this element"
+  }
+}

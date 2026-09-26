@@ -26,6 +26,7 @@ const LOADERS: Record<string, ModuleLoader[]> = {
   nameplate: [() => import('@modules/nameplate')],
   operating_data: [() => import('@modules/operating_data')],
   alignment: [() => import('@modules/alignment')],
+  topography: [() => import('@modules/topography')],
 };
 
 export function knownModuleCodes(): string[] {

@@ -1,0 +1,24 @@
+{
+  "panel": {
+    "title": "Topografía",
+    "hint": "Un elemento por fila, según su número en el plano."
+  },
+  "column": {
+    "element": "Elemento",
+    "level_h": "Nivel H",
+    "level_v": "Nivel V",
+    "parallel_h": "Paralelo H",
+    "parallel_v": "Paralelo V",
+    "observation": "Observación",
+    "history": "Historial",
+    "date": "Fecha"
+  },
+  "form": {
+    "newElement": "Nuevo elemento, p. ej. R3",
+    "addElement": "Agregar elemento",
+    "genericError": "No se pudo guardar"
+  },
+  "history": {
+    "empty": "Sin historial para este elemento"
+  }
+}
