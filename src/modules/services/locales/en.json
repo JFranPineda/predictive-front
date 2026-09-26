@@ -105,7 +105,8 @@
     "removeLastPerformer": "Remove the last one",
     "capture": "Capture the whole round",
     "ungraded": "No standard",
-    "ungradedHint": "No threshold judges this magnitude: the value has no status."
+    "ungradedHint": "No threshold judges this magnitude: the value has no status.",
+    "viewThermogram": "View thermogram"
   },
   "subtitle": "Every visit with who performed it and what they wrote. You can only edit your own while they are open.",
   "empty": "No visits recorded",

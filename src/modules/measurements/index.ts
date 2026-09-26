@@ -7,6 +7,9 @@ import es from './locales/es.json';
 
 import { measurementsApi } from './infrastructure/endpoints';
 
+export { useCreateThermogramMutation } from './infrastructure/endpoints';
+export { ThermogramUploadCard } from './ui/ThermogramUploadCard';
+
 const definition: ModuleDefinition = {
   code: 'measurements',
   routes: [

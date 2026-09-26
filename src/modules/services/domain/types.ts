@@ -107,6 +107,8 @@ export interface VisitReadingValue {
   graded: boolean;
   quality: string;
   not_measured_reason: string | null;
+  /** The thermogram behind this value, if any (V3-16). */
+  image_url: string | null;
 }
 
 export interface VisitPoint {
@@ -126,6 +128,7 @@ export interface VisitDetail {
     tag: string;
     type: string;
     asset_group: string;
+    asset_group_id: number;
     area_label: string;
     sector: string;
   };

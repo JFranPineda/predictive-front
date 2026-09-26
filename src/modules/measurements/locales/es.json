@@ -72,7 +72,8 @@
     "schematic": "Esquema del conjunto",
     "noSchematic": "Sin esquema todavía. El plano del tren con sus puntos marcados.",
     "sitePhoto": "Foto del equipo",
-    "noSitePhoto": "Sin foto todavía. Una foto real del conjunto instalado."
+    "noSitePhoto": "Sin foto todavía. Una foto real del conjunto instalado.",
+    "viewThermogram": "Ver termograma"
   },
   "side": {
     "free_end": "Lado libre",
@@ -174,5 +175,20 @@
       "A": "Axial",
       "N": "Sin eje"
     }
+  },
+  "thermogram": {
+    "title": "Subir termograma",
+    "hint": "Un termograma por elemento observado. Si la imagen la tomó una cámara FLIR, la temperatura máxima se propone sola.",
+    "point": "Punto / elemento",
+    "tmax": "Tmáx (°C)",
+    "tmaxHint": "Déjalo vacío para que se proponga desde la imagen, si es posible",
+    "reference": "Referencia (°C)",
+    "referenceHint": "Con qué se compara, para calcular el ΔT",
+    "image": "Termograma",
+    "caption": "Nota",
+    "captionHint": "Opcional",
+    "upload": "Subir",
+    "uploadFailed": "No se pudo subir el termograma",
+    "suggested": "Tmáx propuesta desde la imagen: {{value}} °C"
   }
 }

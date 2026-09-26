@@ -72,7 +72,8 @@
     "schematic": "Train schematic",
     "noSchematic": "No schematic yet. The drawing of the train with its points marked.",
     "sitePhoto": "Equipment photo",
-    "noSitePhoto": "No photo yet. A real photograph of the installed train."
+    "noSitePhoto": "No photo yet. A real photograph of the installed train.",
+    "viewThermogram": "View thermogram"
   },
   "side": {
     "free_end": "Free end",
@@ -174,5 +175,20 @@
       "A": "Axial",
       "N": "No axis"
     }
+  },
+  "thermogram": {
+    "title": "Upload thermogram",
+    "hint": "One thermogram per element observed. If a FLIR camera took the image, the maximum temperature proposes itself.",
+    "point": "Point / element",
+    "tmax": "Tmax (°C)",
+    "tmaxHint": "Leave blank to propose it from the image, when possible",
+    "reference": "Reference (°C)",
+    "referenceHint": "What it is compared against, to compute ΔT",
+    "image": "Thermogram",
+    "caption": "Note",
+    "captionHint": "Optional",
+    "upload": "Upload",
+    "uploadFailed": "Could not upload the thermogram",
+    "suggested": "Tmax proposed from the image: {{value}} °C"
   }
 }

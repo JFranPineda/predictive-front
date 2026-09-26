@@ -294,6 +294,21 @@ function Block({
                           {t('record.ungraded')}
                         </span>
                       )}
+                      {cell.image_url && (
+                        <a
+                          href={cell.image_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          title={t('record.viewThermogram')}
+                          className="pointer-events-auto absolute right-0.5 top-0.5"
+                        >
+                          <img
+                            src={cell.image_url}
+                            alt={t('record.viewThermogram')}
+                            className="size-4 rounded-sm object-cover ring-1 ring-white dark:ring-slate-900"
+                          />
+                        </a>
+                      )}
                     </td>
                   );
                 })}

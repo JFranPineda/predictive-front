@@ -14,6 +14,8 @@ export interface MatrixCell {
   graded: boolean;
   quality: string;
   visit_id: number | null;
+  /** A thermogram behind this value (V3-16). */
+  image_url: string | null;
 }
 
 /** A value was recorded and nothing judged it (V3-11: acceleration has no standard). */

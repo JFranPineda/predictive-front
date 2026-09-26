@@ -10,6 +10,7 @@ import { assetsApi } from './infrastructure/endpoints';
 export {
   useAreasQuery,
   useAssetGroupsQuery,
+  useEquipmentPointsQuery,
   useEquipmentQuery,
   useEquipmentsQuery,
   useGroupKindsQuery,

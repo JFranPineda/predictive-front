@@ -101,6 +101,25 @@ export const measurementsApi = baseApi.injectEndpoints({
       // Saving re-runs the threshold cascade, so statuses and summaries move.
       invalidatesTags: ['Reading', 'Equipment', 'Summary', 'Visit'],
     }),
+    /** Uploading a thermogram (V3-16): the image is the unit of work, and the
+     * response carries the Tmax and ΔT it produced so the caller can update
+     * without waiting for a refetch. */
+    createThermogram: build.mutation<
+      { image_id: number; image_url: string; tmax_reading_id: number; tmax: string | null;
+        delta_reading_id: number | null; delta: string | null },
+      { visitId: number; body: FormData }
+    >({
+      query: ({ visitId, body }) => ({
+        url: `service-visits/${visitId}/thermograms/`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: (_r, _e, { visitId }) => [
+        { type: 'Visit', id: visitId },
+        'Reading',
+        'Media',
+      ],
+    }),
     recordReadings: build.mutation<
       { recorded: number },
       { visit: number; idempotencyKey: string; readings: unknown[] }
@@ -131,4 +150,5 @@ export const {
   useTrendQuery,
   useSaveMatrixColumnMutation,
   useRecordReadingsMutation,
+  useCreateThermogramMutation,
 } = measurementsApi;
