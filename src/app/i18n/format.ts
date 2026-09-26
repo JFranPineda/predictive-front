@@ -33,9 +33,20 @@ export function formatMeasurement(
   return formatted === '—' ? formatted : `${formatted} ${unit}`;
 }
 
+/**
+ * `2025-08-27` is a calendar day, not an instant. `new Date()` reads it as
+ * midnight UTC, which anywhere west of Greenwich — Lima included — prints as
+ * the 26th: every column of the record of values showed the day before.
+ */
+export function toDate(value: string | Date): Date {
+  const day = typeof value === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
+  if (day) return new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3]));
+  return new Date(value);
+}
+
 export function formatDate(value: string | Date | null, locale = currentLocale()): string {
   if (!value) return '—';
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(value));
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(toDate(value));
 }
 
 /** "18–20 sept 2026" for a window, a single date when it is one day. */
@@ -48,7 +59,7 @@ export function formatDateRange(from: string, to: string, locale = currentLocale
 export function formatDateTime(value: string | Date | null, locale = currentLocale()): string {
   if (!value) return '—';
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(
-    new Date(value),
+    toDate(value),
   );
 }
 
