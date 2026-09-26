@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
 import { formatDateTime } from '@app/i18n/format';
+import { AlignmentPanel } from '@modules/alignment';
 import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
+import { ThermogramUploadCard } from '@modules/measurements';
 import { useCompanyUsersQuery } from '@modules/users';
 import { Button } from '@shared/ui/Button';
 import { Card, Field } from '@shared/ui/Card';
@@ -136,7 +138,14 @@ export default function VisitDetailPage() {
         ))}
       </nav>
 
+      {data.technique_code === 'thermography' && (
+        <ThermogramUploadCard visitId={id} equipmentId={data.equipment.id} />
+      )}
+
       <div id="readings" className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]">
+        {data.technique_code === 'alignment' ? (
+          <AlignmentPanel visitId={id} assetGroupId={data.equipment.asset_group_id} />
+        ) : (
         <Card
           title={t('visit.readings')}
           description={t('visit.readingsHint')}
@@ -211,6 +220,21 @@ export default function VisitDetailPage() {
                                 {t('visit.ungraded')}
                               </span>
                             )}
+                            {value.image_url && (
+                              <a
+                                href={value.image_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                title={t('visit.viewThermogram')}
+                                className="shrink-0"
+                              >
+                                <img
+                                  src={value.image_url}
+                                  alt={t('visit.viewThermogram')}
+                                  className="size-6 rounded object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+                                />
+                              </a>
+                            )}
                           </div>
                         </td>
                       );
@@ -221,6 +245,7 @@ export default function VisitDetailPage() {
             </table>
           </div>
         </Card>
+        )}
 
         <div className="min-w-0 space-y-6">
           <Card title={t('visit.summary')}>

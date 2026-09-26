@@ -1,0 +1,49 @@
+{
+  "panel": {
+    "title": "Alignment",
+    "hint": "SKF format: before and after, eight values.",
+    "save": "Save alignment",
+    "verdictOk": "Within tolerance",
+    "verdictBad": "Out of tolerance on at least one value",
+    "tolerance": "Tolerance applied: parallel {{parallel}} mm, angular {{angular}} mm/100mm"
+  },
+  "form": {
+    "rpmRequired": "RPM is required",
+    "genericError": "Could not save"
+  },
+  "field": {
+    "driver": "Driver",
+    "driven": "Driven",
+    "rpm": "RPM",
+    "instrument": "Instrument"
+  },
+  "phase": {
+    "before": "Before (As Found)",
+    "after": "After (As Corrected)"
+  },
+  "axis": {
+    "angular_h": "Angular H",
+    "parallel_h": "Parallel H",
+    "angular_v": "Angular V",
+    "parallel_v": "Parallel V"
+  },
+  "photos": {
+    "title": "Representative photos",
+    "role": "Role",
+    "file": "File",
+    "caption": "Note",
+    "upload": "Upload photo",
+    "kind": {
+      "alignment_group": "Train",
+      "alignment_observation": "Observation",
+      "alignment_before": "Screen · before",
+      "alignment_after": "Screen · after"
+    }
+  },
+  "list": {
+    "title": "Alignment",
+    "hint": "Trains aligned this month, with before/after and verdict.",
+    "empty": "No alignments this month",
+    "openVisit": "Open visit"
+  }
+}

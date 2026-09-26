@@ -1,0 +1,49 @@
+{
+  "panel": {
+    "title": "Alineamiento",
+    "hint": "Formato SKF: antes y después, ocho valores.",
+    "save": "Guardar alineamiento",
+    "verdictOk": "Dentro de tolerancia",
+    "verdictBad": "Fuera de tolerancia en al menos un valor",
+    "tolerance": "Tolerancia aplicada: paralelo {{parallel}} mm, angular {{angular}} mm/100mm"
+  },
+  "form": {
+    "rpmRequired": "El RPM es obligatorio",
+    "genericError": "No se pudo guardar"
+  },
+  "field": {
+    "driver": "Motriz",
+    "driven": "Conducido",
+    "rpm": "RPM",
+    "instrument": "Instrumento"
+  },
+  "phase": {
+    "before": "Antes (As Found)",
+    "after": "Después (As Corrected)"
+  },
+  "axis": {
+    "angular_h": "Angular H",
+    "parallel_h": "Paralelo H",
+    "angular_v": "Angular V",
+    "parallel_v": "Paralelo V"
+  },
+  "photos": {
+    "title": "Fotos representativas",
+    "role": "Rol",
+    "file": "Archivo",
+    "caption": "Nota",
+    "upload": "Subir foto",
+    "kind": {
+      "alignment_group": "Conjunto",
+      "alignment_observation": "Observación",
+      "alignment_before": "Pantalla · antes",
+      "alignment_after": "Pantalla · después"
+    }
+  },
+  "list": {
+    "title": "Alineamiento",
+    "hint": "Conjuntos alineados en el mes, con antes/después y veredicto.",
+    "empty": "No hay alineamientos en este mes",
+    "openVisit": "Ver visita"
+  }
+}

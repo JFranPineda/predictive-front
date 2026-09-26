@@ -97,6 +97,7 @@ export const baseApi = createApi({
     'Role',
     'License',
     'Media',
+    'AlignmentRecord',
   ],
   endpoints: () => ({}),
 });
