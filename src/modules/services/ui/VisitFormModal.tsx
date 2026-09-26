@@ -26,7 +26,7 @@ export function VisitFormModal({ onClose }: { onClose: () => void }) {
       const created = await create(draft).unwrap();
       onClose();
       // Straight into the form the visit exists for.
-      navigate(`/services/visits/${created.visit_id}`);
+      void navigate(`/services/visits/${created.visit_id}`);
     } catch (cause) {
       setError(readServiceError(cause) ?? t('form.genericError'));
     }

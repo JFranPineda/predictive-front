@@ -333,14 +333,14 @@ function AreaRow({
       {canManage && (
         <Button
           variant="ghost"
-          onClick={async () => {
+          onClick={() => void (async () => {
             onError(null);
             try {
               await remove(area.id).unwrap();
             } catch (cause) {
               onError(readApiError(cause) ?? t('form.genericError'));
             }
-          }}
+          })()}
         >
           ✕
         </Button>
@@ -399,14 +399,14 @@ function GroupRow({
       {canManage && (
         <Button
           variant="ghost"
-          onClick={async () => {
+          onClick={() => void (async () => {
             onError(null);
             try {
               await remove(group.id).unwrap();
             } catch (cause) {
               onError(readApiError(cause) ?? t('form.genericError'));
             }
-          }}
+          })()}
         >
           ✕
         </Button>

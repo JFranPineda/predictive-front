@@ -70,14 +70,14 @@ export default function GroupKindsPage() {
                     {!kind.is_builtin && kind.group_count === 0 && (
                       <Button
                         variant="danger"
-                        onClick={async () => {
+                        onClick={() => void (async () => {
                           setError(null);
                           try {
                             await remove(kind.id).unwrap();
                           } catch (cause) {
                             setError(readKindError(cause) ?? t('form.genericError'));
                           }
-                        }}
+                        })()}
                       >
                         {t('common:action.delete')}
                       </Button>

@@ -5,7 +5,7 @@ import { Button } from '@shared/ui/Button';
 import { ChipPicker, FormField, TextArea, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
 
-import type { Standard, StandardDraft, TechniqueRef } from '../domain/types';
+import type { Standard, StandardDraft } from '../domain/types';
 import {
   useCreateStandardMutation,
   useTechniquesQuery,
@@ -77,7 +77,7 @@ export function StandardFormModal({
 
       <FormField label={t('form.techniques')} hint={t('form.techniquesHint')}>
         <ChipPicker
-          options={(techniques.data ?? []) as TechniqueRef[]}
+          options={techniques.data ?? []}
           selected={draft.techniques}
           onToggle={(code) =>
             setDraft({

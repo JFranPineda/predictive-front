@@ -27,11 +27,14 @@ export function NameplateModal({
   const [save, { isLoading: saving }] = useSaveNameplateMutation();
   const [draft, setDraft] = useState<Record<string, string>>({});
 
-  const value = (field: keyof NonNullable<typeof data>) =>
-    draft[field as string] ?? (data ? String(data[field] ?? '') : '');
+  const value = (field: keyof NonNullable<typeof data>) => {
+    if (draft[field] !== undefined) return draft[field];
+    const raw = data?.[field];
+    return raw === null || raw === undefined || typeof raw === 'object' ? '' : String(raw);
+  };
 
   async function submit() {
-    await save({ equipmentId, ...draft } as never).unwrap().catch(() => undefined);
+    await save({ equipmentId, ...draft }).unwrap().catch(() => undefined);
     onClose();
   }
 
