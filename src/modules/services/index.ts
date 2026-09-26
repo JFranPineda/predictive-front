@@ -36,7 +36,7 @@ const definition: ModuleDefinition = {
 };
 
 /** A module speaks to another through its index, never its internals. */
-export { useVisitQuery } from './infrastructure/endpoints';
+export { useServiceOrdersQuery, useVisitQuery } from './infrastructure/endpoints';
 export type { VisitDetail, VisitPoint } from './domain/types';
 
 export default definition;

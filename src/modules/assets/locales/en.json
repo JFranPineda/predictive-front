@@ -82,7 +82,8 @@
     "blower": "Blower",
     "bearing_housing": "Bearing housing",
     "other": "Other",
-    "turbine": "Turbine"
+    "turbine": "Turbine",
+    "roller": "Roller"
   },
   "form": {
     "genericError": "Could not save",

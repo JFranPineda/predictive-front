@@ -1,5 +1,6 @@
 export type EquipmentType =
-  | 'motor' | 'pump' | 'compressor' | 'gearbox' | 'fan' | 'blower' | 'bearing_housing' | 'other';
+  | 'motor' | 'pump' | 'compressor' | 'gearbox' | 'fan' | 'blower' | 'bearing_housing' | 'roller'
+  | 'other';
 
 export type MonitoringFrequency =
   | 'monthly' | 'bimonthly' | 'quarterly' | 'semiannual' | 'annual' | 'on_demand';
@@ -106,6 +107,7 @@ export const EQUIPMENT_TYPES = [
   'fan',
   'blower',
   'bearing_housing',
+  'roller',
   'other',
 ] as const;
 

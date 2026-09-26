@@ -100,6 +100,8 @@ export const baseApi = createApi({
     'AlignmentRecord',
     'TopographyElement',
     'WorkRecord',
+    'RollerSheet',
+    'RollerIndication',
   ],
   endpoints: () => ({}),
 });

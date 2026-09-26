@@ -1,0 +1,60 @@
+{
+  "page": {
+    "title": "UT en rodillos",
+    "hint": "Seis espesores por rodillo; el estado se juzga sobre el más delgado, como en la orden del cliente.",
+    "order": "Orden de servicio",
+    "group": "Grupo de rodillos",
+    "groupOption": "{{name}} ({{count}} rodillos)",
+    "noOrders": "No hay órdenes de UT en rodillos",
+    "noOrdersHint": "Crea una en Servicios con la técnica «END · UT en rodillos».",
+    "noGroups": "No hay grupos de rodillos",
+    "noGroupsHint": "Crea un conjunto del tipo «Rodillos» en Estructura de planta y agrégale sus rodillos aquí abajo."
+  },
+  "state": {
+    "acceptable": "Aceptable",
+    "medium": "Medio",
+    "inaccessible": "Inaccesible",
+    "critical": "Crítico"
+  },
+  "sheet": {
+    "title": "Espesores · {{order}}",
+    "hint": "Espesores en mm, medidos con palpador. Un rodillo inaccesible no lleva valores: cuenta en su casilla del resumen.",
+    "roller": "Rodillo",
+    "min": "Mínimo",
+    "state": "Estado",
+    "inaccessible": "Inaccesible",
+    "observation": "Observación",
+    "indications_one": "{{count}} incidencia",
+    "indications_other": "{{count}} incidencias",
+    "saveCount_one": "Guardar {{count}} rodillo",
+    "saveCount_other": "Guardar {{count}} rodillos",
+    "upToDate": "Sin cambios",
+    "saved": "Espesores guardados y evaluados.",
+    "saveFailed": "No se pudo guardar",
+    "noRollers": "Este grupo no tiene rodillos",
+    "noRollersHint": "Agrégalos con «Agregar rodillos»."
+  },
+  "indication": {
+    "none": "Sin incidencias registradas.",
+    "type": "Tipo",
+    "length": "Longitud (mm)",
+    "depth": "Profundidad (mm)",
+    "position": "Posición",
+    "add": "Registrar incidencia",
+    "photos": "Fotos de la incidencia",
+    "size": "longitud {{length}} mm · profundidad {{depth}} mm",
+    "kind": {
+      "crack": "Fisura",
+      "undercut": "Socavación",
+      "other": "Otra"
+    }
+  },
+  "rollers": {
+    "title": "Agregar rodillos",
+    "hint": "Crea los rodillos de un grupo, cada uno con sus seis puntos. Los que ya existen se omiten; el plan contratado limita el total.",
+    "numbers": "Números de rodillo",
+    "numbersHint": "Rangos y listas: 1-28, 30 ({{count}} rodillos)",
+    "add": "Agregar",
+    "added": "{{created}} rodillos creados, {{skipped}} ya existían."
+  }
+}

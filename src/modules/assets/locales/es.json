@@ -82,7 +82,8 @@
     "blower": "Soplador",
     "bearing_housing": "Chumacera",
     "other": "Otro",
-    "turbine": "Turbina"
+    "turbine": "Turbina",
+    "roller": "Rodillo / polín"
   },
   "form": {
     "genericError": "No se pudo guardar",

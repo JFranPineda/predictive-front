@@ -1,0 +1,60 @@
+{
+  "page": {
+    "title": "UT on rollers",
+    "hint": "Six thicknesses per roller; the state is judged on the thinnest, as in the customer's order.",
+    "order": "Service order",
+    "group": "Roller group",
+    "groupOption": "{{name}} ({{count}} rollers)",
+    "noOrders": "No UT-on-rollers orders",
+    "noOrdersHint": "Create one in Services with the “NDT · UT on rollers” technique.",
+    "noGroups": "No roller groups",
+    "noGroupsHint": "Create a train of kind “Rollers” in Plant structure and add its rollers below."
+  },
+  "state": {
+    "acceptable": "Acceptable",
+    "medium": "Medium",
+    "inaccessible": "Inaccessible",
+    "critical": "Critical"
+  },
+  "sheet": {
+    "title": "Thicknesses · {{order}}",
+    "hint": "Thicknesses in mm, measured with a probe. An inaccessible roller has no values: it counts in its own box of the summary.",
+    "roller": "Roller",
+    "min": "Minimum",
+    "state": "State",
+    "inaccessible": "Inaccessible",
+    "observation": "Observation",
+    "indications_one": "{{count}} indication",
+    "indications_other": "{{count}} indications",
+    "saveCount_one": "Save {{count}} roller",
+    "saveCount_other": "Save {{count}} rollers",
+    "upToDate": "No changes",
+    "saved": "Thicknesses saved and graded.",
+    "saveFailed": "Could not save",
+    "noRollers": "This group has no rollers",
+    "noRollersHint": "Add them with “Add rollers”."
+  },
+  "indication": {
+    "none": "No indications recorded.",
+    "type": "Type",
+    "length": "Length (mm)",
+    "depth": "Depth (mm)",
+    "position": "Position",
+    "add": "Record indication",
+    "photos": "Indication photos",
+    "size": "length {{length}} mm · depth {{depth}} mm",
+    "kind": {
+      "crack": "Crack",
+      "undercut": "Undercut",
+      "other": "Other"
+    }
+  },
+  "rollers": {
+    "title": "Add rollers",
+    "hint": "Creates a group's rollers, each with its six points. Existing ones are skipped; the plan caps the total.",
+    "numbers": "Roller numbers",
+    "numbersHint": "Ranges and lists: 1-28, 30 ({{count}} rollers)",
+    "add": "Add",
+    "added": "{{created}} rollers created, {{skipped}} already existed."
+  }
+}
