@@ -98,6 +98,7 @@ export const baseApi = createApi({
     'License',
     'Media',
     'AlignmentRecord',
+    'AlignmentScale',
     'TopographyElement',
     'WorkRecord',
     'RollerSheet',

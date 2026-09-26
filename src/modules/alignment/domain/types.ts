@@ -27,8 +27,17 @@ export interface AlignmentRecord {
   created_at: string;
   created_by: string;
   tolerance: { parallel_mm: string; angular_mm_per_100mm: string };
+  /** The norma whose RPM scale the tolerance came from (Q10). */
+  standard: { id: number; name: string } | null;
   before: Record<Phase, AxisValue>;
   after: Record<Phase, AxisValue>;
   all_ok: boolean;
   photos: AlignmentPhotoRole[];
+}
+
+/** One row of an alignment norma's scale: below this RPM, these tolerances. */
+export interface RpmTier {
+  rpm_ceiling: number | null;
+  parallel_mm: string;
+  angular_mm_per_100mm: string;
 }

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useStandardsQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { FormField, Select, TextArea, TextInput } from '@shared/ui/Form';
@@ -38,7 +39,12 @@ function NewRecordForm({ visitId, assetGroupId }: { visitId: number; assetGroupI
   const [driverLabel, setDriverLabel] = useState('');
   const [drivenLabel, setDrivenLabel] = useState('');
   const [rpm, setRpm] = useState('');
+  const [standard, setStandard] = useState(0);
   const [instrument, setInstrument] = useState('');
+  const standards = useStandardsQuery();
+  const normas = (standards.data ?? []).filter(
+    (row) => row.is_active && row.techniques.some((technique) => technique.code === 'alignment'),
+  );
   const [before, setBefore] = useState<Record<Phase, string>>(emptyPhase());
   const [after, setAfter] = useState<Record<Phase, string>>(emptyPhase());
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +62,7 @@ function NewRecordForm({ visitId, assetGroupId }: { visitId: number; assetGroupI
         driver_label: driverLabel.trim(),
         driven_label: drivenLabel.trim(),
         rpm: rpm.trim(),
+        standard: standard || null,
         instrument: instrument.trim(),
         ...prefixed('before', before),
         ...prefixed('after', after),
@@ -81,6 +88,16 @@ function NewRecordForm({ visitId, assetGroupId }: { visitId: number; assetGroupI
         </FormField>
         <FormField label={t('field.instrument')}>
           <TextInput value={instrument} onChange={(event) => setInstrument(event.target.value)} />
+        </FormField>
+        <FormField label={t('field.standard')} hint={t('field.standardHint')}>
+          <Select value={standard || ''} onChange={(event) => setStandard(Number(event.target.value))}>
+            <option value="">{t('field.standardDefault')}</option>
+            {normas.map((row) => (
+              <option key={row.id} value={row.id}>
+                {row.name}
+              </option>
+            ))}
+          </Select>
         </FormField>
       </div>
 
@@ -175,6 +192,7 @@ function ExistingRecord({ record }: { record: AlignmentRecord }) {
           parallel: record.tolerance.parallel_mm,
           angular: record.tolerance.angular_mm_per_100mm,
         })}
+        {record.standard && ` · ${record.standard.name}`}
       </p>
 
       <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">

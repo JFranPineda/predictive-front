@@ -183,7 +183,17 @@ function useOrderColumns({
       header: t('orders.column.code'),
       render: (row) => <span className="font-mono text-xs font-medium">{row.code}</span>,
     },
-    { key: 'technique', header: t('orders.column.technique'), render: (row) => row.technique_name },
+    {
+      key: 'technique',
+      header: t('orders.column.technique'),
+      // The norma under it: the same service can be judged by two normas.
+      render: (row) => (
+        <div>
+          {row.technique_name}
+          {row.standard && <div className="text-xs text-slate-400">{row.standard.name}</div>}
+        </div>
+      ),
+    },
     {
       key: 'serviceDate',
       header: t('orders.column.serviceDate'),

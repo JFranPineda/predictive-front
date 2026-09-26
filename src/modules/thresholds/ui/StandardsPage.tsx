@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
 import { Button } from '@shared/ui/Button';
-
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -16,6 +15,7 @@ import { Spinner } from '@shared/ui/Spinner';
 import type { Standard } from '../domain/types';
 import { useDeleteStandardMutation, useStandardsQuery } from '../infrastructure/endpoints';
 import { StandardFormModal } from './StandardFormModal';
+import { StandardScale } from './StandardScale';
 
 export default function StandardsPage() {
   const { t } = useTranslation(['thresholds', 'common']);
@@ -132,6 +132,7 @@ export default function StandardsPage() {
                 ) : (
                   <p className="text-sm text-slate-400">{t('standards.noClasses')}</p>
                 )}
+                <StandardScale standard={standard} canManage={canManage} />
               </Card>
             ))}
           </div>

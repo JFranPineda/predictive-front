@@ -66,16 +66,17 @@ export const thresholdsApi = baseApi.injectEndpoints({
     }),
     createThresholdSet: build.mutation<ThresholdSet, ThresholdSetDraft>({
       query: (body) => ({ url: 'threshold-sets/new/', method: 'POST', body }),
-      // New limits change what every equipment would be graded as.
-      invalidatesTags: ['ThresholdSet', 'Summary', 'Equipment'],
+      // New limits change what every equipment would be graded as, and a
+      // norma's own set is its scale on the Normas screen.
+      invalidatesTags: ['ThresholdSet', 'Summary', 'Equipment', 'Standard'],
     }),
     updateThresholdSet: build.mutation<ThresholdSet, ThresholdSetDraft & { id: number }>({
       query: ({ id, ...body }) => ({ url: `threshold-sets/${id}/`, method: 'PATCH', body }),
-      invalidatesTags: ['ThresholdSet', 'Summary', 'Equipment'],
+      invalidatesTags: ['ThresholdSet', 'Summary', 'Equipment', 'Standard'],
     }),
     retireThresholdSet: build.mutation<{ id: number }, number>({
       query: (id) => ({ url: `threshold-sets/${id}/`, method: 'DELETE' }),
-      invalidatesTags: ['ThresholdSet'],
+      invalidatesTags: ['ThresholdSet', 'Standard'],
     }),
     thresholdSets: build.query<ThresholdSet[], { magnitude?: string; scope?: string }>({
       query: (params) => ({ url: 'threshold-sets/', params }),

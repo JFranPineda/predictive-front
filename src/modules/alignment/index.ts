@@ -20,6 +20,8 @@ const definition: ModuleDefinition = {
   ],
   translations: { namespace: 'alignment', bundle: { es, en } },
   registerEndpoints: () => void alignmentApi,
+  // The RPM tolerance table of an alignment norma, shown on Normas (Q10).
+  scaleEditors: { alignment: lazy(() => import('./ui/AlignmentScaleEditor')) },
 };
 
 export default definition;

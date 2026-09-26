@@ -76,6 +76,7 @@ export const servicesApi = baseApi.injectEndpoints({
         scheduled_to?: string;
         provider?: number | null;
         lead_analyst?: number | null;
+        standard?: number | null;
       }
     >({
       query: (body) => ({ url: 'service-orders/new/', method: 'POST', body }),
@@ -92,10 +93,12 @@ export const servicesApi = baseApi.injectEndpoints({
         scheduled_to?: string;
         provider?: number | null;
         lead_analyst?: number | null;
+        standard?: number | null;
       }
     >({
       query: ({ id, ...body }) => ({ url: `service-orders/${id}/`, method: 'PATCH', body }),
-      invalidatesTags: ['ServiceOrder'],
+      // A new norma regrades the order's readings: every view of them changes.
+      invalidatesTags: ['ServiceOrder', 'Reading', 'Summary', 'Visit'],
     }),
     cancelServiceOrder: build.mutation<void, number>({
       query: (id) => ({ url: `service-orders/${id}/`, method: 'DELETE' }),

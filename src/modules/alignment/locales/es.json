@@ -15,7 +15,10 @@
     "driver": "Motriz",
     "driven": "Conducido",
     "rpm": "RPM",
-    "instrument": "Instrumento"
+    "instrument": "Instrumento",
+    "standard": "Norma",
+    "standardHint": "De qué norma sale la tolerancia por RPM",
+    "standardDefault": "SKF (por defecto)"
   },
   "phase": {
     "before": "Antes (As Found)",
@@ -45,5 +48,22 @@
     "hint": "Conjuntos alineados en el mes, con antes/después y veredicto.",
     "empty": "No hay alineamientos en este mes",
     "openVisit": "Ver visita"
+  },
+  "scale": {
+    "title": "Tolerancias por RPM",
+    "edit": "Editar tolerancias",
+    "rpm": "RPM",
+    "parallel": "Paralelo",
+    "angular": "Angular",
+    "ceiling": "Techo de RPM",
+    "noCeiling": "sin techo",
+    "addTier": "Tramo",
+    "save": "Guardar tolerancias",
+    "cancel": "Cancelar",
+    "hint": "Cada alineamiento toma la tolerancia del tramo de su RPM y la conserva aunque la escala cambie después.",
+    "needsTier": "La escala necesita al menos un tramo de RPM",
+    "onlyLastOpen": "Solo el último tramo puede quedar sin techo",
+    "climbing": "Los techos de RPM deben ir de menor a mayor",
+    "positive": "Las tolerancias deben ser mayores que cero"
   }
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePlantsQuery } from '@modules/assets';
-import { byFamily, useTechniquesQuery } from '@modules/thresholds';
+import { byFamily, useStandardsQuery, useTechniquesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -29,6 +29,7 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
   const techniques = useTechniquesQuery();
   const providers = useServiceProvidersQuery({ active: true });
   const analysts = useAnalystsQuery();
+  const standards = useStandardsQuery();
   const [create, creating] = useCreateServiceOrderMutation();
   const [update, updating] = useUpdateServiceOrderMutation();
   const isLoading = creating.isLoading || updating.isLoading;
@@ -43,7 +44,15 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
     scheduled_to: order?.scheduled_to ?? today,
     provider: order?.provider?.id ?? 0,
     lead_analyst: order?.lead_analyst?.id ?? 0,
+    standard: order?.standard?.id ?? 0,
   });
+  // A norma judges the services it was written for; one with none listed
+  // is a company's own criterion and fits any.
+  const normas = (standards.data ?? []).filter(
+    (row) =>
+      row.is_active &&
+      (row.techniques.length === 0 || row.techniques.some((technique) => technique.code === draft.technique)),
+  );
   const set = (changes: Partial<typeof draft>) => setDraft({ ...draft, ...changes });
 
   async function submit() {
@@ -55,6 +64,7 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
       scheduled_to: draft.scheduled_to,
       provider: draft.provider || null,
       lead_analyst: draft.lead_analyst || null,
+      standard: draft.standard || null,
     };
     try {
       if (order) await update({ id: order.id, ...common }).unwrap();
@@ -105,7 +115,7 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
           <Select
             value={draft.technique}
             disabled={Boolean(order)}
-            onChange={(event) => set({ technique: event.target.value })}
+            onChange={(event) => set({ technique: event.target.value, standard: 0 })}
           >
             {byFamily(techniques.data ?? []).map(([family, rows]) => (
               <optgroup key={family} label={t(`common:family.${family}`)}>
@@ -143,6 +153,17 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
             {analysts.data?.map((analyst) => (
               <option key={analyst.id} value={analyst.id}>
                 {analyst.name}
+              </option>
+            ))}
+          </Select>
+        </FormField>
+
+        <FormField label={t('orderForm.standard')} hint={t('orderForm.standardHint')}>
+          <Select value={draft.standard || ''} onChange={(event) => set({ standard: Number(event.target.value) })}>
+            <option value="">{t('orderForm.standardNone')}</option>
+            {normas.map((row) => (
+              <option key={row.id} value={row.id}>
+                {row.name}
               </option>
             ))}
           </Select>

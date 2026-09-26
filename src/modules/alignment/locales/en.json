@@ -15,7 +15,10 @@
     "driver": "Driver",
     "driven": "Driven",
     "rpm": "RPM",
-    "instrument": "Instrument"
+    "instrument": "Instrument",
+    "standard": "Standard",
+    "standardHint": "Which standard's RPM scale the tolerance comes from",
+    "standardDefault": "SKF (default)"
   },
   "phase": {
     "before": "Before (As Found)",
@@ -45,5 +48,22 @@
     "hint": "Trains aligned this month, with before/after and verdict.",
     "empty": "No alignments this month",
     "openVisit": "Open visit"
+  },
+  "scale": {
+    "title": "Tolerances by RPM",
+    "edit": "Edit tolerances",
+    "rpm": "RPM",
+    "parallel": "Parallel",
+    "angular": "Angular",
+    "ceiling": "RPM ceiling",
+    "noCeiling": "no ceiling",
+    "addTier": "Tier",
+    "save": "Save tolerances",
+    "cancel": "Cancel",
+    "hint": "Each alignment takes the tolerance of its RPM tier and keeps it even if the scale changes later.",
+    "needsTier": "The scale needs at least one RPM tier",
+    "onlyLastOpen": "Only the last tier may have no ceiling",
+    "climbing": "RPM ceilings must go up",
+    "positive": "Tolerances must be above zero"
   }
 }

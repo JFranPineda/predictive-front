@@ -1,6 +1,6 @@
 import { baseApi } from '@app/api/baseApi';
 
-import type { AlignmentRecord } from '../domain/types';
+import type { AlignmentRecord, RpmTier } from '../domain/types';
 
 export interface AlignmentRecordInput {
   asset_group: number;
@@ -8,6 +8,7 @@ export interface AlignmentRecordInput {
   driver_label?: string;
   driven_label?: string;
   rpm: string;
+  standard?: number | null;
   instrument?: string;
   backlash_within_tolerance?: boolean | null;
   notes?: string;
@@ -55,6 +56,14 @@ export const alignmentApi = baseApi.injectEndpoints({
       query: (id) => ({ url: `alignment-records/${id}/`, method: 'DELETE' }),
       invalidatesTags: ['AlignmentRecord'],
     }),
+    alignmentScale: build.query<RpmTier[], number>({
+      query: (standardId) => `alignment-scales/${standardId}/`,
+      providesTags: (_r, _e, id) => [{ type: 'AlignmentScale', id }],
+    }),
+    saveAlignmentScale: build.mutation<RpmTier[], { standardId: number; tiers: RpmTier[] }>({
+      query: ({ standardId, tiers }) => ({ url: `alignment-scales/${standardId}/`, method: 'PUT', body: { tiers } }),
+      invalidatesTags: (_r, _e, { standardId }) => [{ type: 'AlignmentScale', id: standardId }],
+    }),
     uploadAlignmentPhoto: build.mutation<
       { id: number; kind: string; caption: string },
       { recordId: number; body: FormData }
@@ -70,6 +79,8 @@ export const alignmentApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useAlignmentScaleQuery,
+  useSaveAlignmentScaleMutation,
   useAlignmentRecordsQuery,
   useAlignmentRecordQuery,
   useCreateAlignmentRecordMutation,

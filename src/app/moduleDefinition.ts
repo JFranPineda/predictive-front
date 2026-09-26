@@ -17,6 +17,12 @@ export interface ModuleRoute {
   index?: boolean;
 }
 
+/** What a norma's scale editor receives (Configuración → Normas). */
+export interface ScaleEditorProps {
+  standardId: number;
+  editable: boolean;
+}
+
 export interface ModuleDefinition {
   code: string;
   routes: ModuleRoute[];
@@ -27,6 +33,10 @@ export interface ModuleDefinition {
   /** The module's own strings, shipped in its chunk and registered under its
    * own namespace so two modules can both have a "title" key. */
   translations?: { namespace: string; bundle: TranslationBundle };
+  /** The editor of a norma's scale, keyed by the technique the norma judges.
+   * Alignment contributes its RPM table this way, so the Normas screen shows
+   * it without the thresholds module ever importing alignment (Q10). */
+  scaleEditors?: Record<string, LazyExoticComponent<ComponentType<ScaleEditorProps>>>;
 }
 
 /** A module's entry point is its default export. */

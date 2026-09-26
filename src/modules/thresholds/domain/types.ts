@@ -41,6 +41,25 @@ export interface Standard {
   techniques: TechniqueRef[];
   machine_classes: MachineClass[];
   set_count: number;
+  /** Its own global bands, one entry per magnitude: the norma's scale (Q9). */
+  scale: ScaleRow[];
+}
+
+export interface ScaleBand {
+  status_code: string;
+  status_name: string;
+  color: string;
+  min_value: string | null;
+  max_value: string | null;
+}
+
+export interface ScaleRow {
+  set_id: number;
+  magnitude_code: string;
+  magnitude_name: string;
+  unit_code: string;
+  aggregation: string;
+  bands: ScaleBand[];
 }
 
 export interface Magnitude {

@@ -18,7 +18,7 @@
   "standards": {
     "title": "Normas",
     "loading": "Cargando normas…",
-    "subtitle": "La norma asignada a un equipo decide sus bandas. Cambiarla lo recalifica sin tocar ningún umbral.",
+    "subtitle": "Cada norma trae su escala. Un informe (orden de servicio) elige su norma; si no elige, manda la norma de cada equipo.",
     "builtin": "de fábrica",
     "setCount": "{{count}} juegos de umbrales",
     "empty": "No hay normas cargadas",
@@ -154,5 +154,19 @@
     "usedBy": "Magnitudes",
     "edit": "Editar unidad",
     "inUse": "No se puede borrar: hay magnitudes que se reportan en esta unidad"
+  },
+  "scale": {
+    "title": "Escala",
+    "empty": "Sin escala: esta norma todavía no califica ninguna medida.",
+    "addMagnitude": "Escala de una medida",
+    "edit": "Editar",
+    "modalTitle": "Escala de {{name}}",
+    "modalHint": "Las bandas con que esta norma califica una medida. Un informe que cite la norma se califica con ellas.",
+    "magnitude": "Medida",
+    "bandsHint": "Desde (incluido) y hasta (excluido); vacío es sin límite. Estados como Alerta se crean en Estados.",
+    "status": "Estado",
+    "from": "Desde",
+    "to": "Hasta",
+    "rationale": "Escala de la norma {{name}}"
   }
 }

@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 
+import { ContributionsProvider } from '@app/contributions';
 import { AppShell } from '@app/layout/AppShell';
 import type { ModuleDefinition } from '@app/moduleDefinition';
 import { loadModules, renderableMenu, routesFor } from '@app/moduleRegistry';
@@ -58,28 +59,30 @@ export function AppRoutes() {
   const home = menu[0]?.route ?? first?.route.path;
 
   return (
-    <Routes>
-      <Route element={<AppShell menu={menu} user={data.user} companies={data.companies} />}>
-        {moduleRoutes.map(({ code, route }) => (
-          <Route
-            key={`${code}:${route.path}`}
-            path={route.path}
-            element={
-              <Suspense fallback={<Spinner label="" />}>
-                <route.component />
-              </Suspense>
-            }
-          />
-        ))}
-        {/* No module owns the root: right after signing in (still on
-            /login) the user landed on "that screen does not exist". */}
-        {home && <Route path="/" element={<Navigate to={home} replace />} />}
-        {home && <Route path="/login" element={<Navigate to={home} replace />} />}
-        {/* A typed-in URL for a module this build does not ship says so,
-            instead of silently bouncing to another screen. */}
-        <Route path="*" element={<NotFound fallback={first?.route.path} />} />
-      </Route>
-    </Routes>
+    <ContributionsProvider definitions={definitions}>
+      <Routes>
+        <Route element={<AppShell menu={menu} user={data.user} companies={data.companies} />}>
+          {moduleRoutes.map(({ code, route }) => (
+            <Route
+              key={`${code}:${route.path}`}
+              path={route.path}
+              element={
+                <Suspense fallback={<Spinner label="" />}>
+                  <route.component />
+                </Suspense>
+              }
+            />
+          ))}
+          {/* No module owns the root: right after signing in (still on
+              /login) the user landed on "that screen does not exist". */}
+          {home && <Route path="/" element={<Navigate to={home} replace />} />}
+          {home && <Route path="/login" element={<Navigate to={home} replace />} />}
+          {/* A typed-in URL for a module this build does not ship says so,
+              instead of silently bouncing to another screen. */}
+          <Route path="*" element={<NotFound fallback={first?.route.path} />} />
+        </Route>
+      </Routes>
+    </ContributionsProvider>
   );
 }
 

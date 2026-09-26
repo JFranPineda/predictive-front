@@ -12,9 +12,10 @@ import { useCreateThermogramMutation } from '../infrastructure/endpoints';
  * Termografía's unit of work is the image, not a grid cell (V3-16).
  *
  * Upload one termogram per element observed: the point it was taken on, its
- * Tmax (proposed from the FLIR matrix when the file carries one) and a
- * reference temperature to compute ΔT. The visit's readings table below picks
- * up `ir_tmax` and `delta_temp` the moment the upload succeeds.
+ * Tmax (proposed from the FLIR matrix when the file carries one) and the ΔT
+ * the technician reads, typed as a number in °C (Q8). The visit's readings
+ * table below picks up `ir_tmax` and `delta_temp` the moment the upload
+ * succeeds, graded with the norma of the visit's report.
  */
 export function ThermogramUploadCard({
   visitId,
@@ -31,7 +32,7 @@ export function ThermogramUploadCard({
   const file = useRef<HTMLInputElement>(null);
   const [point, setPoint] = useState(0);
   const [tmax, setTmax] = useState('');
-  const [reference, setReference] = useState('');
+  const [delta, setDelta] = useState('');
   const [caption, setCaption] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [suggested, setSuggested] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export function ThermogramUploadCard({
     body.append('image', chosen);
     body.append('point', String(point));
     if (tmax.trim()) body.append('tmax', tmax.trim());
-    if (reference.trim()) body.append('reference', reference.trim());
+    if (delta.trim()) body.append('delta', delta.trim());
     if (caption.trim()) body.append('caption', caption.trim());
     try {
       const result = await create({ visitId, body }).unwrap();
@@ -56,7 +57,7 @@ export function ThermogramUploadCard({
       }
       if (file.current) file.current.value = '';
       setTmax('');
-      setReference('');
+      setDelta('');
       setCaption('');
       onUploaded?.();
     } catch (cause) {
@@ -93,13 +94,13 @@ export function ThermogramUploadCard({
             onChange={(event) => setTmax(event.target.value)}
           />
         </FormField>
-        <FormField label={t('thermogram.reference')} hint={t('thermogram.referenceHint')}>
+        <FormField label={t('thermogram.delta')} hint={t('thermogram.deltaHint')}>
           <TextInput
             type="number"
             step="0.1"
-            value={reference}
-            placeholder="38.0"
-            onChange={(event) => setReference(event.target.value)}
+            value={delta}
+            placeholder="12.0"
+            onChange={(event) => setDelta(event.target.value)}
           />
         </FormField>
         <FormField label={t('thermogram.image')}>

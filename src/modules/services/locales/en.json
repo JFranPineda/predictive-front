@@ -77,7 +77,7 @@
     "description": "Train: {{group}} · Equipment: {{equipment}} {{tag}} · Area: {{area}}",
     "readOnly": "This visit is read-only",
     "readings": "Visit readings",
-    "readingsHint": "One row per point. On save the system re-applies the equipment's standard and recalculates the status.",
+    "readingsHint": "One row per point. On save the system applies the report's standard again (or the equipment's own, if the report picks none) and recalculates the status.",
     "column": {
       "point": "Point"
     },
@@ -142,7 +142,10 @@
     "save": "Save changes",
     "locked": "Not changed on an existing order: its visits hang off it.",
     "provider": "Company",
-    "analyst": "Analyst"
+    "analyst": "Analyst",
+    "standard": "Report standard",
+    "standardHint": "Which standard grades this order's readings. Changing it regrades the ones already recorded.",
+    "standardNone": "Each machine's own standard"
   },
   "operating": {
     "title": "Operating data",

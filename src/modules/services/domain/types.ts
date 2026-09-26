@@ -63,6 +63,8 @@ export interface ServiceOrder {
   provider: NamedRef | null;
   lead_analyst: NamedRef | null;
   supervisor: string | null;
+  /** The norma the report is judged by; null means each machine's own. */
+  standard: NamedRef | null;
   /** Equipment visited in this order. */
   visit_count: number;
 }

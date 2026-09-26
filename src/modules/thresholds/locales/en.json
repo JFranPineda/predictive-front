@@ -18,7 +18,7 @@
   "standards": {
     "title": "Standards",
     "loading": "Loading standards…",
-    "subtitle": "The standard assigned to an equipment decides its bands. Switching it re-grades the equipment without touching a threshold.",
+    "subtitle": "Each standard carries its scale. A report (service order) picks its standard; if it picks none, each machine's own applies.",
     "builtin": "built-in",
     "setCount": "{{count}} threshold sets",
     "empty": "No standards loaded",
@@ -154,5 +154,19 @@
     "usedBy": "Magnitudes",
     "edit": "Edit unit",
     "inUse": "Cannot delete: magnitudes are reported in this unit"
+  },
+  "scale": {
+    "title": "Scale",
+    "empty": "No scale: this standard grades no magnitude yet.",
+    "addMagnitude": "Scale for a magnitude",
+    "edit": "Edit",
+    "modalTitle": "Scale of {{name}}",
+    "modalHint": "The bands this standard grades a magnitude with. A report citing the standard is graded by them.",
+    "magnitude": "Magnitude",
+    "bandsHint": "From (included) to (excluded); empty means no limit. Statuses such as Alert are created in Statuses.",
+    "status": "Status",
+    "from": "From",
+    "to": "To",
+    "rationale": "Scale of the standard {{name}}"
   }
 }

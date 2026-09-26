@@ -77,7 +77,7 @@
     "description": "Conjunto: {{group}} · Equipo: {{equipment}} {{tag}} · Área: {{area}}",
     "readOnly": "Esta visita es de solo lectura",
     "readings": "Lecturas de la visita",
-    "readingsHint": "Una fila por punto. Al guardar, el sistema vuelve a aplicar la norma del equipo y recalcula el estado.",
+    "readingsHint": "Una fila por punto. Al guardar, el sistema vuelve a aplicar la norma del informe (o la del equipo, si el informe no elige ninguna) y recalcula el estado.",
     "column": {
       "point": "Punto"
     },
@@ -142,7 +142,10 @@
     "save": "Guardar cambios",
     "locked": "No se cambia en una orden existente: sus visitas cuelgan de este dato.",
     "provider": "Empresa",
-    "analyst": "Analista"
+    "analyst": "Analista",
+    "standard": "Norma del informe",
+    "standardHint": "Con qué norma se califican las lecturas de esta orden. Cambiarla recalifica las ya registradas.",
+    "standardNone": "La norma de cada equipo"
   },
   "operating": {
     "title": "Datos operativos",
