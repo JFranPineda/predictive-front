@@ -1,0 +1,36 @@
+{
+  "page": {
+    "title": "MPd and NDT reports",
+    "hint": "Pick what the report is about, check it exactly as it will print, and download it as PDF or Excel.",
+    "loading": "Loading orders…"
+  },
+  "tab": {
+    "mpd": "MPd report",
+    "end": "NDT report",
+    "monthly": "Monthly summary",
+    "corrective": "Corrective work"
+  },
+  "field": {
+    "order": "Service order",
+    "train": "Train",
+    "plant": "Plant",
+    "month": "Month",
+    "from": "From",
+    "to": "To"
+  },
+  "empty": {
+    "mpd": "No MPd orders with visits",
+    "ndt": "No non-destructive testing orders with visits"
+  },
+  "preview": {
+    "pick": "Pick the order and the train to see the report",
+    "loading": "Preparing the report…",
+    "failed": "The report could not be generated",
+    "title": "Report preview"
+  },
+  "download": {
+    "pdf": "Download PDF",
+    "xlsx": "Download Excel",
+    "failed": "The report could not be downloaded"
+  }
+}

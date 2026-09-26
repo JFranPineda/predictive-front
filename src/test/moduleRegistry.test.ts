@@ -10,9 +10,9 @@ const definition = (code: string, routes: ModuleDefinition['routes']): ModuleDef
 
 describe('module registry', () => {
   it('ignores installed modules the build does not ship', async () => {
-    // The backend installs `reports`; the frontend has no screens for it yet.
+    // The backend installs `blueprints`; the frontend has no screens for it.
     // That is a normal state, not a boot failure.
-    const loaded = await loadModules(['assets', 'reports']);
+    const loaded = await loadModules(['assets', 'blueprints']);
     expect(loaded.map((m) => m.code)).toEqual(['assets']);
   });
 

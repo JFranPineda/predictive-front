@@ -1,0 +1,36 @@
+{
+  "page": {
+    "title": "Informes MPd y END",
+    "hint": "Elige de qué es el informe, revísalo tal como se imprimirá y descárgalo en PDF o Excel.",
+    "loading": "Cargando órdenes…"
+  },
+  "tab": {
+    "mpd": "Informe MPd",
+    "end": "Informe END",
+    "monthly": "Resumen mensual",
+    "corrective": "Correctivos"
+  },
+  "field": {
+    "order": "Orden de servicio",
+    "train": "Conjunto",
+    "plant": "Planta",
+    "month": "Mes",
+    "from": "Desde",
+    "to": "Hasta"
+  },
+  "empty": {
+    "mpd": "No hay órdenes de MPd Predictivo con visitas",
+    "ndt": "No hay órdenes de ensayos no destructivos con visitas"
+  },
+  "preview": {
+    "pick": "Elige la orden y el conjunto para ver el informe",
+    "loading": "Preparando el informe…",
+    "failed": "No se pudo generar el informe",
+    "title": "Vista previa del informe"
+  },
+  "download": {
+    "pdf": "Descargar PDF",
+    "xlsx": "Descargar Excel",
+    "failed": "No se pudo descargar el informe"
+  }
+}

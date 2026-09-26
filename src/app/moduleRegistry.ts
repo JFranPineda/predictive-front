@@ -29,6 +29,7 @@ const LOADERS: Record<string, ModuleLoader[]> = {
   topography: [() => import('@modules/topography')],
   maintenance: [() => import('@modules/maintenance')],
   ut_rollers: [() => import('@modules/ut_rollers')],
+  reports: [() => import('@modules/reports')],
 };
 
 export function knownModuleCodes(): string[] {
