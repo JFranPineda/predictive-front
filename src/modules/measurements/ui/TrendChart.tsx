@@ -2,6 +2,7 @@ import { LineChart } from 'echarts/charts';
 import {
   GridComponent,
   LegendComponent,
+  MarkLineComponent,
   TooltipComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
@@ -18,14 +19,20 @@ import {
   defaultSelection,
   MAX_SERIES,
   pointOptions,
+  timeline,
   togglePoint,
   toggleSeries,
   type ChartSeries,
+  type TrendMarker,
 } from '../domain/trendChart';
 
 // Only the pieces this chart draws: the full bundle is an order of magnitude
 // larger and lands in the shared vendor chunk.
-echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
+echarts.use([
+  LineChart, GridComponent, TooltipComponent, LegendComponent, MarkLineComponent, CanvasRenderer,
+]);
+
+const NO_MARKERS: TrendMarker[] = [];
 
 const DASH: Record<string, number | number[]> = {
   solid: 0,
@@ -40,7 +47,16 @@ const DASH: Record<string, number | number[]> = {
  * the same y is how an envelope reading of 0.9 disappears under a velocity of
  * 12.
  */
-export function TrendChart({ block, columns }: { block: MatrixBlock; columns: MatrixColumn[] }) {
+export function TrendChart({
+  block,
+  columns,
+  markers = NO_MARKERS,
+}: {
+  block: MatrixBlock;
+  columns: MatrixColumn[];
+  /** Days something was done to the train, drawn as dashed verticals. */
+  markers?: TrendMarker[];
+}) {
   const { t, i18n } = useTranslation('measurements');
   const { resolved } = useTheme();
 
@@ -63,6 +79,9 @@ export function TrendChart({ block, columns }: { block: MatrixBlock; columns: Ma
           {t('chart.title')}
         </h3>
         <p className="text-xs text-slate-400">{t('chart.hint', { max: MAX_SERIES })}</p>
+        {markers.length > 0 && (
+          <p className="text-xs text-slate-500 dark:text-slate-400">{t('chart.markerHint')}</p>
+        )}
         <span
           className={`ml-auto rounded-full px-2 py-0.5 text-xs tabular-nums ${
             full
@@ -85,6 +104,7 @@ export function TrendChart({ block, columns }: { block: MatrixBlock; columns: Ma
       <Canvas
         series={shown}
         columns={columns}
+        markers={markers}
         unit={block.unit}
         decimals={block.decimals}
         locale={i18n.language}
@@ -187,6 +207,7 @@ function Selector({
 function Canvas({
   series,
   columns,
+  markers,
   unit,
   decimals,
   locale,
@@ -195,6 +216,7 @@ function Canvas({
 }: {
   series: ChartSeries[];
   columns: MatrixColumn[];
+  markers: TrendMarker[];
   unit: string;
   decimals: number;
   locale: string;
@@ -220,11 +242,11 @@ function Canvas({
   useEffect(() => {
     if (!chart.current) return;
     chart.current.setOption(
-      buildOption({ series, columns, unit, decimals, locale, mode }),
+      buildOption({ series, columns, markers, unit, decimals, locale, mode }),
       // Replace rather than merge: a removed series has to leave the chart.
       { notMerge: true },
     );
-  }, [series, columns, unit, decimals, locale, mode]);
+  }, [series, columns, markers, unit, decimals, locale, mode]);
 
   return (
     <div className="relative">
@@ -241,6 +263,7 @@ function Canvas({
 function buildOption({
   series,
   columns,
+  markers,
   unit,
   decimals,
   locale,
@@ -248,6 +271,7 @@ function buildOption({
 }: {
   series: ChartSeries[];
   columns: MatrixColumn[];
+  markers: TrendMarker[];
   unit: string;
   decimals: number;
   locale: string;
@@ -256,6 +280,9 @@ function buildOption({
   const ink = mode === 'dark' ? '#94a3b8' : '#64748b';
   const grid = mode === 'dark' ? '#1e293b' : '#e2e8f0';
   const surface = mode === 'dark' ? '#0f172a' : '#ffffff';
+  // Outside the data palette on purpose: a mark is an event, not a series.
+  const mark = mode === 'dark' ? '#cbd5e1' : '#334155';
+  const line = timeline(columns.map((column) => column.date), markers);
 
   return {
     animationDuration: 300,
@@ -283,7 +310,7 @@ function buildOption({
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: columns.map((column) => formatDate(column.date, locale)),
+      data: line.dates.map((date) => formatDate(date, locale)),
       axisLine: { lineStyle: { color: grid } },
       axisTick: { show: false },
       axisLabel: { color: ink, fontSize: 11 },
@@ -314,16 +341,47 @@ function buildOption({
         formatter: row.label,
       },
       emphasis: { focus: 'series' as const },
-      data: row.points.map((point) => ({
-        value: point.value,
-        // The reading's own verdict, on the marker only: the line keeps the
-        // series colour, so state never competes with identity.
-        itemStyle:
-          point.statusColor && point.statusCode !== 'operational'
-            ? { color: point.statusColor, borderColor: surface, borderWidth: 2 }
-            : undefined,
-        symbolSize: point.statusCode && point.statusCode !== 'operational' ? 11 : 8,
-      })),
-    })),
+      data: line.columnAt.map((column) => {
+        if (column === null) return { value: null };
+        const point = row.points[column]!;
+        return {
+          value: point.value,
+          // The reading's own verdict, on the marker only: the line keeps the
+          // series colour, so state never competes with identity.
+          itemStyle:
+            point.statusColor && point.statusCode !== 'operational'
+              ? { color: point.statusColor, borderColor: surface, borderWidth: 2 }
+              : undefined,
+          symbolSize: point.statusCode && point.statusCode !== 'operational' ? 11 : 8,
+        };
+      }),
+    })).concat(
+      line.marks.length === 0 || series.length === 0
+        ? []
+        : [
+            {
+              // A carrier with no values of its own: it only holds the
+              // vertical marks, and stays out of the legend and the tooltip.
+              name: '',
+              type: 'line' as const,
+              data: line.dates.map(() => ({ value: null })),
+              showSymbol: false,
+              lineStyle: { width: 0 },
+              tooltip: { show: false },
+              markLine: {
+                symbol: 'none',
+                animation: false,
+                lineStyle: { type: 'dashed', color: mark, width: 1.5 },
+                label: {
+                  formatter: (param: { name: string }) => param.name,
+                  position: 'insideEndTop',
+                  color: mark,
+                  fontSize: 10,
+                },
+                data: line.marks.map((entry) => ({ xAxis: entry.index, name: entry.label })),
+              },
+            } as never,
+          ],
+    ),
   };
 }

@@ -174,7 +174,8 @@
       "V": "Vertical",
       "A": "Axial",
       "N": "Sin eje"
-    }
+    },
+    "markerHint": "Línea discontinua: mantenimiento correctivo cerrado ese día."
   },
   "thermogram": {
     "title": "Subir termograma",

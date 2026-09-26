@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router-dom';
 
+import { usePermissions } from '@app/hooks';
 import { formatDate } from '@app/i18n/format';
 import { Button } from '@shared/ui/Button';
 import { Select } from '@shared/ui/Form';
@@ -9,6 +10,7 @@ import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
+import { useWorkRecordMarkersQuery } from '@modules/maintenance';
 import { LatestImagePanel } from '@modules/media';
 import { NameplateModal } from '@modules/nameplate';
 import { useDownload } from '@shared/hooks/useDownload';
@@ -24,6 +26,7 @@ import {
   type MatrixColumn,
 } from '../domain/matrix';
 import { machineLabel } from '../domain/trains';
+import type { TrendMarker } from '../domain/trendChart';
 import { useSaveMatrixColumnMutation, useTrainMatrixQuery } from '../infrastructure/endpoints';
 import { TrendChart } from './TrendChart';
 
@@ -40,9 +43,25 @@ import { TrendChart } from './TrendChart';
  * its machines (V3-08), and the choice lives in the URL so it can be shared.
  */
 export default function RecordOfValuesPage() {
-  const { t } = useTranslation(['measurements', 'common', 'nameplate']);
+  const { t } = useTranslation(['measurements', 'common', 'nameplate', 'maintenance']);
   const { groupId } = useParams();
   const group = Number(groupId);
+  // Only asked for when the maintenance module is installed and readable:
+  // uninstalling it revokes the permission, and the chart simply has no marks.
+  const permissions = usePermissions();
+  const workRecords = useWorkRecordMarkersQuery(group, {
+    skip: !permissions.has('maintenance.view'),
+  });
+  const markers = useMemo<TrendMarker[]>(
+    () =>
+      (workRecords.data ?? []).map((record) => ({
+        date: record.date,
+        label:
+          record.work_types.map((code) => t(`maintenance:workType.${code}`)).join(' / ') ||
+          t('maintenance:list.title'),
+      })),
+    [workRecords.data, t],
+  );
   const [params, setParams] = useSearchParams();
   const machine = Number(params.get('equipment')) || undefined;
   const { data, isLoading, isError } = useTrainMatrixQuery({ group, equipment: machine });
@@ -176,6 +195,7 @@ export default function RecordOfValuesPage() {
             key={block.key}
             block={block}
             columns={data.columns}
+            markers={markers}
             draft={draft}
             onChange={(readingId, value) => setDraft({ ...draft, [readingId]: value })}
           />
@@ -194,11 +214,13 @@ export default function RecordOfValuesPage() {
 function Block({
   block,
   columns,
+  markers,
   draft,
   onChange,
 }: {
   block: MatrixBlock;
   columns: MatrixColumn[];
+  markers: TrendMarker[];
   draft: Record<number, string>;
   onChange: (readingId: number, value: string) => void;
 }) {
@@ -317,7 +339,7 @@ function Block({
           </tbody>
         </table>
       </div>
-      <TrendChart block={block} columns={columns} />
+      <TrendChart block={block} columns={columns} markers={markers} />
     </section>
   );
 }

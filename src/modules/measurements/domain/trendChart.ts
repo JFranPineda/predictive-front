@@ -164,6 +164,57 @@ export function togglePoint(
   return [...selected, ...missing];
 }
 
+/** A dated event drawn across the chart: today, a closed maintenance record. */
+export interface TrendMarker {
+  /** `YYYY-MM-DD`, the same shape as a round's column date. */
+  date: string;
+  label: string;
+}
+
+/** The x axis once markers join the rounds. */
+export interface Timeline {
+  dates: string[];
+  /** Per date, the round column drawn there — or null where only a marker falls. */
+  columnAt: (number | null)[];
+  marks: { index: number; label: string }[];
+}
+
+/**
+ * The rounds' dates plus the days something was done to the train.
+ *
+ * A category axis only has the dates a reading was taken on, so an
+ * intervention between two rounds has nowhere to go unless its day becomes a
+ * category of its own; the series simply have no value there. A marker before
+ * the first round explains nothing on this chart and is left out.
+ */
+export function timeline(columnDates: string[], markers: TrendMarker[]): Timeline {
+  if (columnDates.length === 0) return { dates: [], columnAt: [], marks: [] };
+  const first = [...columnDates].sort()[0]!;
+  const labels = new Map<string, string[]>();
+  for (const marker of markers) {
+    if (marker.date < first) continue;
+    labels.set(marker.date, [...(labels.get(marker.date) ?? []), marker.label]);
+  }
+
+  const entries: { date: string; column: number | null }[] = columnDates.map((date, column) => ({
+    date,
+    column,
+  }));
+  for (const date of labels.keys()) {
+    if (!columnDates.includes(date)) entries.push({ date, column: null });
+  }
+  entries.sort((a, b) => a.date.localeCompare(b.date));
+
+  return {
+    dates: entries.map((entry) => entry.date),
+    columnAt: entries.map((entry) => entry.column),
+    marks: [...labels].map(([date, names]) => ({
+      index: entries.findIndex((entry) => entry.date === date),
+      label: names.join(' · '),
+    })),
+  };
+}
+
 /** H, V, A — the order the analyst reads, not the one the alphabet gives. */
 function axisRank(axis: string): number {
   const order = ['H', 'V', 'A'];

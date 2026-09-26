@@ -174,7 +174,8 @@
       "V": "Vertical",
       "A": "Axial",
       "N": "No axis"
-    }
+    },
+    "markerHint": "Dashed line: corrective maintenance closed that day."
   },
   "thermogram": {
     "title": "Upload thermogram",

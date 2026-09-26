@@ -6,6 +6,7 @@ import {
   defaultSelection,
   MAX_SERIES,
   pointOptions,
+  timeline,
   togglePoint,
   toggleSeries,
 } from '@modules/measurements/domain/trendChart';
@@ -137,5 +138,47 @@ describe('selection cap', () => {
     const first = pointOptions(series)[0]!;
 
     expect(togglePoint(togglePoint([], first), first)).toEqual([]);
+  });
+});
+
+describe('maintenance marks on the trend (V3-32 AC-05)', () => {
+  const rounds = ['2026-08-27', '2026-09-10', '2026-09-28'];
+
+  it('gives a mark between two rounds a day of its own, with no value there', () => {
+    const line = timeline(rounds, [{ date: '2026-09-20', label: 'Cambio de rodamiento' }]);
+
+    expect(line.dates).toEqual(['2026-08-27', '2026-09-10', '2026-09-20', '2026-09-28']);
+    expect(line.columnAt).toEqual([0, 1, null, 2]);
+    expect(line.marks).toEqual([{ index: 2, label: 'Cambio de rodamiento' }]);
+  });
+
+  it('puts a mark on a round day on that round, without a new category', () => {
+    const line = timeline(rounds, [{ date: '2026-09-10', label: 'Balanceo' }]);
+
+    expect(line.dates).toEqual(rounds);
+    expect(line.marks).toEqual([{ index: 1, label: 'Balanceo' }]);
+  });
+
+  it('joins two jobs closed the same day into one mark', () => {
+    const line = timeline(rounds, [
+      { date: '2026-09-20', label: 'Alineamiento' },
+      { date: '2026-09-20', label: 'Balanceo' },
+    ]);
+
+    expect(line.marks).toEqual([{ index: 2, label: 'Alineamiento · Balanceo' }]);
+  });
+
+  it('leaves out a mark older than the first round', () => {
+    const line = timeline(rounds, [{ date: '2026-01-05', label: 'Balanceo' }]);
+
+    expect(line.dates).toEqual(rounds);
+    expect(line.marks).toEqual([]);
+  });
+
+  it('keeps a mark after the last round, since it explains what comes next', () => {
+    const line = timeline(rounds, [{ date: '2026-10-02', label: 'Balanceo' }]);
+
+    expect(line.dates.at(-1)).toBe('2026-10-02');
+    expect(line.columnAt.at(-1)).toBeNull();
   });
 });

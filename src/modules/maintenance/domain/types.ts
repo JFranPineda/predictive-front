@@ -27,6 +27,7 @@ export interface WorkRecord {
 }
 
 export interface WorkRecordMarker {
+  id: number;
   date: string;
-  label: string;
+  work_types: WorkType[];
 }
