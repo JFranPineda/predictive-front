@@ -99,6 +99,7 @@ export const baseApi = createApi({
     'Media',
     'AlignmentRecord',
     'TopographyElement',
+    'WorkRecord',
   ],
   endpoints: () => ({}),
 });

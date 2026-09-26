@@ -1,0 +1,36 @@
+{
+  "list": {
+    "title": "Maintenance",
+    "hint": "Corrective maintenance records: what was done, when, and by whom.",
+    "newRecord": "+ New record",
+    "allGroups": "All trains",
+    "empty": "No records this month",
+    "noResponsibles": "No one recorded",
+    "open": "Open",
+    "closed": "Closed",
+    "closeRecord": "Close record"
+  },
+  "workType": {
+    "bearing_change": "Bearing change",
+    "alignment": "Alignment",
+    "balancing": "Balancing",
+    "other": "Other"
+  },
+  "form": {
+    "title": "New maintenance record",
+    "hint": "Start, end and at least one responsible are required to close.",
+    "group": "Train",
+    "groupRequired": "You must choose a train",
+    "workTypes": "Work type",
+    "otherDescription": "'Other' description",
+    "startedAt": "Start",
+    "endedAt": "End",
+    "responsibleUser": "Responsible (system user)",
+    "externalResponsible": "External responsible",
+    "externalResponsibleHint": "Free text, for contractors with no account",
+    "description": "Description",
+    "sparePartsUsed": "Spare parts used",
+    "save": "Save",
+    "genericError": "Could not save"
+  }
+}

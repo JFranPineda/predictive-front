@@ -1,0 +1,36 @@
+{
+  "list": {
+    "title": "Mantenimiento",
+    "hint": "Registros de mantenimiento correctivo: qué se hizo, cuándo y quién.",
+    "newRecord": "+ Nuevo registro",
+    "allGroups": "Todos los conjuntos",
+    "empty": "No hay registros en este mes",
+    "noResponsibles": "Sin responsables",
+    "open": "Abierto",
+    "closed": "Cerrado",
+    "closeRecord": "Cerrar registro"
+  },
+  "workType": {
+    "bearing_change": "Cambio de rodamiento",
+    "alignment": "Alineamiento",
+    "balancing": "Balanceo",
+    "other": "Otro"
+  },
+  "form": {
+    "title": "Nuevo registro de mantenimiento",
+    "hint": "Inicio, fin y al menos un responsable son obligatorios al cerrar.",
+    "group": "Conjunto rotativo",
+    "groupRequired": "Debes elegir un conjunto",
+    "workTypes": "Tipo de trabajo",
+    "otherDescription": "Descripción de 'Otro'",
+    "startedAt": "Inicio",
+    "endedAt": "Fin",
+    "responsibleUser": "Responsable (usuario del sistema)",
+    "externalResponsible": "Responsable externo",
+    "externalResponsibleHint": "Nombre libre, para contratistas sin cuenta",
+    "description": "Descripción",
+    "sparePartsUsed": "Repuestos usados",
+    "save": "Guardar",
+    "genericError": "No se pudo guardar"
+  }
+}
