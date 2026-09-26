@@ -33,7 +33,7 @@ import {
 import { readServiceError } from './readServiceError';
 
 export default function VisitDetailPage() {
-  const { t } = useTranslation(['services', 'media']);
+  const { t } = useTranslation(['services', 'media', 'assets']);
   const { visitId } = useParams();
   const id = Number(visitId);
   const { data, isLoading, isError } = useVisitQuery(id);
@@ -262,6 +262,13 @@ export default function VisitDetailPage() {
                 {data.service_order.client_work_order || '—'}
               </Field>
               <Field label={t('visit.field.technique')}>{data.technique_name}</Field>
+              {(data.technique_code === 'lubrication' || data.technique_code === 'oil_analysis') && (
+                <Field label={t('visit.field.lubrication')}>
+                  {data.equipment.lubrication_type
+                    ? t(`assets:lubrication.${data.equipment.lubrication_type}`)
+                    : '—'}
+                </Field>
+              )}
               <Field label={t('visit.field.date')}>{formatDateTime(data.visited_at)}</Field>
               <Field label={t('visit.field.instrument')}>{data.instrument ?? '—'}</Field>
               <Field label={t('visit.field.availability')}>

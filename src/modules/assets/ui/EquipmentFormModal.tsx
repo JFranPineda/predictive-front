@@ -5,7 +5,12 @@ import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
 
-import { EQUIPMENT_TYPES, type Equipment, type EquipmentDraft } from '../domain/types';
+import {
+  defaultLubricationFor,
+  EQUIPMENT_TYPES,
+  type Equipment,
+  type EquipmentDraft,
+} from '../domain/types';
 import {
   useAssetGroupsQuery,
   useCreateEquipmentMutation,
@@ -41,6 +46,7 @@ export function EquipmentFormModal({
     client_tag: equipment?.client_tag ?? '',
     position_in_group: 'driver',
     monitoring_frequency: equipment?.monitoring_frequency ?? 'monthly',
+    lubrication_type: equipment?.lubrication_type ?? defaultLubricationFor(equipment?.equipment_type ?? 'motor'),
     generate_points: !equipment,
     // 0 means "continue the train's numbering": a gearbox read on four
     // points does not start at 3 just because a motor came before it.
@@ -60,6 +66,7 @@ export function EquipmentFormModal({
           client_tag: draft.client_tag,
           equipment_type: draft.equipment_type,
           monitoring_frequency: draft.monitoring_frequency,
+          lubrication_type: draft.lubrication_type,
           asset_group: draft.asset_group,
         }).unwrap();
       } else {
@@ -81,7 +88,12 @@ export function EquipmentFormModal({
           <Button onClick={onClose}>{t('common:action.cancel')}</Button>
           <Button
             variant="primary"
-            disabled={isLoading || !draft.name.trim() || !draft.asset_group}
+            disabled={
+              isLoading ||
+              !draft.name.trim() ||
+              !draft.asset_group ||
+              (draft.equipment_type === 'blower' && !draft.lubrication_type)
+            }
             onClick={() => void submit()}
           >
             {t('common:action.save')}
@@ -125,20 +137,39 @@ export function EquipmentFormModal({
         <FormField label={t('form.equipmentType')}>
           <Select
             value={draft.equipment_type}
-            onChange={(event) =>
+            onChange={(event) => {
+              const equipment_type = event.target.value as EquipmentDraft['equipment_type'];
               setDraft({
                 ...draft,
-                equipment_type: event.target.value as EquipmentDraft['equipment_type'],
+                equipment_type,
                 // The driver of a train is its motor; everything else is driven.
-                position_in_group: event.target.value === 'motor' ? 'driver' : 'driven',
-              })
-            }
+                position_in_group: equipment_type === 'motor' ? 'driver' : 'driven',
+                lubrication_type: defaultLubricationFor(equipment_type),
+              });
+            }}
           >
             {EQUIPMENT_TYPES.map((type) => (
               <option key={type} value={type}>
                 {t(`type.${type}`)}
               </option>
             ))}
+          </Select>
+        </FormField>
+
+        <FormField
+          label={t('form.lubricationType')}
+          hint={draft.equipment_type === 'blower' ? t('form.lubricationRequiredHint') : undefined}
+        >
+          <Select
+            value={draft.lubrication_type ?? ''}
+            onChange={(event) =>
+              setDraft({ ...draft, lubrication_type: event.target.value as EquipmentDraft['lubrication_type'] })
+            }
+          >
+            <option value="">—</option>
+            <option value="oil">{t('lubrication.oil')}</option>
+            <option value="grease">{t('lubrication.grease')}</option>
+            <option value="none">{t('lubrication.none')}</option>
           </Select>
         </FormField>
 

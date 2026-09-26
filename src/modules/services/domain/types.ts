@@ -127,6 +127,7 @@ export interface VisitDetail {
     name: string;
     tag: string;
     type: string;
+    lubrication_type: string;
     asset_group: string;
     asset_group_id: number;
     area_label: string;

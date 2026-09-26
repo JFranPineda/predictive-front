@@ -94,6 +94,8 @@
     "clientTag": "TAG del cliente",
     "clientTagHint": "Opcional. Puede repetirse entre motor y bomba; el código interno se genera solo.",
     "equipmentType": "Tipo de equipo",
+    "lubricationType": "Tipo de lubricación",
+    "lubricationRequiredHint": "Un soplador puede ir con aceite o grasa: elige uno",
     "frequency": "Frecuencia de monitoreo",
     "points": "Puntos de medición",
     "pointsHint": "Se crean 2 puntos con ejes H, V y A. El motor suele numerarse desde 1 y el conducido desde 3.",
@@ -101,6 +103,11 @@
     "description": "Descripción",
     "firstPointAuto": "auto",
     "firstPointHint": "Primer número de punto; vacío sigue la numeración del conjunto"
+  },
+  "lubrication": {
+    "oil": "Aceite",
+    "grease": "Grasa",
+    "none": "Ninguno"
   },
   "kind": {
     "motor_pump": "Motor-Bomba",

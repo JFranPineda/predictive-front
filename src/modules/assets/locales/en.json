@@ -94,6 +94,8 @@
     "clientTag": "Customer TAG",
     "clientTagHint": "Optional. It can repeat between motor and pump; the internal code is generated.",
     "equipmentType": "Equipment type",
+    "lubricationType": "Lubrication type",
+    "lubricationRequiredHint": "A blower can run on oil or grease: pick one",
     "frequency": "Monitoring frequency",
     "points": "Measurement points",
     "pointsHint": "Two points with H, V and A axes. Motors usually start at 1 and driven machines at 3.",
@@ -101,6 +103,11 @@
     "description": "Description",
     "firstPointAuto": "auto",
     "firstPointHint": "First point number; blank continues the train's numbering"
+  },
+  "lubrication": {
+    "oil": "Oil",
+    "grease": "Grease",
+    "none": "None"
   },
   "kind": {
     "motor_pump": "Motor-Pump",

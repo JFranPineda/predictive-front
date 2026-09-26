@@ -10,6 +10,7 @@ const base: Equipment = {
   name: 'MOTOR',
   equipment_type: 'motor',
   monitoring_frequency: 'monthly',
+  lubrication_type: 'grease',
   area: { id: 1, code: '101', name: 'ETA' },
   asset_group: { id: 1, name: 'BBA. AGUA CRUDA - TAG:A', kind: 'motor_pump' },
   condition_status: { code: 'normal', name: 'Normal', color: '#16a34a' },

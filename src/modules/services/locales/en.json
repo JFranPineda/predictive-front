@@ -87,6 +87,7 @@
       "order": "Order",
       "clientOrder": "Customer WO",
       "technique": "Technique",
+      "lubrication": "Lubrication",
       "date": "Date",
       "instrument": "Instrument",
       "availability": "Availability",

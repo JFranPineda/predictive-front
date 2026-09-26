@@ -4,6 +4,21 @@ export type EquipmentType =
 export type MonitoringFrequency =
   | 'monthly' | 'bimonthly' | 'quarterly' | 'semiannual' | 'annual' | 'on_demand';
 
+export type LubricationType = 'oil' | 'grease' | 'none' | '';
+
+/** Mirrors `default_lubrication_for` on the backend (V3-29): a soplador is
+ * deliberately left out, since the customer said it goes either way. */
+const DEFAULT_LUBRICATION: Partial<Record<EquipmentType, LubricationType>> = {
+  compressor: 'oil',
+  pump: 'oil',
+  gearbox: 'oil',
+  motor: 'grease',
+};
+
+export function defaultLubricationFor(equipmentType: EquipmentType): LubricationType {
+  return DEFAULT_LUBRICATION[equipmentType] ?? '';
+}
+
 export interface Area {
   id: number;
   code: string;
@@ -23,6 +38,7 @@ export interface Equipment {
   name: string;
   equipment_type: EquipmentType;
   monitoring_frequency: MonitoringFrequency;
+  lubrication_type: LubricationType;
   area: { id: number; code: string; name: string };
   asset_group: { id: number; name: string; kind: string };
   condition_status: { code: string; name: string; color: string } | null;
@@ -68,6 +84,7 @@ export interface EquipmentDraft {
   client_tag?: string;
   position_in_group?: 'driver' | 'driven' | 'intermediate';
   monitoring_frequency?: MonitoringFrequency;
+  lubrication_type?: LubricationType;
   generate_points?: boolean;
   first_point?: number;
 }
