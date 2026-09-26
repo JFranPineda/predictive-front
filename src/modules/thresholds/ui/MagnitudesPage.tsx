@@ -26,7 +26,7 @@ import {
 } from '../infrastructure/endpoints';
 import { readError } from './StandardFormModal';
 
-const AGGREGATIONS = ['rms', 'peak', 'peak_to_peak', 'avg', 'max'] as const;
+const AGGREGATIONS = ['rms', 'peak', 'peak_to_peak', 'avg', 'max', 'min'] as const;
 
 /**
  * Configuración → Medidas.
