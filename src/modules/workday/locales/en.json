@@ -1,0 +1,61 @@
+{
+  "title": "Workday",
+  "hint": "The chief engineer opens the workday and closes it with their password. Once it is closed, technicians can no longer change anything of that day; without an ATS nobody photographs or observes a train.",
+  "noDay": "No workday on {{date}}",
+  "noDayHint": "The chief engineer must open the workday before permits and observations can be recorded.",
+  "open": "Open workday",
+  "close": "Close workday",
+  "reopen": "Reopen workday",
+  "dayOf": "{{plant}} · {{date}}",
+  "stateOpen": "Open",
+  "stateClosed": "Closed",
+  "openedBy": "Opened by {{who}} · {{when}}",
+  "closedBy": "Closed by {{who}} · {{when}}",
+  "lockedHint": "Workday closed: technicians can no longer change readings, photos or records of this day. Only the chief engineer can reopen it, and that is audited.",
+  "genericError": "Could not save. Check the data.",
+  "works": {
+    "title": "Today's work",
+    "hint": "Service visits and corrective jobs of the date, with who did them and when.",
+    "empty": "No work recorded on this date yet.",
+    "start": "Start",
+    "end": "End",
+    "service": "Service",
+    "order": "Order",
+    "group": "Train / machine",
+    "people": "People",
+    "corrective": "Corrective"
+  },
+  "permits": {
+    "title": "Workday permits (ATS)",
+    "hint": "Safe Work Analysis: without a signed ATS for a train, no photos or observations of it are accepted.",
+    "empty": "No permit recorded yet.",
+    "number": "ATS number",
+    "signedCopy": "Signed ATS (PDF or photo)",
+    "register": "Register ATS",
+    "document": "View signed ATS"
+  },
+  "observations": {
+    "title": "Field observations",
+    "hint": "The photo first, then whether the finding shows in it, and last what was done.",
+    "empty": "No observations.",
+    "photo": "1. Photo",
+    "photoHint": "Required, before the text.",
+    "isVisible": "2. Is the finding visible in the photo?",
+    "visible": "Visible",
+    "notVisible": "Not visible",
+    "text": "3. What was done",
+    "textPlaceholder": "Did X, Y, Z…",
+    "add": "Record observation"
+  },
+  "form": {
+    "group": "Train"
+  },
+  "sign": {
+    "closeTitle": "Close the workday",
+    "closeHint": "Type your password to sign the close. From then on technicians cannot change data of this day.",
+    "reopenTitle": "Reopen the workday",
+    "reopenHint": "Reopening is signed with your password and the reason goes to the audit log.",
+    "password": "Your password",
+    "reason": "Reason for reopening"
+  }
+}

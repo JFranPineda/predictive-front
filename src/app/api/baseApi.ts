@@ -102,6 +102,7 @@ export const baseApi = createApi({
     'WorkRecord',
     'RollerSheet',
     'RollerIndication',
+    'Workday',
   ],
   endpoints: () => ({}),
 });

@@ -30,6 +30,7 @@ const LOADERS: Record<string, ModuleLoader[]> = {
   maintenance: [() => import('@modules/maintenance')],
   ut_rollers: [() => import('@modules/ut_rollers')],
   reports: [() => import('@modules/reports')],
+  workday: [() => import('@modules/workday')],
 };
 
 export function knownModuleCodes(): string[] {

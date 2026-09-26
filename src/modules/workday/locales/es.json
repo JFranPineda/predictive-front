@@ -1,0 +1,61 @@
+{
+  "title": "Jornada de trabajo",
+  "hint": "El ingeniero jefe abre la jornada y la cierra con su clave. Cerrada la jornada, los técnicos ya no pueden modificar nada de ese día; sin ATS no se fotografía ni se observa un conjunto.",
+  "noDay": "No hay jornada del {{date}}",
+  "noDayHint": "El ingeniero jefe debe abrir la jornada para que se puedan registrar ATS y observaciones.",
+  "open": "Abrir jornada",
+  "close": "Cerrar jornada",
+  "reopen": "Reabrir jornada",
+  "dayOf": "{{plant}} · {{date}}",
+  "stateOpen": "Abierta",
+  "stateClosed": "Cerrada",
+  "openedBy": "Abierta por {{who}} · {{when}}",
+  "closedBy": "Cerrada por {{who}} · {{when}}",
+  "lockedHint": "Jornada cerrada: los técnicos ya no pueden modificar lecturas, fotos ni registros de este día. Solo el ingeniero jefe puede reabrirla, y queda registrado.",
+  "genericError": "No se pudo guardar. Revisa los datos.",
+  "works": {
+    "title": "Trabajos del día",
+    "hint": "Visitas de servicio y mantenimientos correctivos de la fecha, con sus responsables y horas.",
+    "empty": "Todavía no hay trabajos registrados en esta fecha.",
+    "start": "Inicio",
+    "end": "Término",
+    "service": "Servicio",
+    "order": "Orden",
+    "group": "Conjunto / equipo",
+    "people": "Personas",
+    "corrective": "Correctivo"
+  },
+  "permits": {
+    "title": "ATS de la jornada",
+    "hint": "Análisis de Trabajo Seguro: sin un ATS firmado del conjunto no se aceptan fotos ni observaciones de ese conjunto.",
+    "empty": "Todavía no se registró ningún ATS.",
+    "number": "Número de ATS",
+    "signedCopy": "ATS firmado (PDF o foto)",
+    "register": "Registrar ATS",
+    "document": "Ver ATS firmado"
+  },
+  "observations": {
+    "title": "Observaciones de campo",
+    "hint": "Primero la foto, luego si la observación se ve en ella, y al final lo que se hizo.",
+    "empty": "Sin observaciones.",
+    "photo": "1. Foto",
+    "photoHint": "Obligatoria, antes del texto.",
+    "isVisible": "2. ¿La observación es visible en la foto?",
+    "visible": "Visible",
+    "notVisible": "No visible",
+    "text": "3. Qué se hizo",
+    "textPlaceholder": "Se hizo X, Y, Z…",
+    "add": "Registrar observación"
+  },
+  "form": {
+    "group": "Conjunto"
+  },
+  "sign": {
+    "closeTitle": "Cerrar la jornada",
+    "closeHint": "Escribe tu clave para firmar el cierre. Desde ese momento los técnicos no podrán modificar datos de este día.",
+    "reopenTitle": "Reabrir la jornada",
+    "reopenHint": "La reapertura se firma con tu clave y el motivo queda en la auditoría.",
+    "password": "Tu clave",
+    "reason": "Motivo de la reapertura"
+  }
+}
