@@ -107,7 +107,10 @@ function ScaleModal({ standard, row, onClose }: { standard: Standard; row?: Scal
       { status_code: '', min_value: null, max_value: null },
     ],
   );
-  const conditionStatuses = (statuses.data ?? []).filter((status) => status.kind === 'condition');
+  // As the norma's service names them (UT's "Medio" is the plant's Alarma).
+  const conditionStatuses = standard.status_options?.length
+    ? standard.status_options
+    : (statuses.data ?? []).filter((status) => status.kind === 'condition');
   const magnitude = magnitudes.data?.find((m) => m.code === magnitudeCode);
   const busy = creating.isLoading || updating.isLoading;
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { tierProblem, tierRange } from '@modules/alignment/domain/scale';
+import { tierProblem, tierRange, toInput } from '@modules/alignment/domain/scale';
 import { bandRange, magnitudesForNorma } from '@modules/thresholds/domain/scale';
 
 describe("a norma's scale (Q9)", () => {
@@ -24,8 +24,8 @@ describe("a norma's scale (Q9)", () => {
 describe("alignment's RPM scale (Q10)", () => {
   const tier = (ceiling: number | null, parallel = '0.05', angular = '0.05') => ({
     rpm_ceiling: ceiling,
-    parallel_mm: parallel,
-    angular_mm_per_100mm: angular,
+    bands: [{ status_code: 'operational', parallel_mm: parallel, angular_mm_per_100mm: angular }],
+    beyond: { status_code: 'alarm' },
   });
 
   it('reads each tier from the one above it', () => {
@@ -40,5 +40,29 @@ describe("alignment's RPM scale (Q10)", () => {
     expect(tierProblem([tier(2000), tier(1000)])).toBe('scale.climbing');
     expect(tierProblem([tier(1000, '0')])).toBe('scale.positive');
     expect(tierProblem([tier(1000, '0.10'), tier(2000, '0.07'), tier(null, '0.03')])).toBeNull();
+  });
+
+  it('checks each tier reads as limits that climb, each state once (Q10)', () => {
+    const banded = (bands: [string, string, string][], beyond: string | null) => ({
+      rpm_ceiling: null,
+      bands: bands.map(([status_code, parallel_mm, angular_mm_per_100mm]) => ({
+        status_code,
+        parallel_mm,
+        angular_mm_per_100mm,
+      })),
+      beyond: beyond ? { status_code: beyond } : null,
+    });
+    expect(tierProblem([banded([], null)])).toBe('scale.needsBand');
+    expect(tierProblem([banded([['alarm', '0.10', '0.08'], ['operational', '0.05', '0.09']], null)])).toBe('scale.bandsClimb');
+    expect(tierProblem([banded([['alarm', '0.10', '0.08']], 'alarm')])).toBe('scale.stateOnce');
+    // Typed out of order is fine: the limits are read by size.
+    expect(tierProblem([banded([['alarm', '0.10', '0.08'], ['operational', '0.05', '0.05']], 'shutdown')])).toBeNull();
+    expect(toInput([banded([['operational', '0.05', '0.05']], 'alarm')])).toEqual([
+      {
+        rpm_ceiling: null,
+        bands: [{ status_code: 'operational', parallel_mm: '0.05', angular_mm_per_100mm: '0.05' }],
+        beyond_status_code: 'alarm',
+      },
+    ]);
   });
 });

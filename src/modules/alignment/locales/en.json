@@ -1,11 +1,12 @@
 {
   "panel": {
     "title": "Alignment",
-    "hint": "SKF format: before and after, eight values.",
+    "hint": "SKF format: the four values before and after, ✓/✗ and the equipment's state by the norma.",
     "save": "Save alignment",
     "verdictOk": "Within tolerance",
     "verdictBad": "Out of tolerance on at least one value",
-    "tolerance": "Tolerance applied: parallel {{parallel}} mm, angular {{angular}} mm/100mm"
+    "tolerance": "Tolerance applied: parallel {{parallel}} mm, angular {{angular}} mm/100mm",
+    "scale": "Scale applied:"
   },
   "form": {
     "rpmRequired": "RPM is required",
@@ -18,30 +19,43 @@
     "instrument": "Instrument",
     "standard": "Standard",
     "standardHint": "Which standard's RPM scale the tolerance comes from",
-    "standardDefault": "SKF (default)"
+    "standardDefault": "SKF (default)",
+    "aligner": "Aligner",
+    "alignerHint": "SKF gives one image with before and after; other aligners, one per phase.",
+    "rpmHint": "Changing it recalculates the tolerance and states with the norma",
+    "backlash": "Backlash within tolerance",
+    "yes": "Yes",
+    "no": "No",
+    "notes": "Notes"
   },
   "phase": {
     "before": "Before (As Found)",
     "after": "After (As Corrected)"
   },
   "axis": {
-    "angular_h": "Angular H",
-    "parallel_h": "Parallel H",
-    "angular_v": "Angular V",
-    "parallel_v": "Parallel V"
+    "angular_h": "Horizontal angular",
+    "parallel_h": "Horizontal offset",
+    "angular_v": "Vertical angular",
+    "parallel_v": "Vertical offset"
   },
   "photos": {
-    "title": "Representative photos",
+    "title": "Images of the train",
     "role": "Role",
     "file": "File",
     "caption": "Note",
     "upload": "Upload photo",
     "kind": {
-      "alignment_group": "Train",
-      "alignment_observation": "Observation",
+      "alignment_group": "Train photo",
+      "alignment_observation": "Finding",
       "alignment_before": "Screen · before",
-      "alignment_after": "Screen · after"
-    }
+      "alignment_after": "Screen · after",
+      "alignment_result": "Aligner result (before and after)"
+    },
+    "hintSkf": "SKF aligner: one result image with before and after, plus the train's photo and up to two of the finding.",
+    "hintOther": "Other aligner: one image before and one after, plus the train's photo and up to two of the finding.",
+    "add": "Upload image",
+    "uploading": "Uploading…",
+    "remove": "Remove image"
   },
   "list": {
     "title": "Alignment",
@@ -50,8 +64,8 @@
     "openVisit": "Open visit"
   },
   "scale": {
-    "title": "Tolerances by RPM",
-    "edit": "Edit tolerances",
+    "title": "Limits and states by RPM",
+    "edit": "Edit scale",
     "rpm": "RPM",
     "parallel": "Parallel",
     "angular": "Angular",
@@ -60,10 +74,48 @@
     "addTier": "Tier",
     "save": "Save tolerances",
     "cancel": "Cancel",
-    "hint": "Each alignment takes the tolerance of its RPM tier and keeps it even if the scale changes later.",
+    "hint": "Each tier says up to which value each equipment state applies. Every alignment keeps the scale it was recorded with, even if it changes later.",
     "needsTier": "The scale needs at least one RPM tier",
     "onlyLastOpen": "Only the last tier may have no ceiling",
     "climbing": "RPM ceilings must go up",
-    "positive": "Tolerances must be above zero"
+    "positive": "Tolerances must be above zero",
+    "upTo": "≤ {{parallel}} mm · ≤ {{angular}} mm/100mm",
+    "above": "above",
+    "withinTolerance": "Within tolerance",
+    "state": "State",
+    "parallelUpTo": "Offset up to (mm)",
+    "angularUpTo": "Angular up to (mm/100mm)",
+    "noStateAbove": "No state above",
+    "aboveAll": "Above every limit",
+    "addBand": "Limit",
+    "removeTier": "Remove tier",
+    "needsBand": "Each tier needs at least one limit",
+    "bandsClimb": "Within a tier, each limit must be greater than the previous one",
+    "stateOnce": "A state appears once per tier"
+  },
+  "aligner": {
+    "skf": "SKF",
+    "other": "Other aligner"
+  },
+  "kind": {
+    "angular": "Angular",
+    "parallel": "Offset"
+  },
+  "unit": {
+    "angular": "mm/100mm",
+    "parallel": "mm"
+  },
+  "state": {
+    "found": "As found",
+    "left": "As left"
+  },
+  "results": {
+    "title": "Alignment results",
+    "horizontal": "Horizontal · top view",
+    "vertical": "Vertical · side view"
+  },
+  "details": {
+    "title": "Alignment data",
+    "save": "Save data"
   }
 }

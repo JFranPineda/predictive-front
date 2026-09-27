@@ -152,7 +152,7 @@ export default function VisitDetailPage() {
         }
       >
         {data.evidence_only ? null : data.technique_code === 'alignment' ? (
-          <AlignmentPanel visitId={id} assetGroupId={data.equipment.asset_group_id} />
+          <AlignmentPanel visitId={id} assetGroupId={data.equipment.asset_group_id} canEdit={data.can_edit} />
         ) : data.technique_code === 'topography' ? (
           <TopographyPanel
             visitId={id}

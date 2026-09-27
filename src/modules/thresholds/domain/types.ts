@@ -43,6 +43,8 @@ export interface Standard {
   set_count: number;
   /** Its own global bands, one entry per magnitude: the norma's scale (Q9). */
   scale: ScaleRow[];
+  /** The states its bands may name, as its service calls them (Q10, Q15). */
+  status_options: { code: string; name: string; color: string; severity: number }[];
 }
 
 export interface ScaleBand {

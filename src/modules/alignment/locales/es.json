@@ -1,11 +1,12 @@
 {
   "panel": {
     "title": "Alineamiento",
-    "hint": "Formato SKF: antes y después, ocho valores.",
+    "hint": "Formato SKF: antes y después de los cuatro valores, ✓/✗ y el estado del equipo según la norma.",
     "save": "Guardar alineamiento",
     "verdictOk": "Dentro de tolerancia",
     "verdictBad": "Fuera de tolerancia en al menos un valor",
-    "tolerance": "Tolerancia aplicada: paralelo {{parallel}} mm, angular {{angular}} mm/100mm"
+    "tolerance": "Tolerancia aplicada: paralelo {{parallel}} mm, angular {{angular}} mm/100mm",
+    "scale": "Escala aplicada:"
   },
   "form": {
     "rpmRequired": "El RPM es obligatorio",
@@ -18,30 +19,43 @@
     "instrument": "Instrumento",
     "standard": "Norma",
     "standardHint": "De qué norma sale la tolerancia por RPM",
-    "standardDefault": "SKF (por defecto)"
+    "standardDefault": "SKF (por defecto)",
+    "aligner": "Alineador",
+    "alignerHint": "SKF entrega una imagen con antes y después; otro alineador, una por fase.",
+    "rpmHint": "Cambiarlo recalcula la tolerancia y los estados con la norma",
+    "backlash": "Juego (backlash) dentro de tolerancia",
+    "yes": "Sí",
+    "no": "No",
+    "notes": "Notas"
   },
   "phase": {
     "before": "Antes (As Found)",
     "after": "Después (As Corrected)"
   },
   "axis": {
-    "angular_h": "Angular H",
-    "parallel_h": "Paralelo H",
-    "angular_v": "Angular V",
-    "parallel_v": "Paralelo V"
+    "angular_h": "Angular horizontal",
+    "parallel_h": "Paralelo horizontal",
+    "angular_v": "Angular vertical",
+    "parallel_v": "Paralelo vertical"
   },
   "photos": {
-    "title": "Fotos representativas",
+    "title": "Imágenes del conjunto",
     "role": "Rol",
     "file": "Archivo",
     "caption": "Nota",
     "upload": "Subir foto",
     "kind": {
-      "alignment_group": "Conjunto",
+      "alignment_group": "Foto del conjunto",
       "alignment_observation": "Observación",
       "alignment_before": "Pantalla · antes",
-      "alignment_after": "Pantalla · después"
-    }
+      "alignment_after": "Pantalla · después",
+      "alignment_result": "Resultado del alineador (antes y después)"
+    },
+    "hintSkf": "Alineador SKF: una imagen de resultado con antes y después, más la foto del conjunto y hasta dos de la observación.",
+    "hintOther": "Otro alineador: una imagen antes y otra después, más la foto del conjunto y hasta dos de la observación.",
+    "add": "Subir imagen",
+    "uploading": "Subiendo…",
+    "remove": "Quitar imagen"
   },
   "list": {
     "title": "Alineamiento",
@@ -50,8 +64,8 @@
     "openVisit": "Ver visita"
   },
   "scale": {
-    "title": "Tolerancias por RPM",
-    "edit": "Editar tolerancias",
+    "title": "Límites y estados por RPM",
+    "edit": "Editar escala",
     "rpm": "RPM",
     "parallel": "Paralelo",
     "angular": "Angular",
@@ -60,10 +74,48 @@
     "addTier": "Tramo",
     "save": "Guardar tolerancias",
     "cancel": "Cancelar",
-    "hint": "Cada alineamiento toma la tolerancia del tramo de su RPM y la conserva aunque la escala cambie después.",
+    "hint": "Cada tramo dice hasta qué valor corresponde cada estado del equipo. Cada alineamiento conserva la escala con la que se registró aunque luego cambie.",
     "needsTier": "La escala necesita al menos un tramo de RPM",
     "onlyLastOpen": "Solo el último tramo puede quedar sin techo",
     "climbing": "Los techos de RPM deben ir de menor a mayor",
-    "positive": "Las tolerancias deben ser mayores que cero"
+    "positive": "Las tolerancias deben ser mayores que cero",
+    "upTo": "≤ {{parallel}} mm · ≤ {{angular}} mm/100mm",
+    "above": "por encima",
+    "withinTolerance": "Dentro de tolerancia",
+    "state": "Estado",
+    "parallelUpTo": "Paralelo hasta (mm)",
+    "angularUpTo": "Angular hasta (mm/100mm)",
+    "noStateAbove": "Sin estado por encima",
+    "aboveAll": "Por encima de todos los límites",
+    "addBand": "Límite",
+    "removeTier": "Quitar tramo",
+    "needsBand": "Cada tramo necesita al menos un límite",
+    "bandsClimb": "Dentro de un tramo, cada límite debe ser mayor que el anterior",
+    "stateOnce": "Un estado aparece una sola vez por tramo"
+  },
+  "aligner": {
+    "skf": "SKF",
+    "other": "Otro alineador"
+  },
+  "kind": {
+    "angular": "Angular",
+    "parallel": "Paralelo"
+  },
+  "unit": {
+    "angular": "mm/100mm",
+    "parallel": "mm"
+  },
+  "state": {
+    "found": "Estado encontrado",
+    "left": "Estado final"
+  },
+  "results": {
+    "title": "Resultados del alineamiento",
+    "horizontal": "Horizontal · vista superior",
+    "vertical": "Vertical · vista lateral"
+  },
+  "details": {
+    "title": "Datos del alineamiento",
+    "save": "Guardar datos"
   }
 }

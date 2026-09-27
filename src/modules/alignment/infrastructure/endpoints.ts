@@ -1,6 +1,6 @@
 import { baseApi } from '@app/api/baseApi';
 
-import type { AlignmentRecord, RpmTier } from '../domain/types';
+import type { Aligner, AlignmentRecord, AlignmentScale, RpmTierInput } from '../domain/types';
 
 export interface AlignmentRecordInput {
   asset_group: number;
@@ -10,6 +10,7 @@ export interface AlignmentRecordInput {
   rpm: string;
   standard?: number | null;
   instrument?: string;
+  aligner?: Aligner;
   backlash_within_tolerance?: boolean | null;
   notes?: string;
   before_angular_h?: string;
@@ -56,11 +57,11 @@ export const alignmentApi = baseApi.injectEndpoints({
       query: (id) => ({ url: `alignment-records/${id}/`, method: 'DELETE' }),
       invalidatesTags: ['AlignmentRecord'],
     }),
-    alignmentScale: build.query<RpmTier[], number>({
+    alignmentScale: build.query<AlignmentScale, number>({
       query: (standardId) => `alignment-scales/${standardId}/`,
       providesTags: (_r, _e, id) => [{ type: 'AlignmentScale', id }],
     }),
-    saveAlignmentScale: build.mutation<RpmTier[], { standardId: number; tiers: RpmTier[] }>({
+    saveAlignmentScale: build.mutation<AlignmentScale, { standardId: number; tiers: RpmTierInput[] }>({
       query: ({ standardId, tiers }) => ({ url: `alignment-scales/${standardId}/`, method: 'PUT', body: { tiers } }),
       invalidatesTags: (_r, _e, { standardId }) => [{ type: 'AlignmentScale', id: standardId }],
     }),
@@ -72,6 +73,13 @@ export const alignmentApi = baseApi.injectEndpoints({
         url: `alignment-records/${recordId}/photos/`,
         method: 'POST',
         body,
+      }),
+      invalidatesTags: (_r, _e, { recordId }) => [{ type: 'AlignmentRecord', id: recordId }],
+    }),
+    deleteAlignmentPhoto: build.mutation<void, { recordId: number; photoId: number }>({
+      query: ({ recordId, photoId }) => ({
+        url: `alignment-records/${recordId}/photos/${photoId}/`,
+        method: 'DELETE',
       }),
       invalidatesTags: (_r, _e, { recordId }) => [{ type: 'AlignmentRecord', id: recordId }],
     }),
@@ -87,4 +95,5 @@ export const {
   useUpdateAlignmentRecordMutation,
   useDeleteAlignmentRecordMutation,
   useUploadAlignmentPhotoMutation,
+  useDeleteAlignmentPhotoMutation,
 } = alignmentApi;
