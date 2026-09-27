@@ -104,6 +104,7 @@ export const baseApi = createApi({
     'RollerSheet',
     'RollerIndication',
     'Workday',
+    'Activity',
   ],
   endpoints: () => ({}),
 });

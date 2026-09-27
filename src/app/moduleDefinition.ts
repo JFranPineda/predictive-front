@@ -37,6 +37,9 @@ export interface ModuleDefinition {
    * Alignment contributes its RPM table this way, so the Normas screen shows
    * it without the thresholds module ever importing alignment (Q10). */
   scaleEditors?: Record<string, LazyExoticComponent<ComponentType<ScaleEditorProps>>>;
+  /** Mounted once inside the shell, on every screen, while the module is
+   * installed — the activity log's click listener (Q20). Render nothing. */
+  shell?: LazyExoticComponent<ComponentType>[];
 }
 
 /** A module's entry point is its default export. */

@@ -1,0 +1,46 @@
+{
+  "title": "Activity log",
+  "subtitle": "Everything done in the system: who signed in, which screens they opened, which buttons they pressed, what they recorded, changed, deleted or uploaded, and when. Nobody can edit or delete this log.",
+  "refresh": "Refresh",
+  "export": "Export CSV",
+  "exporting": "Exporting…",
+  "loading": "Loading activity…",
+  "more": "Load more",
+  "count_one": "{{formatted}} event",
+  "count_other": "{{formatted}} events",
+  "readOnly": "Newest first, grouped by day.",
+  "empty": "No activity recorded yet",
+  "emptyFiltered": "No event matches the filters",
+  "emptyHint": "Every action taken in the system shows up here right away.",
+  "anonymous": "No user",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "filter": {
+    "search": "Search",
+    "searchHint": "Description, user or event…",
+    "user": "User",
+    "everyone": "All users",
+    "since": "From",
+    "until": "To",
+    "clear": "Clear filters"
+  },
+  "column": {
+    "at": "Date and time",
+    "user": "User",
+    "event": "Event",
+    "description": "Description"
+  },
+  "kind": {
+    "login": "Sign-in",
+    "login_failed": "Failed sign-in",
+    "logout": "Sign-out",
+    "navigation": "Navigation",
+    "click": "Click",
+    "create": "Created",
+    "update": "Changed",
+    "delete": "Deleted",
+    "upload": "File upload",
+    "action": "Action",
+    "denied": "Refused"
+  }
+}

@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, Suspense, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 import type { ModuleDefinition } from './moduleDefinition';
@@ -22,7 +22,17 @@ export function ContributionsProvider({
     () => Object.assign({}, ...definitions.map((definition) => definition.scaleEditors ?? {})) as ScaleEditors,
     [definitions],
   );
-  return <ScaleEditorsContext.Provider value={editors}>{children}</ScaleEditorsContext.Provider>;
+  const shell = useMemo(() => definitions.flatMap((definition) => definition.shell ?? []), [definitions]);
+  return (
+    <ScaleEditorsContext.Provider value={editors}>
+      {shell.map((Component, index) => (
+        <Suspense key={index} fallback={null}>
+          <Component />
+        </Suspense>
+      ))}
+      {children}
+    </ScaleEditorsContext.Provider>
+  );
 }
 
 export function useScaleEditors(): ScaleEditors {

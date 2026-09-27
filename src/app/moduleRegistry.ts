@@ -31,6 +31,7 @@ const LOADERS: Record<string, ModuleLoader[]> = {
   ut_rollers: [() => import('@modules/ut_rollers')],
   reports: [() => import('@modules/reports')],
   workday: [() => import('@modules/workday')],
+  activity: [() => import('@modules/activity')],
 };
 
 export function knownModuleCodes(): string[] {

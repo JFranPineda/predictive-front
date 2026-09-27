@@ -1,0 +1,46 @@
+{
+  "title": "Registro de actividad",
+  "subtitle": "Todo lo que se hace en el sistema: quién entró, qué pantallas abrió, qué botones pulsó, qué registró, modificó, eliminó o subió, y cuándo. Nadie puede editar ni borrar este registro.",
+  "refresh": "Actualizar",
+  "export": "Exportar CSV",
+  "exporting": "Exportando…",
+  "loading": "Cargando actividad…",
+  "more": "Cargar más",
+  "count_one": "{{formatted}} evento",
+  "count_other": "{{formatted}} eventos",
+  "readOnly": "Del más reciente al más antiguo, agrupado por día.",
+  "empty": "Todavía no hay actividad registrada",
+  "emptyFiltered": "Ningún evento coincide con los filtros",
+  "emptyHint": "Cada acción que se haga en el sistema aparecerá aquí al momento.",
+  "anonymous": "Sin usuario",
+  "today": "Hoy",
+  "yesterday": "Ayer",
+  "filter": {
+    "search": "Buscar",
+    "searchHint": "Descripción, usuario o evento…",
+    "user": "Usuario",
+    "everyone": "Todos los usuarios",
+    "since": "Desde",
+    "until": "Hasta",
+    "clear": "Limpiar filtros"
+  },
+  "column": {
+    "at": "Fecha y hora",
+    "user": "Usuario",
+    "event": "Evento",
+    "description": "Descripción"
+  },
+  "kind": {
+    "login": "Inicio de sesión",
+    "login_failed": "Acceso fallido",
+    "logout": "Cierre de sesión",
+    "navigation": "Navegación",
+    "click": "Clic",
+    "create": "Alta",
+    "update": "Modificación",
+    "delete": "Baja",
+    "upload": "Subida de archivo",
+    "action": "Acción",
+    "denied": "Rechazado"
+  }
+}
