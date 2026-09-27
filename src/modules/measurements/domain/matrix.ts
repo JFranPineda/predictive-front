@@ -6,7 +6,8 @@
  * trend and a column top to bottom for the round; a flat list serves neither.
  */
 export interface MatrixCell {
-  reading_id: number;
+  /** Null on an open cell: a fixed table's value this round has not read yet. */
+  reading_id: number | null;
   value: string | null;
   status_code: string | null;
   status_color: string | null;
@@ -16,6 +17,22 @@ export interface MatrixCell {
   visit_id: number | null;
   /** A thermogram behind this value (V3-16). */
   image_url: string | null;
+  /** Where an open cell's value is written: this point, this magnitude. */
+  point_id?: number;
+  magnitude_code?: string;
+  aggregation?: string;
+}
+
+/** One value to save through a visit: a correction, or a new reading. */
+export type ReadingEdit =
+  | { reading_id: number; value: string | null }
+  | { point: number; magnitude: string; aggregation: string; value: string | null };
+
+/** The draft's key for a cell: its reading, or where an open cell writes. */
+export function cellKey(cell: MatrixCell): string {
+  return cell.reading_id !== null
+    ? `r${cell.reading_id}`
+    : `n${cell.visit_id}:${cell.point_id}:${cell.magnitude_code}:${cell.aggregation}`;
 }
 
 /** A value was recorded and nothing judged it (V3-11: acceleration has no standard). */
@@ -107,14 +124,22 @@ function runLengths(keys: string[]): number[] {
 
 /** Edits grouped by the visit that owns them: the visit is what carries the
  * ownership rule, so each group is saved through its own endpoint. */
-export function groupByVisit(
-  edits: { cell: MatrixCell; value: string }[],
-): Map<number, { reading_id: number; value: string | null }[]> {
-  const grouped = new Map<number, { reading_id: number; value: string | null }[]>();
+export function groupByVisit(edits: { cell: MatrixCell; value: string }[]): Map<number, ReadingEdit[]> {
+  const grouped = new Map<number, ReadingEdit[]>();
   for (const { cell, value } of edits) {
     if (cell.visit_id === null) continue;
+    const typed = value === '' ? null : value;
     const bucket = grouped.get(cell.visit_id) ?? [];
-    bucket.push({ reading_id: cell.reading_id, value: value === '' ? null : value });
+    bucket.push(
+      cell.reading_id !== null
+        ? { reading_id: cell.reading_id, value: typed }
+        : {
+            point: cell.point_id!,
+            magnitude: cell.magnitude_code!,
+            aggregation: cell.aggregation!,
+            value: typed,
+          },
+    );
     grouped.set(cell.visit_id, bucket);
   }
   return grouped;

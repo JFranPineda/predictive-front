@@ -77,6 +77,8 @@ export interface Magnitude {
   display_order: number;
   /** Read only on the points whose kind template lists it (acceleration). */
   template_only: boolean;
+  /** Its table is always in the record of values, open for the rounds that read it. */
+  in_record: boolean;
   higher_is_worse: boolean;
 }
 

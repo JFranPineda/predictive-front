@@ -54,7 +54,9 @@ export function AlignmentPanel({
   assetGroupId: number;
   canEdit?: boolean;
 }) {
-  const records = useAlignmentRecordsQuery({ service_visit: visitId });
+  // The alignment belongs to the train, not to the machine whose visit
+  // recorded it: both visits of the order have to show the same record.
+  const records = useAlignmentRecordsQuery({ train_of_visit: visitId });
   const record = records.data?.[0];
 
   if (records.isLoading) return null;

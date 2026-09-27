@@ -8,7 +8,6 @@ import es from './locales/es.json';
 import { measurementsApi } from './infrastructure/endpoints';
 
 export { useCreateThermogramMutation } from './infrastructure/endpoints';
-export { ThermogramUploadCard } from './ui/ThermogramUploadCard';
 
 const definition: ModuleDefinition = {
   code: 'measurements',
@@ -56,6 +55,9 @@ const definition: ModuleDefinition = {
   ],
   translations: { namespace: 'measurements', bundle: { es, en } },
   registerEndpoints: () => void measurementsApi,
+  visitSections: [
+    { slot: 'top', techniques: ['thermography'], component: lazy(() => import('./ui/ThermogramVisitSection')) },
+  ],
 };
 
 export default definition;

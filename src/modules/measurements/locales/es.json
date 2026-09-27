@@ -50,7 +50,8 @@
   "record": {
     "title": "Registro de valores",
     "loading": "Cargando el registro…",
-    "save": "Guardar {{count}} valores",
+    "save_one": "Guardar 1 valor",
+    "save_other": "Guardar {{count}} valores",
     "saved": "Sin cambios",
     "saveFailed": "Alguna columna no se pudo guardar",
     "legend": "Una fila por punto, una columna por ronda. Solo se editan las rondas abiertas que ejecutaste tú; el candado marca las cerradas. Vaciar una celda significa «no se pudo medir», no cero.",

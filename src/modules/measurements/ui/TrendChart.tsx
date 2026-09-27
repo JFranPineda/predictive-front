@@ -17,6 +17,7 @@ import type { MatrixBlock, MatrixColumn } from '../domain/matrix';
 import {
   buildSeries,
   defaultSelection,
+  liveSelection,
   MAX_SERIES,
   pointOptions,
   timeline,
@@ -62,15 +63,21 @@ export function TrendChart({
 
   const series = useMemo(() => buildSeries(block, resolved), [block, resolved]);
   const options = useMemo(() => pointOptions(series), [series]);
-  const [selected, setSelected] = useState<string[]>(() => defaultSelection(series));
+  const [chosen, setChosen] = useState<string[]>(() => defaultSelection(series));
+  // What the user chose, reduced to the series this block shows now: the
+  // scope list swaps the machine under the same chart (bug: the motor's
+  // points kept counting against the pump's cap).
+  const selected = useMemo(() => liveSelection(chosen, series), [chosen, series]);
+  const setSelected = (change: (rows: string[]) => string[]) => setChosen(change(selected));
 
   const shown = useMemo(
     () => selected.map((id) => series.find((row) => row.id === id)).filter(Boolean) as ChartSeries[],
     [selected, series],
   );
   const full = selected.length >= MAX_SERIES;
+  const hasValues = series.some((row) => row.points.some((point) => point.value !== null));
 
-  if (series.length === 0 || columns.length === 0) return null;
+  if (series.length === 0 || columns.length === 0 || !hasValues) return null;
 
   return (
     <section className="border-t border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-900/40">

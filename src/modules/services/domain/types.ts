@@ -151,5 +151,7 @@ export interface VisitDetail {
   other_fault: string | null;
   is_closed: boolean;
   report_issued: boolean;
+  /** Why another module keeps it read-only now (the workday, Q19). */
+  lock_reason: string | null;
   can_edit: boolean;
 }

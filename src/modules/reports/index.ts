@@ -10,8 +10,18 @@ const definition: ModuleDefinition = {
   code: 'reports',
   routes: [
     {
+      path: '/reports/mpd',
+      component: lazy(() => import('./ui/MpdReportsPage')),
+      permission: 'reports.view',
+    },
+    {
+      path: '/reports/end',
+      component: lazy(() => import('./ui/EndReportsPage')),
+      permission: 'reports.view',
+    },
+    {
       path: '/reports',
-      component: lazy(() => import('./ui/ReportsPage')),
+      component: lazy(() => import('./ui/LegacyReportsRedirect')),
       permission: 'reports.view',
     },
   ],

@@ -45,10 +45,27 @@ export function JournalSheet({ order, group, canCapture }: { order: number; grou
   if (!data) return null;
   return (
     <div className="space-y-6">
+      {data.lock_reason && <LockBanner reason={data.lock_reason} />}
       {SIDES.map((side) => (
-        <SideTable key={side} order={order} group={group} side={side} rows={data.sides[side]} canCapture={canCapture} />
+        <SideTable
+          key={side}
+          order={order}
+          group={group}
+          side={side}
+          rows={data.sides[side]}
+          canCapture={canCapture && !data.lock_reason}
+        />
       ))}
     </div>
+  );
+}
+
+/** Why the group's fields are read-only now: the workday's rule (Q19). */
+export function LockBanner({ reason }: { reason: string }) {
+  return (
+    <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+      🔒 {reason}
+    </p>
   );
 }
 
@@ -372,6 +389,8 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
 
   if (!data) return null;
   const dirty = conclusions !== data.conclusions || recommendations !== data.recommendations;
+  // The workday may keep the group read-only (Q19).
+  const editable = canEdit && !data.lock_reason;
 
   async function send(role: 'plan' | 'photo', file: File) {
     setError(null);
@@ -390,11 +409,12 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
 
   return (
     <div className="space-y-6">
+      {data.lock_reason && <LockBanner reason={data.lock_reason} />}
       <Card
         title={t('report.title')}
         description={t('report.hint')}
         actions={
-          canEdit && (
+          editable && (
             <Button
               variant="primary"
               disabled={!dirty || saving.isLoading}
@@ -408,12 +428,12 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
         {error && <p className="mb-3 rounded-lg bg-red-50 p-2 text-sm text-red-700">{error}</p>}
         <div className="grid gap-4 lg:grid-cols-2">
           <FormField label={t('report.conclusions')}>
-            <TextArea rows={5} disabled={!canEdit} value={conclusions} onChange={(event) => setConclusions(event.target.value)} />
+            <TextArea rows={5} disabled={!editable} value={conclusions} onChange={(event) => setConclusions(event.target.value)} />
           </FormField>
           <FormField label={t('report.recommendations')}>
             <TextArea
               rows={5}
-              disabled={!canEdit}
+              disabled={!editable}
               value={recommendations}
               onChange={(event) => setRecommendations(event.target.value)}
             />
@@ -427,13 +447,13 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
             <a href={data.plan.url} target="_blank" rel="noreferrer">
               <img src={data.plan.url} alt={t('report.plan')} className="max-h-[28rem] w-full rounded-lg object-contain ring-1 ring-slate-200 dark:ring-slate-700" />
             </a>
-            {canEdit && (
+            {editable && (
               <Button variant="ghost" onClick={() => void remove({ order, group, asset: data.plan!.id })}>
                 {t('report.removePlan')}
               </Button>
             )}
           </div>
-        ) : canEdit ? (
+        ) : editable ? (
           <FilePicker label={uploading.isLoading ? t('report.uploading') : t('report.addPlan')} onPick={(file) => void send('plan', file)} />
         ) : (
           <p className="text-sm text-slate-400">{t('report.noPlan')}</p>
@@ -443,10 +463,10 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
       <Card title={t('report.photos')} description={t('report.photosHint')}>
         <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {data.photos.map((photo) => (
-            <Photo key={photo.id} photo={photo} canEdit={canEdit} onRemove={() => void remove({ order, group, asset: photo.id })} />
+            <Photo key={photo.id} photo={photo} canEdit={editable} onRemove={() => void remove({ order, group, asset: photo.id })} />
           ))}
         </div>
-        {canEdit && (
+        {editable && (
           <div className="mt-4 flex flex-wrap items-end gap-3">
             <FormField label={t('report.caption')}>
               <TextInput value={caption} placeholder={t('report.captionPlaceholder')} onChange={(event) => setCaption(event.target.value)} />

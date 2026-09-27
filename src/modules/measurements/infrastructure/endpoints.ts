@@ -1,6 +1,6 @@
 import { baseApi } from '@app/api/baseApi';
 
-import type { EquipmentMatrix } from '../domain/matrix';
+import type { EquipmentMatrix, ReadingEdit } from '../domain/matrix';
 import type { MeasurementTrainPage, TrainOrder } from '../domain/trains';
 import type { TrendSeries } from '../domain/trend';
 import type { Instrument, Spectrum, SpectrumCurve, SpectrumPage } from '../domain/types';
@@ -91,7 +91,7 @@ export const measurementsApi = baseApi.injectEndpoints({
     }),
     saveMatrixColumn: build.mutation<
       { saved: number },
-      { visitId: number; readings: { reading_id: number; value: string | null }[] }
+      { visitId: number; readings: ReadingEdit[] }
     >({
       query: ({ visitId, readings }) => ({
         url: `service-visits/${visitId}/readings/`,

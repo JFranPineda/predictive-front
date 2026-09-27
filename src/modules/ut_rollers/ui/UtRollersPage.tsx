@@ -36,7 +36,7 @@ import {
   useRollerSheetQuery,
   useSaveRollerSheetMutation,
 } from '../infrastructure/endpoints';
-import { GroupReportCard, JournalSheet, ResultsSummary } from './JournalViews';
+import { GroupReportCard, JournalSheet, LockBanner, ResultsSummary } from './JournalViews';
 
 /** What an order of UT on rollers records, one tab each (Q15). */
 const TABS = ['thickness', 'journals', 'results', 'report'] as const;
@@ -168,6 +168,7 @@ function Sheet({ order, group, canCapture }: { order: number; group: number; can
   if (isLoading) return <Spinner label={t('common:loading')} />;
   if (!data) return null;
   if (data.rows.length === 0) return <EmptyState title={t('sheet.noRollers')} body={t('sheet.noRollersHint')} />;
+  const capture = canCapture && !data.lock_reason;
 
   function edit(row: RollerRow, patch: Partial<RollerDraft>) {
     setSaved(false);
@@ -208,6 +209,7 @@ function Sheet({ order, group, canCapture }: { order: number; group: number; can
         ))}
       </div>
 
+      {data.lock_reason && <LockBanner reason={data.lock_reason} />}
       {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       {saved && dirty.length === 0 && (
         <p className="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
@@ -220,7 +222,7 @@ function Sheet({ order, group, canCapture }: { order: number; group: number; can
         description={t('sheet.hint')}
         padded={false}
         actions={
-          canCapture && (
+          capture && (
             <Button variant="primary" disabled={dirty.length === 0 || saving.isLoading} onClick={() => void submit()}>
               {dirty.length > 0 ? t('sheet.saveCount', { count: dirty.length }) : t('sheet.upToDate')}
             </Button>
@@ -245,7 +247,7 @@ function Sheet({ order, group, canCapture }: { order: number; group: number; can
             <tbody>
               {data.rows.map((row) => {
                 const draft = drafts[row.equipment_id] ?? draftFor(row);
-                const locked = !canCapture || row.is_closed;
+                const locked = !capture || row.is_closed;
                 return (
                   <RowView
                     key={row.equipment_id}
@@ -255,7 +257,7 @@ function Sheet({ order, group, canCapture }: { order: number; group: number; can
                     open={opened === row.equipment_id}
                     onToggle={() => setOpened(opened === row.equipment_id ? null : row.equipment_id)}
                     onEdit={(patch) => edit(row, patch)}
-                    canCapture={canCapture}
+                    canCapture={capture}
                   />
                 );
               })}

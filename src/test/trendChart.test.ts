@@ -4,6 +4,7 @@ import type { MatrixBlock, MatrixRow } from '@modules/measurements/domain/matrix
 import {
   buildSeries,
   defaultSelection,
+  liveSelection,
   MAX_SERIES,
   pointOptions,
   timeline,
@@ -97,6 +98,27 @@ describe('trend chart series', () => {
 });
 
 describe('selection cap', () => {
+  it('counts only the machine on screen when the scope narrows to it', () => {
+    // Bug: with the whole train, the motor's six series were chosen; after
+    // picking the pump in the scope list they still filled the cap.
+    const train = buildSeries(block(), 'dark');
+    const motor = train.filter((row) => row.component === 'MOTOR').map((row) => row.id);
+    const pump = buildSeries(
+      block([
+        { number: 3, component: 'BOMBA' },
+        { number: 4, component: 'BOMBA' },
+      ]),
+      'dark',
+    ).map((row) => ({ ...row, id: `pump-${row.id}` }));
+
+    expect(liveSelection(motor, train)).toEqual(motor);
+    const onPump = liveSelection(motor, pump);
+    expect(onPump).toHaveLength(1);
+    expect(onPump[0]).toBe(defaultSelection(pump)[0]);
+    const five = [...onPump, ...pump.slice(1, 5).map((row) => row.id)];
+    expect(liveSelection([...motor, ...five], pump)).toEqual(five);
+  });
+
   it('holds six series and refuses the seventh', () => {
     const series = buildSeries(block(), 'dark');
     let selected: string[] = [];

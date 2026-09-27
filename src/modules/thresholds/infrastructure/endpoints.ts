@@ -42,7 +42,7 @@ export const thresholdsApi = baseApi.injectEndpoints({
     }),
     updateMagnitude: build.mutation<
       Magnitude,
-      { id: number; display_order?: number; template_only?: boolean }
+      { id: number; display_order?: number; template_only?: boolean; in_record?: boolean }
     >({
       query: ({ id, ...body }) => ({ url: `magnitudes/${id}/`, method: 'PATCH', body }),
       // The record of values orders its tables by this.

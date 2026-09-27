@@ -50,7 +50,8 @@
   "record": {
     "title": "Record of values",
     "loading": "Loading the record…",
-    "save": "Save {{count}} values",
+    "save_one": "Save 1 value",
+    "save_other": "Save {{count}} values",
     "saved": "No changes",
     "saveFailed": "Some column could not be saved",
     "legend": "One row per point, one column per round. Only open rounds you performed can be edited; the padlock marks the closed ones. Clearing a cell means “could not be measured”, not zero.",

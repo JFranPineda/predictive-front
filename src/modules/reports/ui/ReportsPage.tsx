@@ -15,20 +15,26 @@ import { Spinner } from '@shared/ui/Spinner';
 import { useReportOrdersQuery } from '../infrastructure/endpoints';
 import { useReportPreview } from './useReportPreview';
 
-const TABS = ['mpd', 'end', 'monthly', 'corrective'] as const;
-type Tab = (typeof TABS)[number];
+/** Each menu entry is one family of reports and its tabs. */
+const FAMILIES = {
+  // The predictive report, with the plant's monthly summary and the correctivos.
+  mpd: ['mpd', 'monthly', 'corrective'],
+  end: ['end'],
+} as const;
+type Family = keyof typeof FAMILIES;
+type Tab = (typeof FAMILIES)[Family][number];
 
 /**
- * Informes MPd y END (V3-23): pick what the report is about, see it exactly
- * as it will print, and download it as PDF or Excel. The choice lives in the
- * URL, so a report can be sent as a link.
+ * Informes MPd and Informes END (V3-23), one menu entry each: pick what the
+ * report is about, see it exactly as it will print, and download it as PDF or
+ * Excel. The choice lives in the URL, so a report can be sent as a link.
  */
-export default function ReportsPage() {
+export function ReportsPage({ family }: { family: Family }) {
   const { t } = useTranslation(['reports', 'common']);
   const permissions = usePermissions();
   const [params, setParams] = useSearchParams();
-  const tabs = TABS.filter((tab) => tab !== 'corrective' || permissions.has('maintenance.view'));
-  const tab = (tabs as readonly string[]).includes(params.get('tab') ?? '') ? (params.get('tab') as Tab) : 'mpd';
+  const tabs = FAMILIES[family].filter((tab) => tab !== 'corrective' || permissions.has('maintenance.view'));
+  const tab = (tabs as readonly string[]).includes(params.get('tab') ?? '') ? (params.get('tab') as Tab) : tabs[0]!;
 
   function set(values: Record<string, string>) {
     const next = new URLSearchParams(params);
@@ -41,24 +47,26 @@ export default function ReportsPage() {
 
   return (
     <Page>
-      <PageHeader title={t('page.title')} description={t('page.hint')} />
-      <nav className="flex flex-wrap gap-2" role="tablist">
-        {tabs.map((name) => (
-          <button
-            key={name}
-            role="tab"
-            aria-selected={tab === name}
-            onClick={() => setParams(new URLSearchParams({ tab: name }), { replace: true })}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-              tab === name
-                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                : 'border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
-            }`}
-          >
-            {t(`tab.${name}`)}
-          </button>
-        ))}
-      </nav>
+      <PageHeader title={t(`page.title.${family}`)} description={t('page.hint')} />
+      {tabs.length > 1 && (
+        <nav className="flex flex-wrap gap-2" role="tablist">
+          {tabs.map((name) => (
+            <button
+              key={name}
+              role="tab"
+              aria-selected={tab === name}
+              onClick={() => setParams(new URLSearchParams({ tab: name }), { replace: true })}
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                tab === name
+                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                  : 'border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
+              }`}
+            >
+              {t(`tab.${name}`)}
+            </button>
+          ))}
+        </nav>
+      )}
       {tab === 'mpd' && <OrderReport family="mpd" params={params} set={set} />}
       {tab === 'end' && <OrderReport family="ndt" params={params} set={set} />}
       {tab === 'monthly' && <MonthlyReport params={params} set={set} />}

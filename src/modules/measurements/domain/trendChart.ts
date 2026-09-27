@@ -140,6 +140,18 @@ export function defaultSelection(series: ChartSeries[]): string[] {
   return [first.id];
 }
 
+/**
+ * The selection that still applies to these series. Switching the record from
+ * the whole train to one machine (or back) changes the series under a chart
+ * that keeps its state: ids of the other machine must neither count against
+ * the cap nor linger. With nothing left, the chart opens as it first did.
+ */
+export function liveSelection(selected: string[], series: ChartSeries[]): string[] {
+  const ids = new Set(series.map((row) => row.id));
+  const kept = selected.filter((id) => ids.has(id));
+  return kept.length > 0 ? kept : defaultSelection(series);
+}
+
 /** Adds or removes one series, never going past the cap. */
 export function toggleSeries(selected: string[], id: string, max = MAX_SERIES): string[] {
   if (selected.includes(id)) return selected.filter((row) => row !== id);

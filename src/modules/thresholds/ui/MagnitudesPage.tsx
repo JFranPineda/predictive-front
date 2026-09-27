@@ -57,20 +57,20 @@ export default function MagnitudesPage() {
         <span>
           <span className="block font-medium">{row.name}</span>
           <span className="block font-mono text-[11px] text-slate-400">{row.code}</span>
-          {canManage ? (
-            <label className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500" title={t('magnitudes.templateOnlyHint')}>
-              <input
-                type="checkbox"
-                checked={row.template_only}
-                onChange={(event) => void updateMagnitude({ id: row.id, template_only: event.target.checked })}
-              />
-              {t('magnitudes.templateOnly')}
-            </label>
-          ) : (
-            row.template_only && (
-              <span className="mt-1 block text-[11px] text-slate-500">{t('magnitudes.templateOnly')}</span>
-            )
-          )}
+          <Flag
+            checked={row.template_only}
+            editable={canManage}
+            label={t('magnitudes.templateOnly')}
+            hint={t('magnitudes.templateOnlyHint')}
+            onChange={(checked) => void updateMagnitude({ id: row.id, template_only: checked })}
+          />
+          <Flag
+            checked={row.in_record}
+            editable={canManage}
+            label={t('magnitudes.inRecord')}
+            hint={t('magnitudes.inRecordHint')}
+            onChange={(checked) => void updateMagnitude({ id: row.id, in_record: checked })}
+          />
         </span>
       ),
     },
@@ -216,6 +216,29 @@ export default function MagnitudesPage() {
         />
       )}
     </Page>
+  );
+}
+
+/** A yes/no setting of the magnitude: a switch for who manages the catalogue, a note for the rest. */
+function Flag({
+  checked,
+  editable,
+  label,
+  hint,
+  onChange,
+}: {
+  checked: boolean;
+  editable: boolean;
+  label: string;
+  hint: string;
+  onChange: (checked: boolean) => void;
+}) {
+  if (!editable) return checked ? <span className="mt-1 block text-[11px] text-slate-500">{label}</span> : null;
+  return (
+    <label className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-500" title={hint}>
+      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
+      {label}
+    </label>
   );
 }
 

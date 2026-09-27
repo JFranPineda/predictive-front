@@ -17,6 +17,7 @@ import { useDownload } from '@shared/hooks/useDownload';
 import { Spinner } from '@shared/ui/Spinner';
 
 import {
+  cellKey,
   groupByVisit,
   isUngraded,
   spansOf,
@@ -66,7 +67,7 @@ export default function RecordOfValuesPage() {
   const machine = Number(params.get('equipment')) || undefined;
   const { data, isLoading, isError } = useTrainMatrixQuery({ group, equipment: machine });
   const [saveColumn, saving] = useSaveMatrixColumnMutation();
-  const [draft, setDraft] = useState<Record<number, string>>({});
+  const [draft, setDraft] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const { download, isDownloading, error: downloadError } = useDownload();
   const [editingPlate, setEditingPlate] = useState(false);
@@ -75,11 +76,11 @@ export default function RecordOfValuesPage() {
   // makes the recalculated statuses appear.
   useEffect(() => {
     if (!data) return;
-    const initial: Record<number, string> = {};
+    const initial: Record<string, string> = {};
     for (const block of data.blocks) {
       for (const row of block.rows) {
         for (const cell of row.cells) {
-          if (cell) initial[cell.reading_id] = trimValue(cell.value, block.decimals);
+          if (cell) initial[cellKey(cell)] = trimValue(cell.value, block.decimals);
         }
       }
     }
@@ -93,7 +94,7 @@ export default function RecordOfValuesPage() {
       for (const row of block.rows) {
         for (const cell of row.cells) {
           if (!cell) continue;
-          const typed = draft[cell.reading_id] ?? '';
+          const typed = draft[cellKey(cell)] ?? '';
           if (typed !== trimValue(cell.value, block.decimals)) changed.push({ cell, value: typed });
         }
       }
@@ -197,7 +198,7 @@ export default function RecordOfValuesPage() {
             columns={data.columns}
             markers={markers}
             draft={draft}
-            onChange={(readingId, value) => setDraft({ ...draft, [readingId]: value })}
+            onChange={(key, value) => setDraft({ ...draft, [key]: value })}
           />
         ))
       )}
@@ -221,8 +222,8 @@ function Block({
   block: MatrixBlock;
   columns: MatrixColumn[];
   markers: TrendMarker[];
-  draft: Record<number, string>;
-  onChange: (readingId: number, value: string) => void;
+  draft: Record<string, string>;
+  onChange: (key: string, value: string) => void;
 }) {
   const { t } = useTranslation('measurements');
   const spans = spansOf(block.rows);
@@ -306,8 +307,8 @@ function Block({
                       <input
                         inputMode="decimal"
                         readOnly={!column.can_edit}
-                        value={draft[cell.reading_id] ?? ''}
-                        onChange={(event) => onChange(cell.reading_id, event.target.value)}
+                        value={draft[cellKey(cell)] ?? ''}
+                        onChange={(event) => onChange(cellKey(cell), event.target.value)}
                         title={isUngraded(cell) ? t('record.ungradedHint') : (cell.status_code ?? undefined)}
                         className="w-20 bg-transparent px-2 py-1 text-right tabular-nums outline-none read-only:text-slate-500 focus:bg-white focus:ring-2 focus:ring-sky-400 dark:focus:bg-slate-900"
                       />

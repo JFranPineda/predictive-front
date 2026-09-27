@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { deltaPercent, toMatrix, type TrendSeries } from '@modules/measurements/domain/trend';
 import {
+  cellKey,
   groupByVisit,
   spansOf,
   trimValue,
@@ -111,6 +112,19 @@ describe('record-of-values grid', () => {
       { reading_id: 1, value: '4.5' },
       // An emptied cell means "not measured", not zero.
       { reading_id: 2, value: null },
+    ]);
+  });
+
+  it('writes an open cell of a fixed table as a new reading of its visit', () => {
+    // Acceleration this round never seeded: the value creates the reading.
+    const open: MatrixCell = {
+      reading_id: null, value: null, status_code: null, status_color: null, graded: false,
+      quality: 'missing', visit_id: 12, image_url: null,
+      point_id: 5, magnitude_code: 'accel_rms', aggregation: 'rms',
+    };
+    expect(cellKey(open)).toBe('n12:5:accel_rms:rms');
+    expect(groupByVisit([{ cell: open, value: '0.8' }]).get(12)).toEqual([
+      { point: 5, magnitude: 'accel_rms', aggregation: 'rms', value: '0.8' },
     ]);
   });
 

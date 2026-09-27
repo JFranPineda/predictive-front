@@ -6,7 +6,6 @@ import { alignmentApi } from './infrastructure/endpoints';
 import en from './locales/en.json';
 import es from './locales/es.json';
 
-export { AlignmentPanel } from './ui/AlignmentPanel';
 export type { AlignmentRecord } from './domain/types';
 
 const definition: ModuleDefinition = {
@@ -22,6 +21,9 @@ const definition: ModuleDefinition = {
   registerEndpoints: () => void alignmentApi,
   // The RPM tolerance table of an alignment norma, shown on Normas (Q10).
   scaleEditors: { alignment: lazy(() => import('./ui/AlignmentScaleEditor')) },
+  visitSections: [
+    { slot: 'readings', techniques: ['alignment'], component: lazy(() => import('./ui/AlignmentVisitSection')) },
+  ],
 };
 
 export default definition;

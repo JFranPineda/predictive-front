@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
+import { useVisitSections } from '@app/contributions';
+import type { VisitSectionProps } from '@app/moduleDefinition';
 import { formatDateTime } from '@app/i18n/format';
-import { AlignmentPanel } from '@modules/alignment';
 import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
-import { ThermogramUploadCard } from '@modules/measurements';
-import { TopographyPanel } from '@modules/topography';
 import { useCompanyUsersQuery } from '@modules/users';
 import { Button } from '@shared/ui/Button';
 import { Card, Field } from '@shared/ui/Card';
@@ -37,6 +36,9 @@ export default function VisitDetailPage() {
   const { visitId } = useParams();
   const id = Number(visitId);
   const { data, isLoading, isError } = useVisitQuery(id);
+  const technique = data?.technique_code ?? '';
+  const topSections = useVisitSections('top', technique);
+  const readingSections = useVisitSections('readings', technique);
   const [saveReadings, saving] = useSaveVisitReadingsMutation();
   const [addEntry, adding] = useAddVisitEntryMutation();
 
@@ -82,6 +84,14 @@ export default function VisitDetailPage() {
     );
   }
 
+  const sectionProps: VisitSectionProps = {
+    visitId: id,
+    equipmentId: data.equipment.id,
+    assetGroupId: data.equipment.asset_group_id,
+    techniqueCode: data.technique_code,
+    canEdit: data.can_edit,
+  };
+
   // Compare against the *displayed* original, not the raw column value:
   // trimming 0.8700 to 0.87 is not an edit, and counting it as one offered to
   // save 18 changes nobody made.
@@ -123,7 +133,7 @@ export default function VisitDetailPage() {
       {!data.can_edit && (
         <ErrorState
           title={t('visit.readOnly')}
-          body={data.report_issued ? t('lock.issued') : t('lock.closed')}
+          body={data.lock_reason ?? (data.report_issued ? t('lock.issued') : t('lock.closed'))}
         />
       )}
 
@@ -139,9 +149,11 @@ export default function VisitDetailPage() {
         ))}
       </nav>
 
-      {data.technique_code === 'thermography' && (
-        <ThermogramUploadCard visitId={id} equipmentId={data.equipment.id} />
-      )}
+      {topSections.map(({ component: Section }, index) => (
+        <Suspense key={index} fallback={<Spinner label="" />}>
+          <Section {...sectionProps} />
+        </Suspense>
+      ))}
 
       <div
         id="readings"
@@ -151,14 +163,14 @@ export default function VisitDetailPage() {
             : 'grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,22rem)]'
         }
       >
-        {data.evidence_only ? null : data.technique_code === 'alignment' ? (
-          <AlignmentPanel visitId={id} assetGroupId={data.equipment.asset_group_id} canEdit={data.can_edit} />
-        ) : data.technique_code === 'topography' ? (
-          <TopographyPanel
-            visitId={id}
-            assetGroupId={data.equipment.asset_group_id}
-            canEdit={data.can_edit}
-          />
+        {data.evidence_only ? null : readingSections.length > 0 ? (
+          <div className="min-w-0 space-y-6">
+            {readingSections.map(({ component: Section }, index) => (
+              <Suspense key={index} fallback={<Spinner label="" />}>
+                <Section {...sectionProps} />
+              </Suspense>
+            ))}
+          </div>
         ) : (
         <Card
           title={t('visit.readings')}

@@ -23,6 +23,28 @@ export interface ScaleEditorProps {
   editable: boolean;
 }
 
+/** What a module's section of a service visit's page receives. */
+export interface VisitSectionProps {
+  visitId: number;
+  equipmentId: number;
+  assetGroupId: number;
+  techniqueCode: string;
+  /** False when the visit is closed, not the user's, or locked by another module. */
+  canEdit: boolean;
+}
+
+/**
+ * A module's section of the visit page, for its own technique's visits:
+ * alignment's SKF panel, topography's sheet, the thermogram upload. The page
+ * never imports them, so uninstalling the module removes its section.
+ */
+export interface VisitSection {
+  /** `readings` takes the place of the readings table; `top` goes above it. */
+  slot: 'top' | 'readings';
+  techniques: string[];
+  component: LazyExoticComponent<ComponentType<VisitSectionProps>>;
+}
+
 export interface ModuleDefinition {
   code: string;
   routes: ModuleRoute[];
@@ -40,6 +62,8 @@ export interface ModuleDefinition {
   /** Mounted once inside the shell, on every screen, while the module is
    * installed — the activity log's click listener (Q20). Render nothing. */
   shell?: LazyExoticComponent<ComponentType>[];
+  /** Sections this module adds to the visit page of its techniques. */
+  visitSections?: VisitSection[];
 }
 
 /** A module's entry point is its default export. */

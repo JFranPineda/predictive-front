@@ -27,7 +27,7 @@ export const alignmentApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     alignmentRecords: build.query<
       AlignmentRecord[],
-      { month?: string; group?: number; service_visit?: number } | void
+      { month?: string; group?: number; service_visit?: number; train_of_visit?: number } | void
     >({
       query: (params) => ({ url: 'alignment-records/', params: params ?? undefined }),
       providesTags: (result) =>

@@ -30,6 +30,8 @@ export interface RollerSheet {
   group_id: number;
   rows: RollerRow[];
   summary: Record<RollerState, number>;
+  /** Why this group of this order is read-only now (the workday, Q19). */
+  lock_reason: string | null;
 }
 
 export interface RollerDraft {
@@ -118,6 +120,7 @@ export interface JournalSheet {
   order: { id: number; code: string };
   group_id: number;
   sides: Record<Side, JournalRow[]>;
+  lock_reason: string | null;
 }
 
 export interface JournalDraft {
@@ -167,4 +170,5 @@ export interface GroupReport {
   recommendations: string;
   plan: ReportImage | null;
   photos: ReportImage[];
+  lock_reason: string | null;
 }

@@ -1,6 +1,9 @@
 {
   "page": {
-    "title": "MPd and NDT reports",
+    "title": {
+      "mpd": "MPd reports",
+      "end": "NDT reports"
+    },
     "hint": "Pick what the report is about, check it exactly as it will print, and download it as PDF or Excel.",
     "loading": "Loading orders…"
   },

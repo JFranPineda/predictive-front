@@ -1,5 +1,5 @@
 {
-  "title": "Informes de planta",
+  "title": "Informes de Planta",
   "subtitle": "El color de un área es el peor estado que contiene. Lo que no se pudo medir se cuenta aparte, nunca como operativo.",
   "loading": "Calculando semáforo…",
   "equipmentCount": "{{count}} eq.",

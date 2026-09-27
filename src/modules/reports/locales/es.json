@@ -1,6 +1,9 @@
 {
   "page": {
-    "title": "Informes MPd y END",
+    "title": {
+      "mpd": "Informes MPd",
+      "end": "Informes END"
+    },
     "hint": "Elige de qué es el informe, revísalo tal como se imprimirá y descárgalo en PDF o Excel.",
     "loading": "Cargando órdenes…"
   },
