@@ -100,6 +100,7 @@ export const baseApi = createApi({
     'AlignmentRecord',
     'AlignmentScale',
     'TopographyElement',
+    'TopographySurvey',
     'WorkRecord',
     'RollerSheet',
     'RollerIndication',

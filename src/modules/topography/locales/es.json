@@ -1,24 +1,77 @@
 {
   "panel": {
     "title": "Topografía",
-    "hint": "Un elemento por fila, según su número en el plano."
+    "hint": "Levantamiento del conjunto y medida de cada polín contra el componente principal."
+  },
+  "survey": {
+    "title": "Levantamiento topográfico",
+    "hint": "Los datos del plano: fecha del servicio, componente principal, notas, el esquema del conjunto y el plano del análisis con sus notas.",
+    "save": "Guardar levantamiento",
+    "titleField": "Contenido del plano",
+    "titlePlaceholder": "Alineamiento y nivelación prensa superior 1 – rodillo N°5",
+    "date": "Fecha del servicio",
+    "reference": "Componente principal",
+    "referenceHint": "Contra qué se mide cada polín, p. ej. Prensa 1",
+    "planNumber": "N° de plano",
+    "instrument": "Instrumento",
+    "notes": "Notas",
+    "notesHint": "Una nota por línea, como en el plano.",
+    "planNotes": "Notas del plano del análisis",
+    "planNotesPlaceholder": "Qué muestra el plano: rodillo referencial, rodillo a corregir…",
+    "dated": "Servicio del {{date}}",
+    "image": {
+      "schema": "Esquema del conjunto (recorrido)",
+      "plan": "Análisis del conjunto principal (plano completo)"
+    }
+  },
+  "sheet": {
+    "title": "Polines medidos",
+    "hint": "Por cada polín, su separación en mm respecto de {{main}} en los cuatro cuadros del plano, la foto de cada cuadro y el desplazamiento que necesita.",
+    "empty": "Todavía no hay polines medidos.",
+    "mainComponent": "el componente principal",
+    "versus": "vs {{main}}",
+    "view": {
+      "parallel": "Paralelismo",
+      "level": "Vista perfil (nivelación)"
+    },
+    "side": {
+      "drive": "Lado mando (referencia)",
+      "transmission": "Lado transmisión"
+    },
+    "box": {
+      "parallel_drive": "Paralelismo · lado mando",
+      "parallel_transmission": "Paralelismo · lado transmisión",
+      "level_drive": "Nivelación · lado mando",
+      "level_transmission": "Nivelación · lado transmisión"
+    },
+    "displacement": {
+      "parallel": "Desplazamiento horizontal",
+      "level": "Desplazamiento vertical"
+    },
+    "suggested": "Transmisión − mando: {{value}}"
   },
   "column": {
-    "element": "Elemento",
-    "level_h": "Nivel H",
-    "level_v": "Nivel V",
-    "parallel_h": "Paralelo H",
-    "parallel_v": "Paralelo V",
     "observation": "Observación",
     "history": "Historial",
     "date": "Fecha"
   },
   "form": {
-    "newElement": "Nuevo elemento, p. ej. R3",
-    "addElement": "Agregar elemento",
+    "element": "Polín medido",
+    "elementPlaceholder": "Rodillo N°5",
+    "reference": "Medido contra",
+    "referenceHint": "Vacío: {{main}}",
+    "addElement": "Agregar polín",
+    "remove": "Quitar",
     "genericError": "No se pudo guardar"
   },
+  "photo": {
+    "add": "Subir imagen",
+    "addBox": "Foto del cuadro",
+    "uploading": "Subiendo…",
+    "remove": "Quitar",
+    "none": "Sin imagen"
+  },
   "history": {
-    "empty": "Sin historial para este elemento"
+    "empty": "Sin historial para este polín"
   }
 }

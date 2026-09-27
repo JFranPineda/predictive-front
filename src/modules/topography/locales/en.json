@@ -1,24 +1,77 @@
 {
   "panel": {
     "title": "Topography",
-    "hint": "One element per row, by its number on the plan."
+    "hint": "Survey of the train and each roller measured against the main component."
+  },
+  "survey": {
+    "title": "Topography survey",
+    "hint": "The plan's data: service date, main component, notes, the train's schema and the analysis plan with its notes.",
+    "save": "Save survey",
+    "titleField": "Plan content",
+    "titlePlaceholder": "Alignment and leveling, upper press 1 – roller No. 5",
+    "date": "Service date",
+    "reference": "Main component",
+    "referenceHint": "What each roller is measured against, e.g. Press 1",
+    "planNumber": "Plan number",
+    "instrument": "Instrument",
+    "notes": "Notes",
+    "notesHint": "One note per line, as on the plan.",
+    "planNotes": "Notes on the analysis plan",
+    "planNotesPlaceholder": "What the plan shows: reference roller, roller to correct…",
+    "dated": "Service of {{date}}",
+    "image": {
+      "schema": "Train schema (felt run)",
+      "plan": "Main component analysis (full plan)"
+    }
+  },
+  "sheet": {
+    "title": "Rollers measured",
+    "hint": "For each roller, its separation in mm from {{main}} on the plan's four boxes, the photo of each box and the displacement it needs.",
+    "empty": "No rollers measured yet.",
+    "mainComponent": "the main component",
+    "versus": "vs {{main}}",
+    "view": {
+      "parallel": "Parallelism",
+      "level": "Side view (level)"
+    },
+    "side": {
+      "drive": "Drive side (reference)",
+      "transmission": "Transmission side"
+    },
+    "box": {
+      "parallel_drive": "Parallelism · drive side",
+      "parallel_transmission": "Parallelism · transmission side",
+      "level_drive": "Level · drive side",
+      "level_transmission": "Level · transmission side"
+    },
+    "displacement": {
+      "parallel": "Horizontal displacement",
+      "level": "Vertical displacement"
+    },
+    "suggested": "Transmission − drive: {{value}}"
   },
   "column": {
-    "element": "Element",
-    "level_h": "Level H",
-    "level_v": "Level V",
-    "parallel_h": "Parallel H",
-    "parallel_v": "Parallel V",
     "observation": "Observation",
     "history": "History",
     "date": "Date"
   },
   "form": {
-    "newElement": "New element, e.g. R3",
-    "addElement": "Add element",
+    "element": "Roller measured",
+    "elementPlaceholder": "Roller No. 5",
+    "reference": "Measured against",
+    "referenceHint": "Empty: {{main}}",
+    "addElement": "Add roller",
+    "remove": "Remove",
     "genericError": "Could not save"
   },
+  "photo": {
+    "add": "Upload image",
+    "addBox": "Box photo",
+    "uploading": "Uploading…",
+    "remove": "Remove",
+    "none": "No image"
+  },
   "history": {
-    "empty": "No history for this element"
+    "empty": "No history for this roller"
   }
 }
