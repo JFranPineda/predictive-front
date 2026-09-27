@@ -14,6 +14,11 @@ const definition: ModuleDefinition = {
       component: lazy(() => import('./ui/WorkdayPage')),
       permission: 'workday.view',
     },
+    {
+      path: '/workday/jobs/:jobId',
+      component: lazy(() => import('./ui/JobPage')),
+      permission: 'workday.view',
+    },
   ],
   translations: { namespace: 'workday', bundle: { es, en } },
   registerEndpoints: () => void workdayApi,

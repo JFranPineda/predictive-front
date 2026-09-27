@@ -1,7 +1,10 @@
+import clsx from 'clsx';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { useAssetGroupsQuery, usePlantsQuery } from '@modules/assets';
+import { useServiceOrdersQuery } from '@modules/services';
 import { usePermissions } from '@app/hooks';
 import { currentLocale } from '@app/i18n';
 import { formatDate, formatDateTime } from '@app/i18n/format';
@@ -19,13 +22,14 @@ import {
   minutesBetween,
   todayIso,
   type DayWork,
+  type ServiceJobSummary,
   type WorkdayDetail,
 } from '../domain/types';
 import {
   useAddObservationMutation,
   useCloseWorkdayMutation,
+  useCreateJobMutation,
   useOpenWorkdayMutation,
-  useRegisterPermitMutation,
   useReopenWorkdayMutation,
   useWorkdayQuery,
   useWorkdaysQuery,
@@ -102,6 +106,7 @@ function DayView({ day, editable }: { day: WorkdayDetail; editable: boolean }) {
   const permissions = usePermissions();
   const [signing, setSigning] = useState<'close' | 'reopen' | null>(null);
   const manages = permissions.has('workday.manage');
+  const reopens = permissions.has('workday.reopen');
   const registers = manages || permissions.has('workday.register_permit');
 
   return (
@@ -109,15 +114,15 @@ function DayView({ day, editable }: { day: WorkdayDetail; editable: boolean }) {
       <Card
         title={t('dayOf', { plant: day.plant.name, date: formatDate(`${day.date}T12:00:00`) })}
         actions={
-          manages ? (
-            day.is_open ? (
+          day.is_open ? (
+            manages && (
               <Button variant="primary" onClick={() => setSigning('close')}>
                 {t('close')}
               </Button>
-            ) : (
-              <Button onClick={() => setSigning('reopen')}>{t('reopen')}</Button>
             )
-          ) : undefined
+          ) : (
+            reopens && <Button onClick={() => setSigning('reopen')}>{t('reopen')}</Button>
+          )
         }
       >
         <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -147,8 +152,8 @@ function DayView({ day, editable }: { day: WorkdayDetail; editable: boolean }) {
         {day.notes && <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{day.notes}</p>}
       </Card>
 
+      {day.jobs !== null && <JobsCard day={day} canCreate={registers && editable} />}
       <WorksCard works={day.works} />
-      {day.permits !== null && <PermitsCard day={day} canRegister={registers && editable} />}
       <ObservationsCard day={day} canAdd={registers && editable} />
 
       {signing && <SignModal day={day} mode={signing} onClose={() => setSigning(null)} />}
@@ -212,75 +217,99 @@ function WorksCard({ works }: { works: DayWork[] }) {
   );
 }
 
-function PermitsCard({ day, canRegister }: { day: WorkdayDetail; canRegister: boolean }) {
+const JOB_TONE: Record<ServiceJobSummary['status'], string> = {
+  pending_start: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
+  in_progress: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
+  closed: 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+};
+
+function JobsCard({ day, canCreate }: { day: WorkdayDetail; canCreate: boolean }) {
   const { t } = useTranslation('workday');
   const groups = useAssetGroupsQuery();
-  const [register, { isLoading }] = useRegisterPermitMutation();
+  const orders = useServiceOrdersQuery({ from: day.date, to: day.date });
+  const [create, { isLoading }] = useCreateJobMutation();
   const [group, setGroup] = useState(0);
-  const [number, setNumber] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  const [order, setOrder] = useState(0);
+  const [activity, setActivity] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const plantOrders = (orders.data?.results ?? []).filter((row) => row.plant_id === day.plant.id);
 
   async function submit() {
     setError(null);
-    const body = new FormData();
-    body.append('asset_group', String(group));
-    body.append('number', number.trim());
-    if (file) body.append('file', file);
     try {
-      await register({ id: day.id, body }).unwrap();
-      setNumber('');
-      setFile(null);
+      await create({
+        workdayId: day.id,
+        asset_group: group,
+        service_order: order || undefined,
+        activity: activity.trim(),
+      }).unwrap();
+      setGroup(0);
+      setOrder(0);
+      setActivity('');
     } catch (cause) {
       setError(apiError(cause) ?? t('genericError'));
     }
   }
 
   return (
-    <Card title={t('permits.title')} description={t('permits.hint')}>
-      {(day.permits ?? []).length === 0 ? (
-        <p className="text-sm text-slate-400">{t('permits.empty')}</p>
+    <Card title={t('jobs.title')} description={t('jobs.hint')} padded={false}>
+      {(day.jobs ?? []).length === 0 ? (
+        <p className="p-4 text-sm text-slate-400">{t('jobs.empty')}</p>
       ) : (
-        <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-          {day.permits?.map((permit) => (
-            <li key={permit.id} className="flex flex-wrap items-center gap-3 py-2">
-              <span className="font-medium">{permit.number}</span>
-              <span>{permit.asset_group.name}</span>
-              <span className="text-xs text-slate-400">
-                {permit.created_by} · {formatDateTime(permit.created_at)}
-              </span>
-              {permit.document_url && (
-                <a className="text-xs text-sky-700 underline dark:text-sky-400" href={permit.document_url} target="_blank" rel="noreferrer">
-                  {t('permits.document')}
-                </a>
-              )}
+        <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+          {day.jobs?.map((job) => (
+            <li key={job.id}>
+              <Link
+                to={`/workday/jobs/${job.id}`}
+                className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800/50"
+              >
+                <span className={clsx('rounded-full px-2 py-0.5 text-xs font-semibold', JOB_TONE[job.status])}>
+                  {t(`job.status.${job.status}`)}
+                </span>
+                <span className="font-medium">{job.asset_group.name}</span>
+                <span className="text-slate-600 dark:text-slate-300">
+                  {job.activity || job.service_order?.technique || t('job.untitled')}
+                </span>
+                {job.service_order && <span className="text-xs text-slate-400">{job.service_order.code}</span>}
+                <span className="ml-auto flex items-center gap-3 text-xs text-slate-500">
+                  {job.status === 'pending_start' && t('jobs.signed', { count: job.start_signed.length })}
+                  {job.unlocked && <span className="text-amber-600">{t('jobs.unlocked')}</span>}
+                  <span>
+                    {t('jobs.hours', { start: time(job.started_at), end: time(job.closed_at) })}
+                  </span>
+                </span>
+              </Link>
             </li>
           ))}
         </ul>
       )}
 
-      {canRegister && (
-        <div className="mt-4 grid gap-3 border-t border-slate-100 pt-4 sm:grid-cols-3 dark:border-slate-800">
-          {error && <p className="rounded-lg bg-red-50 p-2 text-sm text-red-700 sm:col-span-3">{error}</p>}
+      {canCreate && (
+        <div className="grid gap-3 border-t border-slate-100 p-4 sm:grid-cols-[1fr_1fr_1.4fr_auto] sm:items-end dark:border-slate-800">
+          {error && <p className="rounded-lg bg-red-50 p-2 text-sm text-red-700 sm:col-span-4">{error}</p>}
           <FormField label={t('form.group')}>
             <GroupSelect groups={groups.data} value={group} onChange={setGroup} />
           </FormField>
-          <FormField label={t('permits.number')}>
-            <TextInput value={number} onChange={(event) => setNumber(event.target.value)} placeholder="ATS-0457" />
+          <FormField label={t('jobs.order')}>
+            <Select value={order || ''} onChange={(event) => setOrder(Number(event.target.value))}>
+              <option value="">{t('jobs.noOrder')}</option>
+              {plantOrders.map((row) => (
+                <option key={row.id} value={row.id}>
+                  {row.code} · {row.technique_name}
+                </option>
+              ))}
+            </Select>
           </FormField>
-          <FormField label={t('permits.signedCopy')}>
-            <input
-              type="file"
-              accept="application/pdf,image/*"
-              className="block text-sm"
-              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+          <FormField label={t('jobs.activity')}>
+            <TextInput
+              value={activity}
+              placeholder={t('jobs.activityPlaceholder')}
+              onChange={(event) => setActivity(event.target.value)}
             />
           </FormField>
-          <div className="sm:col-span-3">
-            <Button variant="primary" disabled={isLoading || !group || !number.trim() || !file} onClick={() => void submit()}>
-              {t('permits.register')}
-            </Button>
-          </div>
+          <Button variant="primary" disabled={isLoading || !group} onClick={() => void submit()}>
+            {t('jobs.create')}
+          </Button>
         </div>
       )}
     </Card>

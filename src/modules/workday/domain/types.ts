@@ -23,15 +23,107 @@ export interface DayWork {
   ended_at: string | null;
 }
 
-/** An ATS: the safety permit, valid once its signed copy is attached. */
-export interface SafetyPermit {
+export type JobStatus = 'pending_start' | 'in_progress' | 'closed';
+export type StartRole = 'production_engineer' | 'service_leader' | 'plant_supervisor';
+export type RiskCategory = 'high' | 'medium' | 'low';
+export type IpercLevel = 'A' | 'M' | 'B';
+
+/** A service of the day (Q17): one job on one train, with its ATS. */
+export interface ServiceJobSummary {
   id: number;
-  number: string;
+  workday_id: number;
   asset_group: { id: number; name: string };
-  document_url: string | null;
-  valid: boolean;
-  created_by: string;
-  created_at: string;
+  service_order: { id: number; code: string; technique: string } | null;
+  activity: string;
+  status: JobStatus;
+  start_signed: StartRole[];
+  unlocked: boolean;
+  started_at: string | null;
+  /** The service's final hour: when its close was signed (Q19). */
+  closed_at: string | null;
+  closed_by: string;
+}
+
+export interface JobSignature {
+  id: number | null;
+  role: StartRole | 'crew';
+  label: string;
+  name: string;
+  position: string;
+  signed_at: string | null;
+  image_url: string | null;
+}
+
+/** One row of the ATS table: a step, one of its hazards, the IPERC and the controls. */
+export interface AtsStep {
+  item?: number;
+  step: string;
+  hazard: string;
+  risk: string;
+  level: IpercLevel | '';
+  score: number | null;
+  controls: string;
+}
+
+export interface ServiceJob extends ServiceJobSummary {
+  workday: { date: string; is_open: boolean };
+  holder: string;
+  unit: string;
+  area: string;
+  zone: string;
+  risk_category: RiskCategory | '';
+  ppe: string;
+  tools: string;
+  steps: AtsStep[];
+  start_signatures: JobSignature[];
+  crew: JobSignature[];
+  unlock: { by: string; at: string; reason: string } | null;
+  /** What still keeps the ATS from being complete and signed. */
+  missing: string[];
+  can_close: boolean;
+}
+
+export type AtsDraft = Pick<ServiceJob, 'activity' | 'holder' | 'unit' | 'area' | 'zone' | 'risk_category' | 'ppe' | 'tools'> & {
+  steps: AtsStep[];
+};
+
+export function draftOf(job: ServiceJob): AtsDraft {
+  return {
+    activity: job.activity,
+    holder: job.holder,
+    unit: job.unit,
+    area: job.area,
+    zone: job.zone,
+    risk_category: job.risk_category,
+    ppe: job.ppe,
+    tools: job.tools,
+    steps: job.steps.map((row) => ({
+      step: row.step,
+      hazard: row.hazard,
+      risk: row.risk,
+      level: row.level,
+      score: row.score,
+      controls: row.controls,
+    })),
+  };
+}
+
+/** A new hazard row under a step: the step text carries over, the rest is blank. */
+export function blankStep(step = ''): AtsStep {
+  return { step, hazard: '', risk: '', level: '', score: null, controls: '' };
+}
+
+/**
+ * The ATS prints a step once however many hazards it lists: rows repeating
+ * the step above share its number, and only the first shows it.
+ */
+export function itemNumbers(steps: AtsStep[]): number[] {
+  const numbers: number[] = [];
+  steps.forEach((row, index) => {
+    const same = index > 0 && row.step.trim().toLowerCase() === steps[index - 1]!.step.trim().toLowerCase();
+    numbers.push(same ? numbers[index - 1]! : (numbers[index - 1] ?? 0) + 1);
+  });
+  return numbers;
 }
 
 export interface FieldObservation {
@@ -47,8 +139,8 @@ export interface FieldObservation {
 
 export interface WorkdayDetail extends Workday {
   works: DayWork[];
-  /** Null when the user may not see the permits. */
-  permits: SafetyPermit[] | null;
+  /** Null when the user may not see the day's services and their ATS. */
+  jobs: ServiceJobSummary[] | null;
   observations: FieldObservation[];
 }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { apiError, minutesBetween, todayIso } from '@modules/workday/domain/types';
+import { apiError, blankStep, itemNumbers, minutesBetween, todayIso } from '@modules/workday/domain/types';
 
 describe('workday', () => {
   it('writes today as the API does, in the local calendar', () => {
@@ -20,5 +20,11 @@ describe('workday', () => {
     expect(apiError({ data: ['Sube el ATS firmado'] })).toBe('Sube el ATS firmado');
     expect(apiError({ data: { number: ['Obligatorio'] } })).toBe('Obligatorio');
     expect(apiError({})).toBeNull();
+  });
+
+  it('numbers an ATS step once, however many hazards it lists (Q17)', () => {
+    const rows = ['Verificar', 'Mover tubería', ' mover tubería', 'Empalme'].map((text) => blankStep(text));
+    expect(itemNumbers(rows)).toEqual([1, 2, 2, 3]);
+    expect(blankStep('Paso').step).toBe('Paso');
   });
 });
