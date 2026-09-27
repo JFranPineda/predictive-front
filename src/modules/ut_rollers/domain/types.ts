@@ -38,11 +38,20 @@ export interface RollerDraft {
   observation: string;
 }
 
+export const SIDES = ['drive', 'transmission'] as const;
+export type Side = (typeof SIDES)[number];
+export const ACCESS = ['ok', 'covered', 'no_access'] as const;
+export type Access = (typeof ACCESS)[number];
+
 export interface Indication {
   id: number;
   equipment_id: number;
   service_visit_id: number | null;
   kind: IndicationKind;
+  /** On a press roller's journal, the side it was found on (Q15). */
+  side: Side | '';
+  /** As the results summary writes it. */
+  description: string;
   length_mm: string | null;
   depth_mm: string | null;
   position: string;
@@ -86,4 +95,76 @@ export function isDirty(row: RollerRow, draft: RollerDraft): boolean {
     original.observation !== draft.observation ||
     original.values.some((value, index) => value !== (draft.values[index] ?? '').trim())
   );
+}
+
+/** One roller's journal on one side (Q15): the detail table's row. */
+export interface JournalRow {
+  equipment_id: number;
+  number: number;
+  name: string;
+  recorded: boolean;
+  diameter_mm: string | null;
+  external_length_mm: string | null;
+  total_length_mm: string | null;
+  access: Access;
+  access_note: string;
+  /** What the crew wrote; empty means the state below is computed. */
+  state_text: string;
+  state: string;
+  findings: { id: number; kind: IndicationKind; length_mm: string | null; depth_mm: string | null; description: string }[];
+}
+
+export interface JournalSheet {
+  order: { id: number; code: string };
+  group_id: number;
+  sides: Record<Side, JournalRow[]>;
+}
+
+export interface JournalDraft {
+  diameter_mm: string;
+  external_length_mm: string;
+  total_length_mm: string;
+  access: Access;
+  access_note: string;
+  state_text: string;
+}
+
+export function journalDraft(row: JournalRow): JournalDraft {
+  return {
+    diameter_mm: row.diameter_mm ?? '',
+    external_length_mm: row.external_length_mm ?? '',
+    total_length_mm: row.total_length_mm ?? '',
+    access: row.access,
+    access_note: row.access_note,
+    state_text: row.state_text,
+  };
+}
+
+export function journalDirty(row: JournalRow, draft: JournalDraft): boolean {
+  return JSON.stringify(journalDraft(row)) !== JSON.stringify(draft);
+}
+
+/** The report's "Resumen de resultados": a group's side, with its findings. */
+export interface ResultsRow {
+  group: string;
+  side: Side;
+  side_label: string;
+  items: { kind: string; description: string; roller: number | null }[];
+}
+
+export interface ReportImage {
+  id: number;
+  url: string;
+  thumb_url: string | null;
+  caption: string;
+}
+
+export interface GroupReport {
+  id: number | null;
+  order_id: number;
+  group_id: number;
+  conclusions: string;
+  recommendations: string;
+  plan: ReportImage | null;
+  photos: ReportImage[];
 }

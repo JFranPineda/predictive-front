@@ -1,7 +1,7 @@
 {
   "page": {
     "title": "UT on rollers",
-    "hint": "Six thicknesses per roller; the state is judged on the thinnest, as in the customer's order.",
+    "hint": "Dryer thicknesses, press journals, results summary and report per group. States come from the UT norma (Settings → Normas).",
     "order": "Service order",
     "group": "Roller group",
     "groupOption": "{{name}} ({{count}} rollers)",
@@ -56,5 +56,68 @@
     "numbersHint": "Ranges and lists: 1-28, 30 ({{count}} rollers)",
     "add": "Add",
     "added": "{{created}} rollers created, {{skipped}} already existed."
+  },
+  "tab": {
+    "thickness": "Thicknesses",
+    "journals": "Journals (presses)",
+    "results": "Results summary",
+    "report": "Group report"
+  },
+  "journal": {
+    "side": {
+      "drive": "Drive side",
+      "transmission": "Transmission side"
+    },
+    "hint": "Per roller: diameter, external and total length in mm, access and state. The state writes itself from access and findings, or you write it.",
+    "roller": "Roller",
+    "diameter": "Diameter (mm)",
+    "external": "External length (mm)",
+    "total": "Total length (mm)",
+    "diameter_mm": "diameter",
+    "external_length_mm": "external length",
+    "total_length_mm": "total length",
+    "access": "Access",
+    "accessNote": "Reason",
+    "accessNotePlaceholder": "No access: transmission shaft running…",
+    "accessOption": {
+      "ok": "Accessible",
+      "covered": "Covered (no access)",
+      "no_access": "No access"
+    },
+    "state": "State",
+    "statePlaceholder": "Filled automatically; type to change it",
+    "findings_one": "{{count}} finding",
+    "findings_other": "{{count}} findings",
+    "noFindings": "No cracks on the roller journal.",
+    "at": "At (mm of length)"
+  },
+  "results": {
+    "title": "Results summary",
+    "hint": "Every group and side of the order, with its findings. Built from the findings recorded on the journals.",
+    "empty": "No journals recorded in this order yet.",
+    "group": "Press / group",
+    "side": "Side",
+    "kind": "Finding",
+    "description": "Description",
+    "roller": "Roller"
+  },
+  "report": {
+    "title": "Conclusions and recommendations",
+    "hint": "What the report says about this group in this order.",
+    "save": "Save",
+    "conclusions": "Conclusions",
+    "recommendations": "Recommendations",
+    "plan": "Group plan",
+    "planHint": "The group's plan or schema that goes with the report.",
+    "addPlan": "Upload plan",
+    "removePlan": "Remove plan",
+    "noPlan": "No plan",
+    "uploading": "Uploading…",
+    "photos": "Photographic record",
+    "photosHint": "Photos of the group in this order, with their note.",
+    "caption": "Photo note",
+    "captionPlaceholder": "Roller 6, drive side",
+    "addPhoto": "Add photo",
+    "removePhoto": "Remove photo"
   }
 }

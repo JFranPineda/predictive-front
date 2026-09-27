@@ -1,7 +1,7 @@
 {
   "page": {
     "title": "UT en rodillos",
-    "hint": "Seis espesores por rodillo; el estado se juzga sobre el más delgado, como en la orden del cliente.",
+    "hint": "Espesores de los secadores, muñones de las prensas, resumen de resultados e informe por conjunto. Los estados salen de la norma de UT (Configuración → Normas).",
     "order": "Orden de servicio",
     "group": "Grupo de rodillos",
     "groupOption": "{{name}} ({{count}} rodillos)",
@@ -56,5 +56,68 @@
     "numbersHint": "Rangos y listas: 1-28, 30 ({{count}} rodillos)",
     "add": "Agregar",
     "added": "{{created}} rodillos creados, {{skipped}} ya existían."
+  },
+  "tab": {
+    "thickness": "Espesores",
+    "journals": "Muñones (prensas)",
+    "results": "Resumen de resultados",
+    "report": "Informe del conjunto"
+  },
+  "journal": {
+    "side": {
+      "drive": "Lado mando",
+      "transmission": "Lado transmisión"
+    },
+    "hint": "Por rollo: diámetro, longitud externa y total en mm, acceso y estado. El estado se escribe solo con el acceso y las incidencias, o lo escribes tú.",
+    "roller": "Rollo",
+    "diameter": "Diámetro (mm)",
+    "external": "Longitud externa (mm)",
+    "total": "Longitud total (mm)",
+    "diameter_mm": "diámetro",
+    "external_length_mm": "longitud externa",
+    "total_length_mm": "longitud total",
+    "access": "Acceso",
+    "accessNote": "Motivo",
+    "accessNotePlaceholder": "Sin acceso por inicio de operaciones…",
+    "accessOption": {
+      "ok": "Con acceso",
+      "covered": "Tapado (sin acceso)",
+      "no_access": "Sin acceso"
+    },
+    "state": "Estado",
+    "statePlaceholder": "Se completa solo; escribe para cambiarlo",
+    "findings_one": "{{count}} incidencia",
+    "findings_other": "{{count}} incidencias",
+    "noFindings": "Sin fisuras presentes en el muñón de polín.",
+    "at": "A (mm de longitud)"
+  },
+  "results": {
+    "title": "Resumen de resultados",
+    "hint": "Cada conjunto y lado de la orden, con sus incidencias. Se arma solo con las incidencias registradas en los muñones.",
+    "empty": "Todavía no hay muñones registrados en esta orden.",
+    "group": "Prensa / conjunto",
+    "side": "Lado",
+    "kind": "Incidencia",
+    "description": "Descripción",
+    "roller": "Polín"
+  },
+  "report": {
+    "title": "Conclusiones y recomendaciones",
+    "hint": "Lo que el informe dice de este conjunto en esta orden.",
+    "save": "Guardar",
+    "conclusions": "Conclusiones",
+    "recommendations": "Recomendaciones",
+    "plan": "Plano del conjunto",
+    "planHint": "El plano o esquema del conjunto que acompaña al informe.",
+    "addPlan": "Subir plano",
+    "removePlan": "Quitar plano",
+    "noPlan": "Sin plano",
+    "uploading": "Subiendo…",
+    "photos": "Registro fotográfico",
+    "photosHint": "Fotos del conjunto en esta orden, con su nota.",
+    "caption": "Nota de la foto",
+    "captionPlaceholder": "Polín 6, lado mando",
+    "addPhoto": "Agregar foto",
+    "removePhoto": "Quitar foto"
   }
 }

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -35,6 +36,11 @@ import {
   useRollerSheetQuery,
   useSaveRollerSheetMutation,
 } from '../infrastructure/endpoints';
+import { GroupReportCard, JournalSheet, ResultsSummary } from './JournalViews';
+
+/** What an order of UT on rollers records, one tab each (Q15). */
+const TABS = ['thickness', 'journals', 'results', 'report'] as const;
+type Tab = (typeof TABS)[number];
 
 const STATE_TONE: Record<string, string> = {
   acceptable: 'text-emerald-700 dark:text-emerald-300',
@@ -54,10 +60,11 @@ export default function UtRollersPage() {
   const [params, setParams] = useSearchParams();
   const order = Number(params.get('order')) || 0;
   const group = Number(params.get('group')) || 0;
+  const tab: Tab = (TABS as readonly string[]).includes(params.get('tab') ?? '') ? (params.get('tab') as Tab) : 'thickness';
   const orders = useServiceOrdersQuery({ technique: 'ndt_rollers' });
   const groups = useRollerGroupsQuery();
 
-  function choose(key: 'order' | 'group', value: number) {
+  function choose(key: 'order' | 'group' | 'tab', value: number | string) {
     const next = new URLSearchParams(params);
     if (value) next.set(key, String(value));
     else next.delete(key);
@@ -100,7 +107,34 @@ export default function UtRollersPage() {
       )}
 
       {order > 0 && group > 0 && (
-        <Sheet order={order} group={group} canCapture={permissions.has('ut_rollers.capture')} />
+        <>
+          <nav className="flex flex-wrap gap-1 border-b border-slate-200 dark:border-slate-800" role="tablist">
+            {TABS.map((option) => (
+              <button
+                key={option}
+                role="tab"
+                aria-selected={tab === option}
+                onClick={() => choose('tab', option === 'thickness' ? '' : option)}
+                className={clsx(
+                  '-mb-px border-b-2 px-4 py-2 text-sm font-medium',
+                  tab === option
+                    ? 'border-slate-900 text-slate-900 dark:border-slate-100 dark:text-slate-100'
+                    : 'border-transparent text-slate-500 hover:text-slate-700',
+                )}
+              >
+                {t(`tab.${option}`)}
+              </button>
+            ))}
+          </nav>
+          {tab === 'thickness' && <Sheet order={order} group={group} canCapture={permissions.has('ut_rollers.capture')} />}
+          {tab === 'journals' && (
+            <JournalSheet order={order} group={group} canCapture={permissions.has('ut_rollers.capture')} />
+          )}
+          {tab === 'results' && <ResultsSummary order={order} />}
+          {tab === 'report' && (
+            <GroupReportCard order={order} group={group} canEdit={permissions.has('ut_rollers.capture')} />
+          )}
+        </>
       )}
 
       {permissions.has('ut_rollers.manage_rollers') && (groups.data?.length ?? 0) > 0 && (
