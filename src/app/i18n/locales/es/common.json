@@ -90,5 +90,19 @@
     "mpd": "MPd Predictivo",
     "ndt": "END · Ensayos no destructivos",
     "internal": "Interno"
+  },
+  "history": {
+    "title": "Histórico en disco",
+    "hint": "La pantalla muestra {{days}} días. Lo anterior se archiva solo, un CSV por mes, en el servidor:",
+    "empty": "Todavía no hay meses archivados.",
+    "rows_one": "{{count}} fila",
+    "rows_other": "{{count}} filas",
+    "window": "Ventana de {{days}} días",
+    "windowHint": "Estas vistas muestran como máximo {{days}} días. Mueve la fecha final para ver una quincena anterior; lo más antiguo está en el histórico en disco.",
+    "windowShown": "Mostrando del {{since}} al {{until}}",
+    "archiveNow": "Archivar ahora",
+    "archiving": "Archivando…",
+    "since": "Desde",
+    "until": "Hasta"
   }
 }

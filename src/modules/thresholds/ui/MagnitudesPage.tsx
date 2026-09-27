@@ -135,6 +135,8 @@ export default function MagnitudesPage() {
     {
       key: 'magnitudes',
       header: t('units.usedBy'),
+      headerHint: t('units.usedByHint'),
+      numeric: true,
       render: (row) => row.magnitude_count ?? 0,
     },
     {

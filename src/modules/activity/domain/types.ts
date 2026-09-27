@@ -31,6 +31,8 @@ export interface ActivityPage {
   /** Rows per kind under the other filters: the numbers on the chips. */
   counts: Partial<Record<ActivityKind, number>>;
   next_before: number | null;
+  /** The fortnight the server served; older events are on disk. */
+  window: { since: string; until: string; days: number };
 }
 
 export interface ActivityFilters {

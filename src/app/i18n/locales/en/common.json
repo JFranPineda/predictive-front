@@ -90,5 +90,19 @@
     "mpd": "Predictive maintenance",
     "ndt": "NDT · Non-destructive testing",
     "internal": "Internal"
+  },
+  "history": {
+    "title": "History on disk",
+    "hint": "The screen shows {{days}} days. Anything older is filed automatically, one CSV per month, on the server:",
+    "empty": "No months archived yet.",
+    "rows_one": "{{count}} row",
+    "rows_other": "{{count}} rows",
+    "window": "{{days}}-day window",
+    "windowHint": "These screens show at most {{days}} days. Move the end date to read an earlier fortnight; anything older is in the history on disk.",
+    "windowShown": "Showing {{since}} to {{until}}",
+    "archiveNow": "Archive now",
+    "archiving": "Archiving…",
+    "since": "From",
+    "until": "To"
   }
 }

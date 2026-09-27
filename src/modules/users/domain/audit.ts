@@ -19,6 +19,8 @@ export interface AuditEntry {
 export interface AuditPage {
   items: AuditEntry[];
   next_before: number | null;
+  /** The fortnight the server served; older entries are on disk. */
+  window: { since: string; until: string; days: number };
 }
 
 /** Families the filter offers; each matches every action that starts with it. */

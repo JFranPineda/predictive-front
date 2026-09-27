@@ -138,7 +138,7 @@
       "aggregation": "Aggregation",
       "decimals": "Decimals",
       "direction": "Direction",
-      "order": "Order"
+      "order": "Order in the record"
     },
     "orderHint": "Where its table sits in the record of values: the lowest number goes first.",
     "templateOnly": "Only where the template asks",
@@ -155,7 +155,8 @@
     "empty": "No units",
     "usedBy": "Magnitudes",
     "edit": "Edit unit",
-    "inUse": "Cannot delete: magnitudes are reported in this unit"
+    "inUse": "Cannot delete: magnitudes are reported in this unit",
+    "usedByHint": "How many measurements are reported in this unit. With at least one, the unit cannot be deleted, and renaming it changes every report that uses it."
   },
   "scale": {
     "title": "Scale",

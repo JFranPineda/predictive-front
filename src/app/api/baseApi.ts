@@ -110,6 +110,7 @@ export const baseApi = createApi({
     'Workday',
     'ServiceJob',
     'Activity',
+    'History',
   ],
   endpoints: () => ({}),
 });

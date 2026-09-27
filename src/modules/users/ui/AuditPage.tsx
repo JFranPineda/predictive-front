@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatDateTime } from '@app/i18n/format';
+import { HistoryArchive } from '@shared/history/HistoryArchive';
+import { WindowPicker } from '@shared/history/WindowPicker';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -31,11 +33,14 @@ export default function AuditPage() {
   const { t } = useTranslation(['users', 'common']);
   const [family, setFamily] = useState('');
   const [user, setUser] = useState(0);
+  const [window, setWindow] = useState({ since: '', until: '' });
   const [before, setBefore] = useState<number | undefined>();
   const people = useCompanyUsersQuery();
   const { data, isLoading, isFetching } = useAuditLogQuery({
     action: family || undefined,
     user: user || undefined,
+    since: window.since || undefined,
+    until: window.until || undefined,
     before,
   });
 
@@ -46,12 +51,21 @@ export default function AuditPage() {
     setBefore(undefined);
   }
 
+  function moveWindow(next: { since: string; until: string }) {
+    setWindow(next);
+    setBefore(undefined);
+  }
+
   if (isLoading) return <Spinner label={t('audit.loading')} />;
   const rows = data?.items ?? [];
 
   return (
     <Page>
       <PageHeader title={t('audit.title')} description={t('audit.subtitle')} />
+
+      <Card padded>
+        <WindowPicker value={window} shown={data?.window} onChange={moveWindow} />
+      </Card>
 
       <Card
         title={t('audit.table')}
@@ -104,6 +118,8 @@ export default function AuditPage() {
           {t('audit.more')}
         </Button>
       )}
+
+      <HistoryArchive source="audit" />
     </Page>
   );
 }

@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import { usePermissions } from '@app/hooks';
 import { currentLocale } from '@app/i18n';
+import { HistoryArchive } from '@shared/history/HistoryArchive';
+import { WindowPicker } from '@shared/history/WindowPicker';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -135,24 +137,14 @@ export default function ActivityPage() {
               ))}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-500">
-            {t('filter.since')}
-            <input
-              type="date"
-              value={since}
-              onChange={(event) => setSince(event.target.value)}
-              className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-500">
-            {t('filter.until')}
-            <input
-              type="date"
-              value={until}
-              onChange={(event) => setUntil(event.target.value)}
-              className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-            />
-          </label>
+          <WindowPicker
+            value={{ since, until }}
+            shown={first.data?.window}
+            onChange={(window) => {
+              setSince(window.since);
+              setUntil(window.until);
+            }}
+          />
           {active && (
             <Button variant="ghost" onClick={clear}>
               {t('filter.clear')}
@@ -234,6 +226,8 @@ export default function ActivityPage() {
           </div>
         )}
       </Card>
+
+      <HistoryArchive source="activity" />
     </Page>
   );
 }

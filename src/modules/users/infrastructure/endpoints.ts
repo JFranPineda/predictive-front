@@ -88,11 +88,12 @@ export const usersApi = baseApi.injectEndpoints({
     }),
     auditLog: build.query<
       AuditPage,
-      { action?: string; user?: number; before?: number }
+      { action?: string; user?: number; since?: string; until?: string; before?: number }
     >({
       query: (params) => ({ url: 'audit/', params }),
       // Older pages append under one key, so scrolling never refetches.
-      serializeQueryArgs: ({ queryArgs }) => `${queryArgs.action ?? ''}:${queryArgs.user ?? ''}`,
+      serializeQueryArgs: ({ queryArgs }) =>
+        `${queryArgs.action ?? ''}:${queryArgs.user ?? ''}:${queryArgs.since ?? ''}:${queryArgs.until ?? ''}`,
       merge: (cache, incoming, { arg }) => {
         if (!arg.before) return incoming;
         cache.items.push(...incoming.items);

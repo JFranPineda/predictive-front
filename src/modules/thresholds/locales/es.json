@@ -138,7 +138,7 @@
       "aggregation": "Agregación",
       "decimals": "Decimales",
       "direction": "Sentido",
-      "order": "Orden"
+      "order": "Orden en el registro"
     },
     "orderHint": "Posición de su tabla en el registro de valores: la de menor número va primero.",
     "templateOnly": "Solo donde la plantilla lo pida",
@@ -155,7 +155,8 @@
     "empty": "No hay unidades",
     "usedBy": "Magnitudes",
     "edit": "Editar unidad",
-    "inUse": "No se puede borrar: hay magnitudes que se reportan en esta unidad"
+    "inUse": "No se puede borrar: hay magnitudes que se reportan en esta unidad",
+    "usedByHint": "Cuántas medidas se reportan en esta unidad. Con al menos una, la unidad no se puede borrar ni renombrar sin que cambie en todos sus reportes."
   },
   "scale": {
     "title": "Escala",
