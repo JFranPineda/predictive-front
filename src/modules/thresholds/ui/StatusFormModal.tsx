@@ -6,7 +6,7 @@ import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
 
 import { useCreateStatusMutation } from '../infrastructure/endpoints';
-import { readError } from './StandardFormModal';
+import { readError } from '@shared/lib/apiError';
 
 export function StatusFormModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation(['thresholds', 'common']);

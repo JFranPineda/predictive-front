@@ -15,7 +15,7 @@ import {
   useMagnitudesQuery,
   useUpdateThresholdSetMutation,
 } from '../infrastructure/endpoints';
-import { readError } from './StandardFormModal';
+import { readError } from '@shared/lib/apiError';
 
 /**
  * A norma's scale, where the norma is (Q9, Q10): the bands it grades each

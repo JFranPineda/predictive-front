@@ -18,7 +18,7 @@ import {
   useDeleteStatusMutation,
   useUpdateStatusMutation,
 } from '../infrastructure/endpoints';
-import { readError } from './StandardFormModal';
+import { readError } from '@shared/lib/apiError';
 import { StatusFormModal } from './StatusFormModal';
 
 export default function StatusesPage() {

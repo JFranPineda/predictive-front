@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useStandardsQuery } from '@modules/thresholds';
+import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { FormField, Select, TextArea, TextInput } from '@shared/ui/Form';
@@ -583,12 +584,6 @@ function detailsOf(record: AlignmentRecord) {
   };
 }
 
-function readError(cause: unknown): string | null {
-  const data = (cause as { data?: unknown })?.data;
-  if (Array.isArray(data)) return String(data[0]);
-  if (data && typeof data === 'object' && 'detail' in data) return String((data).detail);
-  return null;
-}
 
 function emptyPhase(): Record<Phase, string> {
   return { angular_h: '', parallel_h: '', angular_v: '', parallel_v: '' };

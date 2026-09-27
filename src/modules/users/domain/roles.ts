@@ -64,7 +64,8 @@ export interface PermissionEntry {
 
 export interface RoleCatalogue {
   roles: RolePermissions[];
-  modules: { code: string; permissions: PermissionEntry[] }[];
+  /** `name` is the module's own, as its manifest declares it. */
+  modules: { code: string; name: string; permissions: PermissionEntry[] }[];
 }
 
 export const ACTION_ORDER = ['view', 'add', 'change', 'delete', 'other'] as const;

@@ -14,7 +14,7 @@ import {
   useStandardsQuery,
   useUpdateThresholdSetMutation,
 } from '../infrastructure/endpoints';
-import { readError } from './StandardFormModal';
+import { readError } from '@shared/lib/apiError';
 
 const SCOPES = ['global', 'equipment_type', 'asset_group_kind', 'equipment', 'point'] as const;
 const EQUIPMENT_TYPES = ['motor', 'pump', 'compressor', 'gearbox', 'fan', 'blower'] as const;

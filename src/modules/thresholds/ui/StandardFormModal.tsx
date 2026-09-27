@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { ChipPicker, FormField, TextArea, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -162,15 +163,3 @@ export function StandardFormModal({
   );
 }
 
-/** DRF sends either a list of messages or an object keyed by field. */
-export function readError(cause: unknown): string | null {
-  const data = (cause as { data?: unknown })?.data;
-  if (typeof data === 'string') return data;
-  if (Array.isArray(data)) return String(data[0]);
-  if (data && typeof data === 'object') {
-    const first = Object.values(data as Record<string, unknown>)[0];
-    if (Array.isArray(first)) return String(first[0]);
-    if (typeof first === 'string') return first;
-  }
-  return null;
-}

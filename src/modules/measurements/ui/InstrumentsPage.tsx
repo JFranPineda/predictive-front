@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
@@ -189,10 +190,3 @@ export default function InstrumentsPage() {
   );
 }
 
-export function readError(cause: unknown): string | null {
-  const data = (cause as { data?: unknown })?.data;
-  if (Array.isArray(data)) return String(data[0]);
-  if (typeof data === 'string') return data;
-  if (data && typeof data === 'object' && 'detail' in data) return String(data.detail);
-  return null;
-}

@@ -24,7 +24,7 @@ import {
   useTechniquesQuery,
   useUnitsQuery,
 } from '../infrastructure/endpoints';
-import { readError } from './StandardFormModal';
+import { readError } from '@shared/lib/apiError';
 
 const AGGREGATIONS = ['rms', 'peak', 'peak_to_peak', 'avg', 'max', 'min'] as const;
 

@@ -188,7 +188,7 @@ export default function RolesPage() {
                 {data?.modules.map((module) => (
                   <section key={module.code}>
                     <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-400">
-                      {t(`module.${module.code}`, { defaultValue: module.code })}
+                      {t(`module.${module.code}`, { defaultValue: module.name })}
                     </h3>
                     <div className="grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
                       {[...module.permissions]
