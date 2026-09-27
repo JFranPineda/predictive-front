@@ -174,7 +174,8 @@ export const assetsApi = baseApi.injectEndpoints({
     }),
     updateEquipment: build.mutation<{ id: number }, Partial<EquipmentDraft> & { id: number }>({
       query: ({ id, ...body }) => ({ url: `equipments/${id}/edit/`, method: 'PATCH', body }),
-      invalidatesTags: ['Equipment', 'Summary'],
+      // A new norma regrades its readings: every view of them is stale.
+      invalidatesTags: ['Equipment', 'Summary', 'Reading', 'Visit'],
     }),
     deleteEquipment: build.mutation<void, number>({
       query: (id) => ({ url: `equipments/${id}/edit/`, method: 'DELETE' }),

@@ -45,6 +45,10 @@ export interface Equipment {
   condition_status: { code: string; name: string; color: string } | null;
   availability_status: { code: string; name: string; measurable: boolean } | null;
   condition_updated_at: string | null;
+  /** The norma that judges it (Configuración → Normas). */
+  applied_standard: { id: number; code: string; name: string } | null;
+  /** Q16: judged by its own norma only, whatever norma the report cites. */
+  keeps_own_standard: boolean;
 }
 
 export interface MeasurementPoint {
@@ -88,6 +92,8 @@ export interface EquipmentDraft {
   lubrication_type?: LubricationType;
   generate_points?: boolean;
   first_point?: number;
+  applied_standard?: number | null;
+  keeps_own_standard?: boolean;
 }
 
 export const ASSET_GROUP_KINDS = [

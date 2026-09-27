@@ -103,7 +103,13 @@
     "generatePoints": "Generar puntos automáticamente",
     "description": "Descripción",
     "firstPointAuto": "auto",
-    "firstPointHint": "Primer número de punto; vacío sigue la numeración del conjunto"
+    "firstPointHint": "Primer número de punto; vacío sigue la numeración del conjunto",
+    "standard": "Norma",
+    "standardHint": "Con qué norma se califica este equipo (Configuración → Normas).",
+    "noStandard": "Sin norma asignada",
+    "ownStandard": "Norma propia del equipo",
+    "ownStandardHint": "Para equipos fuera de norma (p. ej. fabricados a medida): se califica solo con esta norma, aunque el informe cite otra. Al cambiarla se recalifican sus lecturas.",
+    "editEquipment": "Editar equipo"
   },
   "lubrication": {
     "oil": "Aceite",

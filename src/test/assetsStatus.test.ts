@@ -16,6 +16,8 @@ const base: Equipment = {
   condition_status: { code: 'normal', name: 'Normal', color: '#16a34a' },
   availability_status: { code: 'running', name: 'En marcha', measurable: true },
   condition_updated_at: '2026-09-01T10:00:00Z',
+  applied_standard: null,
+  keeps_own_standard: false,
 };
 
 describe('status display', () => {

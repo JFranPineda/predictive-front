@@ -103,7 +103,13 @@
     "generatePoints": "Generate points automatically",
     "description": "Description",
     "firstPointAuto": "auto",
-    "firstPointHint": "First point number; blank continues the train's numbering"
+    "firstPointHint": "First point number; blank continues the train's numbering",
+    "standard": "Norma",
+    "standardHint": "Which norma judges this equipment (Settings → Normas).",
+    "noStandard": "No norma assigned",
+    "ownStandard": "Equipment's own norma",
+    "ownStandardHint": "For equipment outside the standard (e.g. built to order): judged by this norma only, even when the report cites another. Changing it regrades its readings.",
+    "editEquipment": "Edit equipment"
   },
   "lubrication": {
     "oil": "Oil",

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useStandardsQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -35,6 +36,8 @@ export function EquipmentFormModal({
 }) {
   const { t } = useTranslation(['assets', 'common']);
   const groups = useAssetGroupsQuery();
+  const standards = useStandardsQuery();
+  const normas = (standards.data ?? []).filter((row) => row.is_active);
   const [create, creating] = useCreateEquipmentMutation();
   const [update, updating] = useUpdateEquipmentMutation();
   const isLoading = creating.isLoading || updating.isLoading;
@@ -51,6 +54,8 @@ export function EquipmentFormModal({
     // 0 means "continue the train's numbering": a gearbox read on four
     // points does not start at 3 just because a motor came before it.
     first_point: 0,
+    applied_standard: equipment?.applied_standard?.id ?? null,
+    keeps_own_standard: equipment?.keeps_own_standard ?? false,
   });
 
   async function submit() {
@@ -68,6 +73,8 @@ export function EquipmentFormModal({
           monitoring_frequency: draft.monitoring_frequency,
           lubrication_type: draft.lubrication_type,
           asset_group: draft.asset_group,
+          applied_standard: draft.applied_standard ?? null,
+          keeps_own_standard: draft.keeps_own_standard ?? false,
         }).unwrap();
       } else {
         await create(draft).unwrap();
@@ -191,6 +198,43 @@ export function EquipmentFormModal({
           </Select>
         </FormField>
       </div>
+
+      {standards.isSuccess && (
+        <div className="space-y-2 rounded-lg border border-slate-200 p-3 dark:border-slate-700">
+          <FormField label={t('form.standard')} hint={t('form.standardHint')}>
+            <Select
+              value={draft.applied_standard ?? ''}
+              onChange={(event) =>
+                setDraft({
+                  ...draft,
+                  applied_standard: event.target.value ? Number(event.target.value) : null,
+                  keeps_own_standard: event.target.value ? draft.keeps_own_standard : false,
+                })
+              }
+            >
+              <option value="">{t('form.noStandard')}</option>
+              {normas.map((row) => (
+                <option key={row.id} value={row.id}>
+                  {row.name}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+          <label className="flex items-start gap-2 text-sm">
+            <input
+              type="checkbox"
+              className="mt-1"
+              disabled={!draft.applied_standard}
+              checked={Boolean(draft.keeps_own_standard)}
+              onChange={(event) => setDraft({ ...draft, keeps_own_standard: event.target.checked })}
+            />
+            <span>
+              {t('form.ownStandard')}
+              <span className="block text-xs text-slate-500">{t('form.ownStandardHint')}</span>
+            </span>
+          </label>
+        </div>
+      )}
 
       {!equipment && (
       <FormField label={t('form.points')} hint={t('form.pointsHint')}>
