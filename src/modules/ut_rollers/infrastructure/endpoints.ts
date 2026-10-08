@@ -7,6 +7,7 @@ import type {
   JournalDraft,
   JournalSheet,
   ResultsRow,
+  RollerEntry,
   RollerGroup,
   RollerSheet,
   Side,
@@ -35,6 +36,30 @@ export const utRollersApi = baseApi.injectEndpoints({
     rollerGroups: build.query<RollerGroup[], void>({
       query: () => 'ut-rollers/groups/',
       providesTags: ['RollerSheet'],
+    }),
+    createRollerGroup: build.mutation<RollerGroup, { name: string; sector: number }>({
+      query: (body) => ({ url: 'ut-rollers/groups/', method: 'POST', body }),
+      invalidatesTags: ['RollerSheet', 'AssetGroup'],
+    }),
+    renameRollerGroup: build.mutation<RollerGroup, { id: number; name: string }>({
+      query: ({ id, name }) => ({ url: `ut-rollers/groups/${id}/`, method: 'PATCH', body: { name } }),
+      invalidatesTags: ['RollerSheet', 'AssetGroup'],
+    }),
+    deleteRollerGroup: build.mutation<void, number>({
+      query: (id) => ({ url: `ut-rollers/groups/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['RollerSheet', 'AssetGroup'],
+    }),
+    rollers: build.query<RollerEntry[], number>({
+      query: (group) => `ut-rollers/groups/${group}/rollers/`,
+      providesTags: ['RollerSheet'],
+    }),
+    setRollerRetired: build.mutation<RollerEntry, { id: number; retired: boolean }>({
+      query: ({ id, retired }) => ({ url: `ut-rollers/rollers/${id}/`, method: 'PATCH', body: { retired } }),
+      invalidatesTags: ['RollerSheet', 'Equipment', 'License'],
+    }),
+    deleteRoller: build.mutation<void, number>({
+      query: (id) => ({ url: `ut-rollers/rollers/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['RollerSheet', 'Equipment', 'License'],
     }),
     addRollers: build.mutation<{ created: number[]; skipped: number[] }, { group: number; numbers: number[] }>({
       query: ({ group, numbers }) => ({
@@ -118,6 +143,12 @@ export const utRollersApi = baseApi.injectEndpoints({
 
 export const {
   useRollerGroupsQuery,
+  useCreateRollerGroupMutation,
+  useRenameRollerGroupMutation,
+  useDeleteRollerGroupMutation,
+  useRollersQuery,
+  useSetRollerRetiredMutation,
+  useDeleteRollerMutation,
   useAddRollersMutation,
   useRollerSheetQuery,
   useSaveRollerSheetMutation,

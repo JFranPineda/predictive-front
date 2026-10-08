@@ -8,7 +8,7 @@
     "noOrders": "No UT-on-rollers orders",
     "noOrdersHint": "Create one in Services with the “NDT · UT on rollers” technique.",
     "noGroups": "No roller groups",
-    "noGroupsHint": "Create a train of kind “Rollers” in Plant structure and add its rollers below."
+    "noGroupsHint": "Create them in “Groups and rollers”: a group (e.g. a dryer section) and its numbered rollers."
   },
   "state": {
     "acceptable": "Acceptable",
@@ -119,5 +119,42 @@
     "captionPlaceholder": "Roller 6, drive side",
     "addPhoto": "Add photo",
     "removePhoto": "Remove photo"
+  },
+  "view": {
+    "orders": "Fill an order",
+    "catalogue": "Groups and rollers"
+  },
+  "catalogue": {
+    "groups": "Roller groups",
+    "rollerCount_one": "{{count}} roller",
+    "rollerCount_other": "{{count}} rollers",
+    "noGroupsHint": "Create the first one with the form on the left.",
+    "newGroup": "New roller group",
+    "newGroupHint": "A group is what is inspected together: a dryer section, a press section.",
+    "groupName": "Name",
+    "groupNameHint": "Dryers group 1",
+    "sector": "Sector",
+    "createGroup": "Create group",
+    "groupHint": "Sector {{sector}}. Each roller has six thickness points; its number is the one it carries in the plant.",
+    "rename": "Rename",
+    "noRollers": "This group has no rollers yet: add them below.",
+    "number": "No.",
+    "code": "Code",
+    "readings": "Readings",
+    "status": "Status",
+    "active": "In service",
+    "retired": "Retired",
+    "retire": "Retire",
+    "restore": "Back in service"
+  },
+  "explain": {
+    "title": "What is recorded here?",
+    "what": "Ultrasonic (UT) inspection of rollers: the wall thickness of each roller is measured to know how much material is left.",
+    "thickness": "Thickness: six readings per roller (P1–P6). The thinnest sets its state from the UT norma: Acceptable, Medium or Critical; Inaccessible when it could not be reached.",
+    "journals": "Journals (presses): per press side, the roll, its diameter, outer and total length and its state.",
+    "results": "Results summary: the order's table, value by value, with the count per state.",
+    "report": "Group report: conclusions, recommendations, the group's drawing and the photo record.",
+    "example": "Example — Order END-UT-012 · Dryers group 1 · Roller 7: P1 9.10 · P2 8.95 · P3 8.40 · P4 8.62 · P5 7.85 · P6 8.90 mm → minimum 7.85 mm → Medium (between 6.14 and 8.01).",
+    "steps": "Step by step: 1) in “Groups and rollers” create the group and its rollers (once); 2) in Services create the order with the technique “NDT · UT on rollers”; 3) here, in “Fill an order”, pick order and group and fill the tabs."
   }
 }

@@ -8,7 +8,7 @@
     "noOrders": "No hay órdenes de UT en rodillos",
     "noOrdersHint": "Crea una en Servicios con la técnica «END · UT en rodillos».",
     "noGroups": "No hay grupos de rodillos",
-    "noGroupsHint": "Crea un conjunto del tipo «Rodillos» en Estructura de planta y agrégale sus rodillos aquí abajo."
+    "noGroupsHint": "Créalos en «Grupos y rodillos»: un grupo (p. ej. una secadora) y sus rodillos numerados."
   },
   "state": {
     "acceptable": "Aceptable",
@@ -119,5 +119,42 @@
     "captionPlaceholder": "Polín 6, lado mando",
     "addPhoto": "Agregar foto",
     "removePhoto": "Quitar foto"
+  },
+  "view": {
+    "orders": "Registrar una orden",
+    "catalogue": "Grupos y rodillos"
+  },
+  "catalogue": {
+    "groups": "Grupos de rodillos",
+    "rollerCount_one": "{{count}} rodillo",
+    "rollerCount_other": "{{count}} rodillos",
+    "noGroupsHint": "Crea el primero con el formulario de la izquierda.",
+    "newGroup": "Nuevo grupo de rodillos",
+    "newGroupHint": "Un grupo es el conjunto que se inspecciona junto: una secadora, una sección de prensas.",
+    "groupName": "Nombre",
+    "groupNameHint": "Secadores grupo 1",
+    "sector": "Sector",
+    "createGroup": "Crear grupo",
+    "groupHint": "Sector {{sector}}. Cada rodillo tiene seis puntos de espesor; el número es el que lleva en planta.",
+    "rename": "Renombrar",
+    "noRollers": "Este grupo todavía no tiene rodillos: agrégalos abajo.",
+    "number": "N°",
+    "code": "Código",
+    "readings": "Lecturas",
+    "status": "Estado",
+    "active": "En servicio",
+    "retired": "Retirado",
+    "retire": "Retirar",
+    "restore": "Volver a servicio"
+  },
+  "explain": {
+    "title": "¿Qué se registra aquí?",
+    "what": "La inspección por ultrasonido (UT) de rodillos: se mide el espesor de pared de cada rodillo para saber cuánto material le queda.",
+    "thickness": "Espesores: seis medidas por rodillo (P1–P6). El menor decide su estado según la norma de UT: Aceptable, Medio o Crítico; si no se pudo llegar, Inaccesible.",
+    "journals": "Muñones (prensas): por cada lado de la prensa, el rollo, el diámetro, la longitud externa y total y su estado.",
+    "results": "Resumen de resultados: el cuadro de la orden, dato por dato, con el conteo por estado.",
+    "report": "Informe del conjunto: conclusiones, recomendaciones, el plano del grupo y el registro fotográfico.",
+    "example": "Ejemplo — Orden END-UT-012 · Secadores grupo 1 · Rodillo 7: P1 9.10 · P2 8.95 · P3 8.40 · P4 8.62 · P5 7.85 · P6 8.90 mm → mínimo 7.85 mm → Medio (entre 6.14 y 8.01).",
+    "steps": "Paso a paso: 1) en «Grupos y rodillos» crea el grupo y sus rodillos (una sola vez); 2) en Servicios crea la orden con la técnica «END · UT en rodillos»; 3) aquí, en «Registrar una orden», elige orden y grupo y llena las pestañas."
   }
 }

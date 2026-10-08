@@ -7,7 +7,21 @@ export type IndicationKind = (typeof INDICATION_KINDS)[number];
 export interface RollerGroup {
   id: number;
   name: string;
+  sector: string;
+  /** Rollers still in service: the ones the sheets list. */
   rollers: number;
+}
+
+/** A roller in the catalogue, retired ones included. */
+export interface RollerEntry {
+  id: number;
+  number: number;
+  code: string;
+  tag: string;
+  readings: number;
+  /** Measured in some order: it can be retired, never deleted. */
+  measured: boolean;
+  retired: boolean;
 }
 
 export interface RollerRow {
