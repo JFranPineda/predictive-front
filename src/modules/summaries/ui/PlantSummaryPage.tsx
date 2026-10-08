@@ -1,11 +1,15 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { formatDateTime, formatNumber, formatPercent } from '@app/i18n/format';
+import { usePlantsQuery } from '@modules/assets';
 import { byFamily } from '@modules/thresholds';
 import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
+import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
+import { Select } from '@shared/ui/Form';
 import { Legend } from '@shared/ui/Legend';
 import { Metric, MetricRow } from '@shared/ui/Metric';
 import { Page } from '@shared/ui/Page';
@@ -21,11 +25,20 @@ const TONE_CLASS = { ok: 'text-slate-500', warn: 'text-amber-600', bad: 'text-re
 
 export default function PlantSummaryPage() {
   const { t } = useTranslation('summaries');
-  const { data, isLoading } = usePlantSummaryQuery({ plant: 1 });
+  const plants = usePlantsQuery();
+  const [chosenPlant, setChosenPlant] = useState(0);
+  // The board was pinned to plant 1: a second plant was never shown.
+  const plant = chosenPlant || plants.data?.[0]?.id || 0;
+  const { data, isLoading } = usePlantSummaryQuery({ plant }, { skip: !plant });
   const [technique, setTechnique] = useState<string | null>(null);
+  // Bumped to open or close every row at once; rows keep their own state otherwise.
+  const [expanded, setExpanded] = useState({ open: false, version: 0 });
 
   const summaries = data ?? [];
-  const active = summaries.find((s) => s.technique_code === technique) ?? summaries[0];
+  // Opens on the service that covers most of the plant, not on whichever the
+  // server listed first (a three-machine oil board said little).
+  const active =
+    summaries.find((s) => s.technique_code === technique) ?? [...summaries].sort((a, b) => sizeOf(b) - sizeOf(a))[0];
   const totals = useMemo(() => rollUpTotals(active), [active]);
 
   const areas = useMemo(() => active?.nodes ?? [], [active]);
@@ -45,11 +58,35 @@ export default function PlantSummaryPage() {
   // only what is in alarm" without reading twenty-four rows.
   const table = useTableFilter(areas, (node) => node.label, specs);
 
-  if (isLoading) return <Spinner label={t('loading')} />;
+  if (isLoading || plants.isLoading) return <Spinner label={t('loading')} />;
 
   return (
     <Page>
-      <PageHeader title={t('title')} description={t('subtitle')}>
+      <PageHeader
+        title={t('title')}
+        description={t('subtitle')}
+        actions={
+          <div className="flex items-center gap-3">
+            {active?.generated_at && (
+              <span className="text-xs text-slate-500">{t('updated', { when: formatDateTime(active.generated_at) })}</span>
+            )}
+            {(plants.data?.length ?? 0) > 1 && (
+              <Select
+                value={plant}
+                aria-label={t('plant')}
+                onChange={(event) => setChosenPlant(Number(event.target.value))}
+                className="w-auto"
+              >
+                {plants.data?.map((row) => (
+                  <option key={row.id} value={row.id}>
+                    {row.name}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </div>
+        }
+      >
         {summaries.length > 1 && (
           <div className="space-y-2">
             {byFamily(summaries.map((summary) => ({ ...summary, family: summary.technique_family }))).map(
@@ -79,6 +116,8 @@ export default function PlantSummaryPage() {
         )}
       </PageHeader>
 
+      <Explainer />
+
       <MetricRow>
         <Metric label={t('metric.equipment')} value={totals.total} hint={t('metric.equipmentHint')} />
         {totals.counts.slice(0, 3).map((entry) => (
@@ -98,46 +137,52 @@ export default function PlantSummaryPage() {
         />
       </MetricRow>
 
-      <Card title={t('legend.title')} description={t('legend.hint')}>
-        <p className="mb-3 text-sm text-slate-500">{t('legend.coverage')}</p>
-        <Legend
-          items={totals.counts.map((entry) => ({
-            code: entry.status.code,
-            name: entry.status.name,
-            color: entry.status.color,
-            hint: entry.status.kind === 'availability' ? t('legend.notMeasured') : undefined,
-          }))}
-        />
-      </Card>
-
       <Card
         title={t('tree.title')}
         description={t('tree.hint')}
         actions={
-          <TableToolbar
-            query={table.query}
-            onQuery={table.setQuery}
-            placeholder={t('filter.search')}
-            filters={specs.map((spec) => ({
-              key: spec.key,
-              label: spec.label,
-              options: table.options[spec.key] ?? [],
-            }))}
-            active={table.active}
-            onFilter={table.setFilter}
-            onClear={table.clear}
-            activeCount={table.activeCount}
-            total={areas.length}
-            shown={table.filtered.length}
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={() => setExpanded({ open: !expanded.open, version: expanded.version + 1 })}>
+              {expanded.open ? t('collapseAll') : t('expandAll')}
+            </Button>
+            <TableToolbar
+              query={table.query}
+              onQuery={table.setQuery}
+              placeholder={t('filter.search')}
+              filters={specs.map((spec) => ({
+                key: spec.key,
+                label: spec.label,
+                options: table.options[spec.key] ?? [],
+              }))}
+              active={table.active}
+              onFilter={table.setFilter}
+              onClear={table.clear}
+              activeCount={table.activeCount}
+              total={areas.length}
+              shown={table.filtered.length}
+            />
+          </div>
         }
         padded={false}
       >
+        <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+          <Legend
+            items={totals.counts.map((entry) => ({
+              code: entry.status.code,
+              name: entry.status.name,
+              color: entry.status.color,
+              hint: entry.status.kind === 'availability' ? t('legend.notMeasured') : undefined,
+            }))}
+          />
+          <p className="mt-2 text-xs text-slate-500">
+            {t('legend.hint')} {t('legend.coverage')}
+          </p>
+        </div>
         <div className="hidden border-b border-slate-100 px-4 py-2 text-xs uppercase tracking-wide text-slate-500 md:flex dark:border-slate-800">
           <span className="w-6" />
           <span className="w-24">{t('tree.column.status')}</span>
           <span className="flex-1">{t('tree.column.area')}</span>
-          <span className="w-56">{t('tree.column.split')}</span>
+          <span className="w-40 xl:w-56">{t('tree.column.split')}</span>
           <span className="w-40 text-right">{t('tree.column.tag')}</span>
           <span className="w-20 text-right">{t('tree.column.total')}</span>
           <span className="w-28 text-right">{t('tree.column.coverage')}</span>
@@ -145,7 +190,7 @@ export default function PlantSummaryPage() {
         {table.filtered.length > 0 ? (
           <ul>
             {table.filtered.map((node) => (
-              <NodeRow key={node.key} node={node} depth={0} />
+              <NodeRow key={`${node.key}:${expanded.version}`} node={node} depth={0} startOpen={expanded.open} />
             ))}
           </ul>
         ) : (
@@ -158,9 +203,11 @@ export default function PlantSummaryPage() {
   );
 }
 
-function NodeRow({ node, depth }: { node: SummaryNode; depth: number }) {
+function NodeRow({ node, depth, startOpen }: { node: SummaryNode; depth: number; startOpen: boolean }) {
   const { t, i18n } = useTranslation('summaries');
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
+  // A train row opens its record of values: the answer to "why is it red?".
+  const groupId = node.level === 'asset_group' ? Number(node.key.split(':')[1]) : 0;
   const segments = barSegments(node.counts, node.total);
   const hasChildren = node.children.length > 0;
 
@@ -186,11 +233,17 @@ function NodeRow({ node, depth }: { node: SummaryNode; depth: number }) {
           {node.worst.name}
         </span>
 
-        <span className={depth === 0 ? 'flex-1 font-medium' : 'flex-1 text-slate-600 dark:text-slate-300'}>
-          {node.label}
+        <span className={depth === 0 ? 'min-w-0 flex-1 font-medium' : 'min-w-0 flex-1 text-slate-600 dark:text-slate-300'}>
+          {groupId ? (
+            <Link to={`/measurements/groups/${groupId}`} title={t('openRecord')} className="hover:text-sky-700 hover:underline">
+              {node.label}
+            </Link>
+          ) : (
+            node.label
+          )}
         </span>
 
-        <span className="relative flex h-2 w-56 shrink-0 items-center overflow-visible">
+        <span className="relative flex h-2 w-40 shrink-0 items-center overflow-visible xl:w-56">
           <span className="flex h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
             {segments.map((segment) => (
               <span
@@ -258,12 +311,33 @@ function NodeRow({ node, depth }: { node: SummaryNode; depth: number }) {
       {open && hasChildren && (
         <ul>
           {node.children.map((child) => (
-            <NodeRow key={child.key} node={child} depth={depth + 1} />
+            <NodeRow key={child.key} node={child} depth={depth + 1} startOpen={startOpen} />
           ))}
         </ul>
       )}
     </li>
   );
+}
+
+/** What the board is and where it comes from — asked every time someone new
+ * opens it. */
+function Explainer() {
+  const { t } = useTranslation('summaries');
+  return (
+    <details className="rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm dark:border-sky-900 dark:bg-sky-950/40">
+      <summary className="cursor-pointer font-medium text-sky-900 dark:text-sky-200">{t('explain.title')}</summary>
+      <ul className="mt-3 list-disc space-y-1 pl-5 text-slate-700 dark:text-slate-300">
+        <li>{t('explain.what')}</li>
+        <li>{t('explain.who')}</li>
+        <li>{t('explain.read')}</li>
+        <li>{t('explain.print')}</li>
+      </ul>
+    </details>
+  );
+}
+
+function sizeOf(summary: TechniqueSummary): number {
+  return summary.nodes.reduce((sum, node) => sum + node.total, 0);
 }
 
 function rollUpTotals(summary: TechniqueSummary | undefined) {

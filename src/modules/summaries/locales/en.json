@@ -42,5 +42,17 @@
     "hint": "The area's worst reading, on {{tag}}",
     "measured": "Measured on {{when}}",
     "recorded": "Recorded on {{when}}"
+  },
+  "updated": "Updated {{when}}",
+  "plant": "Plant",
+  "expandAll": "Expand all",
+  "collapseAll": "Collapse all",
+  "openRecord": "Open its record of values",
+  "explain": {
+    "title": "How does this board work?",
+    "what": "Nobody creates it: it is computed from the latest reading of each machine in each service (vibration, thermography, ultrasound…). One tab per service.",
+    "who": "It changes every time someone saves a round, a visit or the record of values. That is why each area says which machine colours it, who measured it and when.",
+    "read": "An area's colour is the WORST state among its machines. Open an area to see its sectors and trains; a train's name opens its record of values.",
+    "print": "For a document handed to the customer there are MPd reports (per train and order, plus the monthly summary) and NDT reports."
   }
 }

@@ -42,5 +42,17 @@
     "hint": "Peor lectura del área, en {{tag}}",
     "measured": "Medido el {{when}}",
     "recorded": "Registrado el {{when}}"
+  },
+  "updated": "Actualizado {{when}}",
+  "plant": "Planta",
+  "expandAll": "Expandir todo",
+  "collapseAll": "Contraer todo",
+  "openRecord": "Abrir su registro de valores",
+  "explain": {
+    "title": "¿Cómo funciona este tablero?",
+    "what": "No se crea a mano: se calcula solo con la última lectura de cada equipo en cada servicio (vibraciones, termografía, ultrasonido…). Una pestaña por servicio.",
+    "who": "Cambia cada vez que alguien guarda una ronda, una visita o el registro de valores. Por eso cada área dice qué equipo la pinta, quién lo midió y cuándo.",
+    "read": "El color de un área es el PEOR estado de sus equipos. Despliega el área para ver sectores y conjuntos; el nombre de un conjunto abre su registro de valores.",
+    "print": "Para un documento que se entrega al cliente están Informes MPd (por conjunto y orden, más el resumen mensual) e Informes END."
   }
 }
