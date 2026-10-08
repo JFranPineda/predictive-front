@@ -138,13 +138,32 @@
       "aggregation": "Agregación",
       "decimals": "Decimales",
       "direction": "Sentido",
-      "order": "Orden en el registro"
+      "order": "Orden en el registro",
+      "record": "Cuadro fijo",
+      "template": "Solo plantilla"
     },
     "orderHint": "Posición de su tabla en el registro de valores: la de menor número va primero.",
     "templateOnly": "Solo donde la plantilla lo pida",
     "templateOnlyHint": "Se lee únicamente en los puntos cuya plantilla del tipo de conjunto la incluye; en los demás, la ronda no la ofrece ni la cuenta como no medida.",
     "inRecord": "Cuadro fijo en el registro",
-    "inRecordHint": "Su tabla aparece siempre en el registro de valores, con celdas abiertas en las rondas del servicio aunque aún no tenga lecturas."
+    "inRecordHint": "Su tabla aparece siempre en el registro de valores, con celdas abiertas en las rondas del servicio aunque aún no tenga lecturas.",
+    "search": "Buscar medida",
+    "searchHint": "Nombre, código o unidad",
+    "allServices": "Todos los servicios",
+    "serviceCount_one": "{{count}} medida",
+    "serviceCount_other": "{{count}} medidas",
+    "edit": "Editar «{{name}}»",
+    "confirmDelete": "¿Eliminar esta medida? Solo se puede si nunca se registró ni la juzga ningún umbral.",
+    "serviceFixed": "El servicio no cambia una vez creada: de él cuelgan sus normas y lecturas.",
+    "yes": "Sí",
+    "explain": {
+      "title": "¿Qué es un tipo de medición?",
+      "what": "Lo que se mide en un servicio, con su unidad: Velocidad vibracional en mm/s, Temperatura en °C, Espesor de pared en mm. Cada medida pertenece a un solo servicio, y eso decide qué normas pueden juzgarla.",
+      "aggregation": "La agregación dice cómo se resume la señal: RMS, pico, pico a pico, promedio, máximo o mínimo. «Envolvente en gE pico» y «en gE pico a pico» son criterios distintos.",
+      "order": "«Orden en el registro»: la posición de su tabla en el registro de valores y en los informes; el número menor va primero.",
+      "flags": "«Cuadro fijo»: su tabla aparece siempre en el registro, con celdas abiertas. «Solo plantilla»: se mide únicamente en los puntos cuya plantilla del tipo de conjunto la pide.",
+      "example": "Ejemplo — Velocidad vibracional · Análisis de vibraciones · mm/s · RMS · 2 decimales · orden 10 · más alto es peor · cuadro fijo"
+    }
   },
   "units": {
     "new": "Nueva unidad",
@@ -180,5 +199,13 @@
     "modalTitle": "Estados de {{service}}",
     "modalHint": "Marca los estados que usa este servicio. El nombre propio es opcional: «Medio» en lugar de «Alarma», por ejemplo.",
     "renameHint": "Nombre en este servicio (si no, «{{name}}»)"
+  },
+  "aggregation": {
+    "rms": "RMS",
+    "peak": "Pico",
+    "peak_to_peak": "Pico a pico",
+    "avg": "Promedio",
+    "max": "Máximo",
+    "min": "Mínimo"
   }
 }

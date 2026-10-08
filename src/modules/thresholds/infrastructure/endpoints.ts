@@ -47,7 +47,7 @@ export const thresholdsApi = baseApi.injectEndpoints({
     }),
     createUnit: build.mutation<UnitRef, { code: string; name: string }>({
       query: (body) => ({ url: 'units/', method: 'POST', body }),
-      invalidatesTags: ['Magnitude'],
+      invalidatesTags: ['Unit', 'Magnitude'],
     }),
     createMagnitude: build.mutation<Magnitude, Partial<Magnitude> & { name: string }>({
       query: (body) => ({ url: 'magnitudes/', method: 'POST', body }),
@@ -55,11 +55,25 @@ export const thresholdsApi = baseApi.injectEndpoints({
     }),
     updateMagnitude: build.mutation<
       Magnitude,
-      { id: number; display_order?: number; template_only?: boolean; in_record?: boolean }
+      {
+        id: number;
+        name?: string;
+        default_unit?: string;
+        default_aggregation?: string;
+        decimals?: number;
+        higher_is_worse?: boolean;
+        display_order?: number;
+        template_only?: boolean;
+        in_record?: boolean;
+      }
     >({
       query: ({ id, ...body }) => ({ url: `magnitudes/${id}/`, method: 'PATCH', body }),
       // The record of values orders its tables by this.
-      invalidatesTags: ['Magnitude', 'Reading'],
+      invalidatesTags: ['Magnitude', 'Reading', 'Unit'],
+    }),
+    deleteMagnitude: build.mutation<void, number>({
+      query: (id) => ({ url: `magnitudes/${id}/`, method: 'DELETE' }),
+      invalidatesTags: ['Magnitude', 'Unit'],
     }),
     createStandard: build.mutation<Standard, StandardDraft>({
       query: (body) => ({ url: 'standards/new/', method: 'POST', body }),
@@ -145,6 +159,7 @@ export const {
   useStandardsQuery,
   useTechniquesQuery,
   useUnitsQuery,
+  useDeleteMagnitudeMutation,
   useStatusProfilesQuery,
   useSaveStatusProfileMutation,
   useMagnitudesQuery,

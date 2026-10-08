@@ -138,13 +138,32 @@
       "aggregation": "Aggregation",
       "decimals": "Decimals",
       "direction": "Direction",
-      "order": "Order in the record"
+      "order": "Order in the record",
+      "record": "Fixed table",
+      "template": "Template only"
     },
     "orderHint": "Where its table sits in the record of values: the lowest number goes first.",
     "templateOnly": "Only where the template asks",
     "templateOnlyHint": "Read only on the points whose train-kind template lists it; elsewhere the round neither offers it nor counts it as not measured.",
     "inRecord": "Fixed table in the record",
-    "inRecordHint": "Its table always shows in the record of values, with open cells in the service's rounds even before any reading."
+    "inRecordHint": "Its table always shows in the record of values, with open cells in the service's rounds even before any reading.",
+    "search": "Search measurement",
+    "searchHint": "Name, code or unit",
+    "allServices": "All services",
+    "serviceCount_one": "{{count}} measurement",
+    "serviceCount_other": "{{count}} measurements",
+    "edit": "Edit “{{name}}”",
+    "confirmDelete": "Delete this measurement? Only possible if it was never recorded and no threshold judges it.",
+    "serviceFixed": "The service cannot change once created: its normas and readings hang off it.",
+    "yes": "Yes",
+    "explain": {
+      "title": "What is a measurement type?",
+      "what": "What a service measures, with its unit: vibration velocity in mm/s, temperature in °C, wall thickness in mm. Each measurement belongs to one service, which decides which normas may judge it.",
+      "aggregation": "The aggregation says how the signal is summarised: RMS, peak, peak to peak, average, maximum or minimum. “Envelope in gE peak” and “in gE peak to peak” are different criteria.",
+      "order": "“Order in the record”: where its table sits in the record of values and the reports; the lower number comes first.",
+      "flags": "“Fixed table”: its table always shows in the record, with open cells. “Template only”: measured only on the points whose train-kind template asks for it.",
+      "example": "Example — Vibration velocity · Vibration analysis · mm/s · RMS · 2 decimals · order 10 · higher is worse · fixed table"
+    }
   },
   "units": {
     "new": "New unit",
@@ -180,5 +199,13 @@
     "modalTitle": "States of {{service}}",
     "modalHint": "Tick the states this service uses. The own name is optional: “Medium” instead of “Alarm”, for example.",
     "renameHint": "Name in this service (otherwise “{{name}}”)"
+  },
+  "aggregation": {
+    "rms": "RMS",
+    "peak": "Peak",
+    "peak_to_peak": "Peak to peak",
+    "avg": "Average",
+    "max": "Maximum",
+    "min": "Minimum"
   }
 }
