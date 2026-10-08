@@ -62,9 +62,9 @@ export function AlignmentPanel({
 
   if (records.isLoading) return null;
   return record ? (
-    <ExistingRecord record={record} canEdit={canEdit} />
+    <AlignmentRecordCard record={record} canEdit={canEdit} />
   ) : canEdit ? (
-    <NewRecordForm visitId={visitId} assetGroupId={assetGroupId} />
+    <AlignmentForm visitId={visitId} assetGroupId={assetGroupId} />
   ) : null;
 }
 
@@ -75,7 +75,19 @@ function useAlignmentNormas() {
   );
 }
 
-function NewRecordForm({ visitId, assetGroupId }: { visitId: number; assetGroupId: number }) {
+/**
+ * A new alignment of a train: from its visit, or — with no visit — a
+ * one-off job registered from Mediciones → Alineamiento.
+ */
+export function AlignmentForm({
+  visitId,
+  assetGroupId,
+  onCreated,
+}: {
+  visitId?: number;
+  assetGroupId: number;
+  onCreated?: (record: AlignmentRecord) => void;
+}) {
   const { t } = useTranslation(['alignment', 'common']);
   const [create, { isLoading }] = useCreateAlignmentRecordMutation();
   const normas = useAlignmentNormas();
@@ -96,7 +108,7 @@ function NewRecordForm({ visitId, assetGroupId }: { visitId: number; assetGroupI
       return;
     }
     try {
-      await create({
+      const created = await create({
         asset_group: assetGroupId,
         service_visit: visitId,
         driver_label: driverLabel.trim(),
@@ -108,6 +120,7 @@ function NewRecordForm({ visitId, assetGroupId }: { visitId: number; assetGroupI
         ...prefixed('before', before),
         ...prefixed('after', after),
       }).unwrap();
+      onCreated?.(created);
     } catch (cause) {
       setError(readError(cause) ?? t('form.genericError'));
     }
@@ -188,7 +201,8 @@ function PhaseColumn({
   );
 }
 
-function ExistingRecord({ record, canEdit }: { record: AlignmentRecord; canEdit: boolean }) {
+/** One alignment as SKF prints it, editable in place for who may edit it. */
+export function AlignmentRecordCard({ record, canEdit }: { record: AlignmentRecord; canEdit: boolean }) {
   const { t } = useTranslation(['alignment', 'common']);
   const [update] = useUpdateAlignmentRecordMutation();
   const [error, setError] = useState<string | null>(null);

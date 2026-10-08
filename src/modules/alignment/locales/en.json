@@ -59,9 +59,24 @@
   },
   "list": {
     "title": "Alignment",
-    "hint": "Trains aligned this month, with before/after and verdict.",
+    "hint": "Every laser alignment of a train: the eight values before and after, the machine's state from the norma and the aligner's images.",
     "empty": "No alignments this month",
-    "openVisit": "Open visit"
+    "openVisit": "Open visit",
+    "emptyHint": "They are registered from a visit of an alignment order, or here with “+ New alignment”.",
+    "new": "New alignment",
+    "newTitle": "New alignment",
+    "newHint": "A one-off job with no service order. If the alignment belongs to an order, register it from that order's visit.",
+    "month": "Month",
+    "search": "Search",
+    "searchHint": "Train, driver, driven or order",
+    "oneOff": "One-off job",
+    "edit": "Open and edit",
+    "view": "View",
+    "close": "Close",
+    "confirmDelete": "Delete this alignment and its images? This cannot be undone.",
+    "findGroup": "Find train",
+    "findGroupHint": "Type part of the name",
+    "pickGroupFirst": "Pick the train that was aligned."
   },
   "scale": {
     "title": "Limits and states by RPM",
@@ -117,5 +132,21 @@
   "details": {
     "title": "Alignment data",
     "save": "Save data"
+  },
+  "column": {
+    "date": "Date",
+    "group": "Train",
+    "machines": "Driver → driven",
+    "states": "State found → left",
+    "origin": "Order"
+  },
+  "explain": {
+    "title": "What is recorded here?",
+    "what": "A laser alignment of the shaft between two machines of a train (the driver, e.g. the motor, and the driven one, e.g. the pump), measured before and after correcting it.",
+    "values": "Eight values: angular and offset, in the horizontal and vertical views, before (As Found) and after (As Corrected). Angular in mm/100 mm, offset in mm.",
+    "states": "From the RPM, the alignment norma gives the tolerance and the machine's state (Operational, Under observation, Alarm…), before and after.",
+    "images": "The aligner's screens per train: SKF prints one image with before and after; any other aligner, one per phase. Plus the train's photo and up to two of the finding.",
+    "example": "Example — WATER PUMP TAG:A · Motor → Pump · 1780 rpm · SKF TKSA 41. Before: angular H 0.08, offset H 0.12, angular V 0.05, offset V 0.10 → Alarm. After: 0.02 · 0.03 · 0.01 · 0.02 → Operational.",
+    "where": "If the job belongs to an alignment order, it is registered from that order's visit and shows here with its code. Otherwise it is a one-off job, created here."
   }
 }

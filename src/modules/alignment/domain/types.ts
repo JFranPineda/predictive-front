@@ -37,6 +37,10 @@ export interface AlignmentRecord {
   id: number;
   asset_group: { id: number; name: string };
   service_visit_id: number | null;
+  /** The order the visit belongs to; null for a one-off job. */
+  order_code: string | null;
+  /** Whether the reader may change it: a visit's alignment follows its visit. */
+  can_edit: boolean;
   driver_label: string;
   driven_label: string;
   rpm: string;

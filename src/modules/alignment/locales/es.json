@@ -59,9 +59,24 @@
   },
   "list": {
     "title": "Alineamiento",
-    "hint": "Conjuntos alineados en el mes, con antes/después y veredicto.",
+    "hint": "Cada alineamiento láser de un conjunto: los ocho valores antes y después, el estado del equipo según la norma y las imágenes del alineador.",
     "empty": "No hay alineamientos en este mes",
-    "openVisit": "Ver visita"
+    "openVisit": "Ver visita",
+    "emptyHint": "Se registran desde la visita de una orden de alineamiento o aquí con «+ Nuevo alineamiento».",
+    "new": "Nuevo alineamiento",
+    "newTitle": "Nuevo alineamiento",
+    "newHint": "Trabajo puntual sin orden de servicio. Si el alineamiento es parte de una orden, regístralo desde la visita de esa orden.",
+    "month": "Mes",
+    "search": "Buscar",
+    "searchHint": "Conjunto, motriz, conducido u orden",
+    "oneOff": "Trabajo puntual",
+    "edit": "Abrir y editar",
+    "view": "Ver",
+    "close": "Cerrar",
+    "confirmDelete": "¿Eliminar este alineamiento con sus imágenes? No se puede deshacer.",
+    "findGroup": "Buscar conjunto",
+    "findGroupHint": "Escribe parte del nombre",
+    "pickGroupFirst": "Elige el conjunto que se alineó."
   },
   "scale": {
     "title": "Límites y estados por RPM",
@@ -117,5 +132,21 @@
   "details": {
     "title": "Datos del alineamiento",
     "save": "Guardar datos"
+  },
+  "column": {
+    "date": "Fecha",
+    "group": "Conjunto",
+    "machines": "Motriz → conducido",
+    "states": "Estado encontrado → final",
+    "origin": "Orden"
+  },
+  "explain": {
+    "title": "¿Qué se registra aquí?",
+    "what": "Un alineamiento láser del eje entre dos máquinas de un conjunto (la motriz, p. ej. el motor, y la conducida, p. ej. la bomba), medido antes de corregir y después de corregir.",
+    "values": "Ocho valores: angular y paralelo, en la vista horizontal y en la vertical, antes (As Found) y después (As Corrected). Angular en mm/100 mm, paralelo en mm.",
+    "states": "Con las RPM, la norma de alineamiento da la tolerancia y el estado del equipo (Operativo, Observación, Alarma…), antes y después.",
+    "images": "Las pantallas del alineador por conjunto: SKF entrega una imagen con antes y después; otro alineador, una por fase. Más la foto del conjunto y hasta dos de la observación.",
+    "example": "Ejemplo — BBA. AGUA CRUDA TAG:A · Motor → Bomba · 1780 rpm · SKF TKSA 41. Antes: angular H 0.08, paralelo H 0.12, angular V 0.05, paralelo V 0.10 → Alarma. Después: 0.02 · 0.03 · 0.01 · 0.02 → Operativo.",
+    "where": "Si el trabajo pertenece a una orden de alineamiento, se registra desde la visita de esa orden y aparece aquí con su código. Si no, es un trabajo puntual y se crea aquí."
   }
 }
