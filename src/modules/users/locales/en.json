@@ -94,7 +94,18 @@
       "other": "action"
     },
     "base": "Behaviour",
-    "baseHint": "Decides whether it can alter field data, and whose. Permissions decide which screens it sees."
+    "baseHint": "Decides whether it can alter field data, and whose. Permissions decide which screens it sees.",
+    "search": "Search permission",
+    "searchHint": "Search a permission or module (e.g. “reopen”, “rollers”)",
+    "onlyGranted": "Only granted",
+    "noMatch": "No permission matches the search.",
+    "heldOf": "{{held}} of {{total}}",
+    "all": "All",
+    "none": "None",
+    "pending_one": "{{count}} unsaved change in this role",
+    "pending_other": "{{count}} unsaved changes in this role",
+    "discard": "Discard",
+    "leaveUnsaved": "This role has unsaved changes. Discard them and open the other one?"
   },
   "edit": {
     "title": "Edit {{name}}",

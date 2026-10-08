@@ -94,7 +94,18 @@
       "other": "acción"
     },
     "base": "Comportamiento",
-    "baseHint": "Define si puede alterar datos de campo, y de quién. Los permisos definen qué pantallas ve."
+    "baseHint": "Define si puede alterar datos de campo, y de quién. Los permisos definen qué pantallas ve.",
+    "search": "Buscar permiso",
+    "searchHint": "Buscar permiso o módulo (p. ej. «reabrir», «rodillos»)",
+    "onlyGranted": "Solo los concedidos",
+    "noMatch": "Ningún permiso coincide con la búsqueda.",
+    "heldOf": "{{held}} de {{total}}",
+    "all": "Todos",
+    "none": "Ninguno",
+    "pending_one": "{{count}} cambio sin guardar en este rol",
+    "pending_other": "{{count}} cambios sin guardar en este rol",
+    "discard": "Descartar",
+    "leaveUnsaved": "Hay cambios sin guardar en este rol. ¿Descartarlos y abrir el otro?"
   },
   "edit": {
     "title": "Editar a {{name}}",

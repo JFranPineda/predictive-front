@@ -10,13 +10,14 @@ import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
-import { ACTION_ORDER, BASE_ROLES, type RolePermissions } from '../domain/roles';
+import { BASE_ROLES, type RolePermissions } from '../domain/roles';
 import {
   useCreateRoleMutation,
   useDeleteRoleMutation,
   useRolesQuery,
   useUpdateRoleMutation,
 } from '../infrastructure/endpoints';
+import { PermissionMatrix } from './PermissionMatrix';
 import { RoleSummary } from './RoleSummary';
 import { readUserError } from './UserFormModal';
 
@@ -54,9 +55,12 @@ export default function RolesPage() {
 
   if (isLoading) return <Spinner label={t('roles.loading')} />;
 
-  const dirty =
-    role && (granted.size !== role.permissions.length ||
-      role.permissions.some((code) => !granted.has(code)));
+  // How many ticks differ from what is saved: the number the save bar shows.
+  const changes = role
+    ? role.permissions.filter((code) => !granted.has(code)).length +
+      [...granted].filter((code) => !role.permissions.includes(code)).length
+    : 0;
+  const dirty = changes > 0;
 
   async function run(action: () => Promise<unknown>) {
     setError(null);
@@ -81,7 +85,11 @@ export default function RolesPage() {
               {data?.roles.map((row) => (
                 <li key={row.id}>
                   <button
-                    onClick={() => setSelected(row.id)}
+                    onClick={() => {
+                      // Switching role re-reads its saved ticks: say so before losing them.
+                      if (dirty && row.id !== role?.id && !window.confirm(t('roles.leaveUnsaved'))) return;
+                      setSelected(row.id);
+                    }}
                     className={[
                       'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm',
                       row.id === role?.id
@@ -184,51 +192,30 @@ export default function RolesPage() {
                 )}
                 <p className="text-xs text-slate-500">{t(`behaviour.${role.base_role}`)}</p>
               </div>
-              <div className="space-y-5">
-                {data?.modules.map((module) => (
-                  <section key={module.code}>
-                    <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-400">
-                      {t(`module.${module.code}`, { defaultValue: module.name })}
-                    </h3>
-                    <div className="grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
-                      {[...module.permissions]
-                        .sort(
-                          (a, b) =>
-                            ACTION_ORDER.indexOf(a.action as (typeof ACTION_ORDER)[number]) -
-                            ACTION_ORDER.indexOf(b.action as (typeof ACTION_ORDER)[number]),
-                        )
-                        .map((permission) => (
-                          <label
-                            key={permission.code}
-                            className="flex items-start gap-2 text-sm"
-                            title={permission.code}
-                          >
-                            <input
-                              type="checkbox"
-                              disabled={!canManage}
-                              checked={granted.has(permission.code)}
-                              onChange={(event) => {
-                                const next = new Set(granted);
-                                if (event.target.checked) next.add(permission.code);
-                                else next.delete(permission.code);
-                                setGranted(next);
-                              }}
-                              className="mt-0.5"
-                            />
-                            <span className="min-w-0">
-                              <span className="block leading-tight">{permission.description}</span>
-                              <span className="block text-[11px] text-slate-400">
-                                {t(`roles.action.${permission.action}`)}
-                              </span>
-                            </span>
-                          </label>
-                        ))}
-                    </div>
-                  </section>
-                ))}
-              </div>
+              <PermissionMatrix
+                modules={data?.modules ?? []}
+                granted={granted}
+                editable={canManage}
+                onChange={setGranted}
+              />
             </Card>
           )}
+        </div>
+      )}
+
+      {/* Unsaved ticks are easy to lose by clicking another role: the bar
+          stays in sight until they are saved or thrown away. */}
+      {canManage && role && dirty && (
+        <div className="sticky bottom-4 z-10 mx-auto flex max-w-xl items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm shadow-lg dark:border-amber-800 dark:bg-amber-950">
+          <span className="flex-1 text-amber-900 dark:text-amber-200">{t('roles.pending', { count: changes })}</span>
+          <Button onClick={() => setGranted(new Set(role.permissions))}>{t('roles.discard')}</Button>
+          <Button
+            variant="primary"
+            disabled={updating.isLoading}
+            onClick={() => void run(() => updateRole({ id: role.id, permissions: [...granted] }).unwrap())}
+          >
+            {t('roles.save')}
+          </Button>
         </div>
       )}
     </Page>
