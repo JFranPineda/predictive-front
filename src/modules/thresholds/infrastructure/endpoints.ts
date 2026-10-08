@@ -5,6 +5,7 @@ import type {
   Magnitude,
   Standard,
   StandardDraft,
+  StatusProfile,
   ThresholdSet,
   ThresholdSetDraft,
   TechniqueRef,
@@ -20,6 +21,18 @@ export const thresholdsApi = baseApi.injectEndpoints({
     standards: build.query<Standard[], void>({
       query: () => 'standards/',
       providesTags: ['Standard'],
+    }),
+    statusProfiles: build.query<StatusProfile[], void>({
+      query: () => 'status-profiles/',
+      providesTags: ['ConditionStatus'],
+    }),
+    saveStatusProfile: build.mutation<
+      StatusProfile,
+      { technique: string; options: { status: number; display_name: string }[] }
+    >({
+      query: ({ technique, options }) => ({ url: `status-profiles/${technique}/`, method: 'PUT', body: { options } }),
+      // The scale editors of Normas offer only the service's states.
+      invalidatesTags: ['ConditionStatus', 'Standard'],
     }),
     techniques: build.query<TechniqueRef[], void>({
       query: () => 'techniques/',
@@ -132,6 +145,8 @@ export const {
   useStandardsQuery,
   useTechniquesQuery,
   useUnitsQuery,
+  useStatusProfilesQuery,
+  useSaveStatusProfileMutation,
   useMagnitudesQuery,
   useCreateMagnitudeMutation,
   useUpdateMagnitudeMutation,

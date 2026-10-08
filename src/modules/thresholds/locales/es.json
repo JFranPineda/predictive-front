@@ -171,5 +171,14 @@
     "from": "Desde",
     "to": "Hasta",
     "rationale": "Escala de la norma {{name}}"
+  },
+  "profiles": {
+    "title": "Condiciones por servicio",
+    "hint": "Cada servicio tiene su propio conjunto de estados: en cuáles puede calificar su norma y cuáles puede declarar el técnico en lugar de un valor. Un estado puede llevar otro nombre solo en ese servicio. Lo que distingue a un equipo con aisladores de uno sin ellos no es otro servicio: son otros límites, en Umbrales.",
+    "none": "Sin configurar: ofrece todos los estados",
+    "edit": "Editar",
+    "modalTitle": "Estados de {{service}}",
+    "modalHint": "Marca los estados que usa este servicio. El nombre propio es opcional: «Medio» en lugar de «Alarma», por ejemplo.",
+    "renameHint": "Nombre en este servicio (si no, «{{name}}»)"
   }
 }

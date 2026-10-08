@@ -11,6 +11,20 @@ export interface ConditionStatus {
   is_terminal: boolean;
 }
 
+/** A service's set of states (Estados → Condiciones por servicio). */
+export interface StatusProfile {
+  technique: { code: string; name: string };
+  options: {
+    status: number;
+    code: string;
+    kind: 'condition' | 'availability';
+    name: string;
+    /** This service's own name for the state; empty keeps the plant's. */
+    display_name: string;
+    color: string;
+  }[];
+}
+
 export interface MachineClass {
   id?: number;
   code: string;

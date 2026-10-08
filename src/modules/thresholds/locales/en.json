@@ -171,5 +171,14 @@
     "from": "From",
     "to": "To",
     "rationale": "Scale of the standard {{name}}"
+  },
+  "profiles": {
+    "title": "States per service",
+    "hint": "Each service has its own set of states: which ones its norma may grade into and which ones the technician may declare instead of a value. A state can carry another name in that service only. What sets a machine with isolators apart from one without is not another service: it is other limits, in Thresholds.",
+    "none": "Not configured: offers every state",
+    "edit": "Edit",
+    "modalTitle": "States of {{service}}",
+    "modalHint": "Tick the states this service uses. The own name is optional: “Medium” instead of “Alarm”, for example.",
+    "renameHint": "Name in this service (otherwise “{{name}}”)"
   }
 }

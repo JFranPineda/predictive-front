@@ -19,6 +19,7 @@ import {
   useUpdateStatusMutation,
 } from '../infrastructure/endpoints';
 import { readError } from '@shared/lib/apiError';
+import { ServiceProfiles } from './ServiceProfiles';
 import { StatusFormModal } from './StatusFormModal';
 
 export default function StatusesPage() {
@@ -60,6 +61,8 @@ export default function StatusesPage() {
           </Card>
         </div>
       )}
+
+      {data && <ServiceProfiles statuses={data} canManage={canManage} />}
 
       {creating && <StatusFormModal onClose={() => setCreating(false)} />}
       {editing && <StatusEditModal status={editing} onClose={() => setEditing(null)} />}
