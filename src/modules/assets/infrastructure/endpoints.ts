@@ -129,8 +129,8 @@ export const assetsApi = baseApi.injectEndpoints({
       query: (id) => ({ url: `asset-groups/${id}/`, method: 'DELETE' }),
       invalidatesTags: ['AssetGroup'],
     }),
-    groupKinds: build.query<AssetGroupKind[], void>({
-      query: () => 'asset-group-kinds/',
+    groupKinds: build.query<AssetGroupKind[], { q?: string } | void>({
+      query: (params) => ({ url: 'asset-group-kinds/', params: params?.q ? { q: params.q } : undefined }),
       providesTags: ['GroupKind'],
     }),
     createGroupKind: build.mutation<AssetGroupKind, Partial<AssetGroupKind>>({

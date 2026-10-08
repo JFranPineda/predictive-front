@@ -149,6 +149,8 @@ export interface AssetGroupKind {
   group_count: number;
   components: KindComponent[];
   point_templates: PointTemplateRow[];
+  /** Only when searched: the trains (and their matching TAGs) that made it match. */
+  matches?: { id: number; name: string; tags: string[] }[];
 }
 
 export interface GroupPoint {

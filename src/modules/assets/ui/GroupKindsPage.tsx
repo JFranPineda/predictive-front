@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
@@ -6,6 +6,7 @@ import { useMagnitudesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
+import { TextInput } from '@shared/ui/Form';
 import { ErrorState } from '@shared/ui/ErrorState';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
@@ -29,13 +30,20 @@ export default function GroupKindsPage() {
   const { t } = useTranslation(['assets', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('assets.manage_equipment');
-  const { data, isLoading, isError } = useGroupKindsQuery();
+  const [search, setSearch] = useState('');
+  const [q, setQ] = useState('');
+  // A query per keystroke is noise: the search waits for a pause.
+  useEffect(() => {
+    const timer = window.setTimeout(() => setQ(search.trim()), 300);
+    return () => window.clearTimeout(timer);
+  }, [search]);
+  const { data, isLoading, isError, isFetching } = useGroupKindsQuery(q ? { q } : undefined);
   const [remove] = useDeleteGroupKindMutation();
   const [editing, setEditing] = useState<AssetGroupKind | null>(null);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (isLoading) return <Spinner label={t('kinds.loading')} />;
+  if (isLoading && !q) return <Spinner label={t('kinds.loading')} />;
 
   return (
     <Page>
@@ -51,11 +59,31 @@ export default function GroupKindsPage() {
         }
       />
 
+      <div className="flex flex-wrap items-center gap-3">
+        <TextInput
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder={t('kinds.searchHint')}
+          aria-label={t('kinds.search')}
+          className="max-w-md"
+        />
+        {q && (
+          <span className="text-xs text-slate-500">
+            {isFetching ? t('common:state.loading') : t('kinds.found', { count: data?.length ?? 0 })}
+          </span>
+        )}
+      </div>
+
       {error && <ErrorState title={error} />}
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
       ) : (data ?? []).length === 0 ? (
-        <EmptyState title={t('kinds.empty')} body={t('kinds.emptyBody')} />
+        q ? (
+          <EmptyState title={t('kinds.noMatch', { q })} body={t('kinds.noMatchHint')} />
+        ) : (
+          <EmptyState title={t('kinds.empty')} body={t('kinds.emptyBody')} />
+        )
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           {data?.map((kind) => (
@@ -101,6 +129,7 @@ export default function GroupKindsPage() {
                 </span>
               </div>
 
+              {kind.matches && kind.matches.length > 0 && <Matches matches={kind.matches} />}
               <PointLayout kind={kind} />
             </Card>
           ))}
@@ -117,6 +146,27 @@ export default function GroupKindsPage() {
         />
       )}
     </Page>
+  );
+}
+
+/** Why a kind came up in the search: the trains built from it that matched,
+ * with the TAGs that did. */
+function Matches({ matches }: { matches: NonNullable<AssetGroupKind['matches']> }) {
+  const { t } = useTranslation('assets');
+  return (
+    <div className="mb-3 rounded-lg bg-sky-50 p-2 text-xs dark:bg-sky-950/40">
+      <p className="mb-1 font-medium text-sky-800 dark:text-sky-300">{t('kinds.matchedIn')}</p>
+      <ul className="space-y-0.5">
+        {matches.map((train) => (
+          <li key={train.id} className="text-slate-700 dark:text-slate-300">
+            {train.name}
+            {train.tags.length > 0 && (
+              <span className="ml-2 font-mono text-slate-500">{train.tags.join(' · ')}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

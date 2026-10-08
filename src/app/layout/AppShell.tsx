@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { useAppDispatch } from '@app/hooks';
 import { SessionGuard } from '@app/session/SessionGuard';
@@ -8,6 +8,7 @@ import type { Bootstrap } from '@app/session/sessionApi';
 import type { MenuEntry } from '@app/session/sessionSlice';
 import { ThemeToggle } from '@shared/ui/ThemeToggle';
 
+import { activeMenuRoute } from './activeMenu';
 import { BackButton } from './BackButton';
 import { BrandLogo } from './BrandLogo';
 import { PlanNotice } from './PlanNotice';
@@ -26,6 +27,11 @@ export function AppShell({ menu, user, companies }: Props) {
   const topLevel = menu.filter((item) => item.parent === null);
   const settings = menu.filter((item) => item.parent === 'settings');
   const company = companies[0];
+  const { pathname } = useLocation();
+  const active = activeMenuRoute(
+    pathname,
+    menu.map((item) => item.route),
+  );
 
   return (
     <div className="flex h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
@@ -37,7 +43,7 @@ export function AppShell({ menu, user, companies }: Props) {
 
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3">
           {topLevel.map((item) => (
-            <MenuLink key={item.route} item={item} />
+            <MenuLink key={item.route} item={item} active={item.route === active} />
           ))}
 
           {settings.length > 0 && (
@@ -46,7 +52,7 @@ export function AppShell({ menu, user, companies }: Props) {
                 {t('nav.settings')}
               </p>
               {settings.map((item) => (
-                <MenuLink key={item.route} item={item} />
+                <MenuLink key={item.route} item={item} active={item.route === active} />
               ))}
             </>
           )}
@@ -85,21 +91,19 @@ export function AppShell({ menu, user, companies }: Props) {
   );
 }
 
-function MenuLink({ item }: { item: MenuEntry }) {
+function MenuLink({ item, active }: { item: MenuEntry; active: boolean }) {
   return (
-    <NavLink
+    <Link
       to={item.route}
-      end={item.route.split('/').length <= 2}
-      className={({ isActive }) =>
-        [
-          'block rounded-lg px-3 py-2 text-sm transition-colors',
-          isActive
-            ? 'bg-slate-900 font-medium text-white dark:bg-slate-100 dark:text-slate-900'
-            : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
-        ].join(' ')
-      }
+      aria-current={active ? 'page' : undefined}
+      className={[
+        'block rounded-lg px-3 py-2 text-sm transition-colors',
+        active
+          ? 'bg-slate-900 font-medium text-white dark:bg-slate-100 dark:text-slate-900'
+          : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
+      ].join(' ')}
     >
       {item.label}
-    </NavLink>
+    </Link>
   );
 }
