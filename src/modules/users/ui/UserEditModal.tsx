@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAreasQuery } from '@modules/assets';
 import { formatDateTime } from '@app/i18n/format';
+import { useConfirm, useToast } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -16,7 +17,7 @@ import {
   useUpdateUserMutation,
 } from '../infrastructure/endpoints';
 import { RoleSummary, useRoleLabel } from './RoleSummary';
-import { readUserError } from './UserFormModal';
+import { generatePassword, readUserError } from './UserFormModal';
 
 const MIN_PASSWORD = 10;
 
@@ -35,7 +36,10 @@ export function UserEditModal({
   const roleLabel = useRoleLabel();
   const [update, { isLoading }] = useUpdateUserMutation();
   const [removeUser] = useRemoveUserMutation();
+  const confirm = useConfirm();
+  const toast = useToast();
   const [error, setError] = useState<string | null>(null);
+  const [reveal, setReveal] = useState(false);
   const [draft, setDraft] = useState<{
     first_name: string;
     last_name: string;
@@ -44,8 +48,8 @@ export function UserEditModal({
     role: string;
     shift: string;
   }>({
-    first_name: user.full_name.split(' ')[0] ?? '',
-    last_name: user.full_name.split(' ').slice(1).join(' '),
+    first_name: user.first_name,
+    last_name: user.last_name,
     initials: user.initials,
     password: '',
     role: user.role,
@@ -57,14 +61,24 @@ export function UserEditModal({
     new Set(user.area_restrictions.map((ref) => Number(ref))),
   );
 
-  async function run(action: () => Promise<unknown>) {
+  async function run(action: () => Promise<unknown>, done: string) {
     setError(null);
     try {
       await action();
+      toast.success(done);
       onClose();
     } catch (cause) {
       setError(readUserError(cause) ?? t('form.genericError'));
     }
+  }
+
+  async function revoke() {
+    const ok = await confirm({
+      title: t('feedback.revokeTitle', { name: user.full_name }),
+      body: t('feedback.revokeBody'),
+      confirmLabel: t('action.revoke'),
+    });
+    if (ok) await run(() => removeUser(user.id).unwrap(), t('feedback.revoked', { name: user.full_name }));
   }
 
   async function save() {
@@ -81,6 +95,7 @@ export function UserEditModal({
         ...(isSelf || draft.role === user.role ? {} : { role: draft.role }),
         ...(draft.password ? { password: draft.password } : {}),
       }).unwrap(),
+      draft.password ? t('feedback.savedWithPassword', { name: user.full_name }) : t('feedback.saved', { name: user.full_name }),
     );
   }
 
@@ -95,7 +110,7 @@ export function UserEditModal({
             <Button
               variant="danger"
               className="mr-auto"
-              onClick={() => void run(() => removeUser(user.id).unwrap())}
+              onClick={() => void revoke()}
             >
               {t('edit.revoke')}
             </Button>
@@ -137,11 +152,27 @@ export function UserEditModal({
           label={t('edit.newPassword')}
           hint={t('edit.newPasswordHint', { count: MIN_PASSWORD })}
         >
-          <TextInput
-            type="password"
-            value={draft.password}
-            onChange={(event) => setDraft({ ...draft, password: event.target.value })}
-          />
+          <div className="flex gap-2">
+            <TextInput
+              type={reveal ? 'text' : 'password'}
+              value={draft.password}
+              autoComplete="new-password"
+              onChange={(event) => setDraft({ ...draft, password: event.target.value })}
+              className="font-mono"
+            />
+            <Button type="button" onClick={() => setReveal(!reveal)}>
+              {reveal ? t('form.hide') : t('form.show')}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setDraft({ ...draft, password: generatePassword() });
+                setReveal(true);
+              }}
+            >
+              {t('form.generate')}
+            </Button>
+          </div>
         </FormField>
         <FormField label={t('form.role')} hint={isSelf ? t('edit.ownRole') : undefined}>
           <Select
@@ -219,6 +250,7 @@ function AccessCodeSection({ user }: { user: CompanyUser }) {
   const [revoke, revoking] = useRevokeAccessCodeMutation();
   const [code, setCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const confirm = useConfirm();
   const [problem, setProblem] = useState<string | null>(null);
 
   async function run(action: () => Promise<void>) {
@@ -271,6 +303,13 @@ function AccessCodeSection({ user }: { user: CompanyUser }) {
           disabled={issuing.isLoading}
           onClick={() =>
             void run(async () => {
+              // A new code silently locks out the one the technician carries.
+              if (
+                user.has_access_code &&
+                !(await confirm({ title: t('code.reissueTitle'), body: t('code.reissueBody'), confirmLabel: t('code.reissue') }))
+              ) {
+                return;
+              }
               const answer = await issue(user.id).unwrap();
               setCode(answer.code);
               setCopied(false);
@@ -283,7 +322,13 @@ function AccessCodeSection({ user }: { user: CompanyUser }) {
           <Button
             variant="danger"
             disabled={revoking.isLoading}
-            onClick={() => void run(() => revoke(user.id).unwrap())}
+            onClick={() =>
+              void run(async () => {
+                if (await confirm({ title: t('code.revokeTitle'), body: t('code.revokeBody'), confirmLabel: t('code.revoke') })) {
+                  await revoke(user.id).unwrap();
+                }
+              })
+            }
           >
             {t('code.revoke')}
           </Button>

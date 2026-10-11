@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useConfirm, useToast } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -40,7 +41,8 @@ export default function RolesPage() {
 
   const [selected, setSelected] = useState<number | null>(null);
   const [granted, setGranted] = useState<Set<string>>(new Set());
-  const [error, setError] = useState<string | null>(null);
+  const confirm = useConfirm();
+  const toast = useToast();
   const [newRole, setNewRole] = useState('');
   // Every company role says how it stands towards field data; read-only is
   // the default so that forgetting to choose never grants write access.
@@ -62,20 +64,38 @@ export default function RolesPage() {
     : 0;
   const dirty = changes > 0;
 
-  async function run(action: () => Promise<unknown>) {
-    setError(null);
+  async function run(action: () => Promise<unknown>, done?: string) {
     try {
       await action();
+      if (done) toast.success(done);
     } catch (cause) {
-      setError(readUserError(cause) ?? t('form.genericError'));
+      toast.error(readUserError(cause) ?? t('form.genericError'));
     }
+  }
+
+  async function pick(id: number) {
+    // Switching role re-reads its saved ticks: say so before losing them.
+    if (dirty && id !== role?.id) {
+      const ok = await confirm({
+        title: t('roles.leaveUnsavedTitle'),
+        body: t('roles.leaveUnsaved'),
+        confirmLabel: t('roles.discard'),
+      });
+      if (!ok) return;
+    }
+    setSelected(id);
+  }
+
+  async function removeRole(target: RolePermissions) {
+    const name = t(`role.${target.code}`, { defaultValue: target.name });
+    const ok = await confirm({ title: t('roles.deleteTitle', { name }), confirmLabel: t('common:action.delete') });
+    if (ok) await run(() => deleteRole(target.id).unwrap(), t('roles.deleted', { name }));
   }
 
   return (
     <Page>
       <PageHeader title={t('roles.title')} description={t('roles.subtitle')} />
 
-      {error && <ErrorState title={error} />}
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
       ) : (
@@ -85,11 +105,7 @@ export default function RolesPage() {
               {data?.roles.map((row) => (
                 <li key={row.id}>
                   <button
-                    onClick={() => {
-                      // Switching role re-reads its saved ticks: say so before losing them.
-                      if (dirty && row.id !== role?.id && !window.confirm(t('roles.leaveUnsaved'))) return;
-                      setSelected(row.id);
-                    }}
+                    onClick={() => void pick(row.id)}
                     className={[
                       'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm',
                       row.id === role?.id
@@ -127,11 +143,13 @@ export default function RolesPage() {
                   disabled={!newRole.trim()}
                   onClick={() =>
                     void run(async () => {
-                      await createRole({
+                      const created = await createRole({
                         name: newRole, permissions: [], base_role: newBase,
                       }).unwrap();
                       setNewRole('');
-                    })
+                      // The new role opens at once: its permissions are the next thing to set.
+                      setSelected(created.id);
+                    }, t('roles.created', { name: newRole }))
                   }
                 >
                   + {t('common:action.add')}
@@ -151,8 +169,9 @@ export default function RolesPage() {
                       variant="primary"
                       disabled={!dirty || updating.isLoading}
                       onClick={() =>
-                        void run(() =>
-                          updateRole({ id: role.id, permissions: [...granted] }).unwrap(),
+                        void run(
+                          () => updateRole({ id: role.id, permissions: [...granted] }).unwrap(),
+                          t('roles.savedToast'),
                         )
                       }
                     >
@@ -161,7 +180,7 @@ export default function RolesPage() {
                     {!role.is_system && role.member_count === 0 && (
                       <Button
                         variant="danger"
-                        onClick={() => void run(() => deleteRole(role.id).unwrap())}
+                        onClick={() => void removeRole(role)}
                       >
                         {t('common:action.delete')}
                       </Button>
@@ -177,8 +196,9 @@ export default function RolesPage() {
                     <Select
                       value={role.base_role}
                       onChange={(event) =>
-                        void run(() =>
-                          updateRole({ id: role.id, base_role: event.target.value }).unwrap(),
+                        void run(
+                          () => updateRole({ id: role.id, base_role: event.target.value }).unwrap(),
+                          t('roles.baseChanged'),
                         )
                       }
                     >
@@ -212,7 +232,9 @@ export default function RolesPage() {
           <Button
             variant="primary"
             disabled={updating.isLoading}
-            onClick={() => void run(() => updateRole({ id: role.id, permissions: [...granted] }).unwrap())}
+            onClick={() =>
+              void run(() => updateRole({ id: role.id, permissions: [...granted] }).unwrap(), t('roles.savedToast'))
+            }
           >
             {t('roles.save')}
           </Button>

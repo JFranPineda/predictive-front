@@ -8,6 +8,7 @@ import { i18n } from '@app/i18n';
 import { applyTheme, readStoredTheme } from '@app/theme/theme';
 import { AppRoutes } from '@app/router';
 import { store } from '@app/store';
+import { FeedbackProvider } from '@shared/feedback/FeedbackProvider';
 
 import './index.css';
 
@@ -20,7 +21,9 @@ createRoot(document.getElementById('root')!).render(
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
         <BrowserRouter>
-          <AppRoutes />
+          <FeedbackProvider>
+            <AppRoutes />
+          </FeedbackProvider>
         </BrowserRouter>
       </Provider>
     </I18nextProvider>

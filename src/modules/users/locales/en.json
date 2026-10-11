@@ -74,7 +74,11 @@
     "externalNotice": "An external inspector will see the equipment but can only edit the visits they perform, and only while those are open.",
     "shift": "Shift",
     "shiftHint": "One of the three 8-hour relays",
-    "codeNotice": "After creating them, issue their personal code from “Edit”: it is how they sign in on the plant floor."
+    "codeNotice": "After creating them, issue their personal code from “Edit”: it is how they sign in on the plant floor.",
+    "pickRole": "— Pick a role —",
+    "show": "Show",
+    "hide": "Hide",
+    "generate": "Generate"
   },
   "roles": {
     "title": "Permissions",
@@ -105,7 +109,13 @@
     "pending_one": "{{count}} unsaved change in this role",
     "pending_other": "{{count}} unsaved changes in this role",
     "discard": "Discard",
-    "leaveUnsaved": "This role has unsaved changes. Discard them and open the other one?"
+    "leaveUnsaved": "This role has unsaved changes. Discard them and open the other one?",
+    "leaveUnsavedTitle": "There are unsaved changes",
+    "deleteTitle": "Delete the role “{{name}}”?",
+    "deleted": "Role “{{name}}” deleted",
+    "created": "Role “{{name}}” created: tick its permissions now",
+    "savedToast": "Permissions saved",
+    "baseChanged": "Role behaviour updated"
   },
   "edit": {
     "title": "Edit {{name}}",
@@ -179,7 +189,11 @@
     "hint": "The technician signs in with this code instead of e-mail and password. Issuing a new one invalidates the old.",
     "issue": "Issue code",
     "reissue": "Issue a new code",
-    "revoke": "Revoke"
+    "revoke": "Revoke",
+    "reissueTitle": "Issue a new code?",
+    "reissueBody": "The current code stops working right away: the technician will need the new one to sign in.",
+    "revokeTitle": "Revoke the code?",
+    "revokeBody": "The technician cannot sign in with a code until you issue a new one."
   },
   "panel": {
     "title": "What {{name}} can do",
@@ -263,5 +277,27 @@
   "validationShort": {
     "corporate": "Credential",
     "personal_code": "Personal code"
+  },
+  "feedback": {
+    "roleChanged": "{{name}} is now {{role}}",
+    "shiftChanged": "{{name}}'s shift updated",
+    "deactivateTitle": "Deactivate {{name}}?",
+    "deactivateBody": "They cannot sign in until you reactivate them. Their records stay under their name.",
+    "deactivated": "{{name}} is deactivated",
+    "activated": "{{name}} has access again",
+    "revokeTitle": "Remove {{name}} from the company?",
+    "revokeBody": "They can no longer sign in and leave this list. Their readings, signatures and conclusions stay under their name.",
+    "revoked": "{{name}} no longer has access to the company",
+    "invited": "{{email}} now has access",
+    "saved": "{{name}}'s details saved",
+    "savedWithPassword": "{{name}}'s details saved with the new password: hand it over in person"
+  },
+  "created": {
+    "title": "User created",
+    "hint": "Hand these over in person: they are not e-mailed. The password can be changed later.",
+    "copy": "Copy details",
+    "copied": "Details copied",
+    "copyFailed": "Could not copy: write them down",
+    "done": "Done"
   }
 }

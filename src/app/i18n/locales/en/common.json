@@ -104,5 +104,14 @@
     "archiving": "Archiving…",
     "since": "From",
     "until": "To"
+  },
+  "feedback": {
+    "confirm": "Confirm",
+    "cannotUndo": "This cannot be undone.",
+    "dismiss": "Dismiss",
+    "saved": "Changes saved",
+    "deleted": "Deleted",
+    "failed": "The action could not be completed",
+    "undo": "Undo"
   }
 }

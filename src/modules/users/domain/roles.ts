@@ -29,6 +29,8 @@ export interface CompanyUser {
   id: number;
   email: string;
   full_name: string;
+  first_name: string;
+  last_name: string;
   initials: string;
   role: string;
   role_name: string;

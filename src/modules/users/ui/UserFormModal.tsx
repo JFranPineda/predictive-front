@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useToast } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -10,6 +11,14 @@ import { useCreateUserMutation, useRolesQuery } from '../infrastructure/endpoint
 import { RoleSummary, useRoleLabel } from './RoleSummary';
 
 const MIN_PASSWORD = 10;
+// No 0/O, 1/l/I: the password is read aloud or copied from a screen.
+const PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+
+/** Twelve characters from the browser's CSPRNG — strong, and readable. */
+export function generatePassword(length = 12): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
+  return Array.from(bytes, (byte) => PASSWORD_ALPHABET[byte % PASSWORD_ALPHABET.length]).join('');
+}
 
 /**
  * Brings a person into the company.
@@ -23,7 +32,12 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
   const roles = useRolesQuery();
   const [create, { isLoading }] = useCreateUserMutation();
   const roleLabel = useRoleLabel();
+  const toast = useToast();
   const [error, setError] = useState<string | null>(null);
+  const [reveal, setReveal] = useState(false);
+  // After creating, the credentials stay on screen once, to be handed over:
+  // they are never e-mailed.
+  const [created, setCreated] = useState<{ email: string; password: string; field: boolean } | null>(null);
   const [draft, setDraft] = useState({
     email: '',
     first_name: '',
@@ -35,8 +49,10 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
   });
 
   const available = roles.data?.roles ?? [];
+  // No role is preselected: the first one in the list was whatever sorted
+  // first — an administrator, one careless click away.
   const chosen: RolePermissions | undefined = useMemo(
-    () => available.find((role) => role.code === draft.role) ?? available[0],
+    () => available.find((role) => role.code === draft.role),
     [available, draft.role],
   );
   const field = chosen ? isFieldRole(chosen.base_role) : false;
@@ -47,11 +63,14 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
     setError(null);
     try {
       await create({ ...draft, role: chosen.code, shift: field ? draft.shift : '' }).unwrap();
-      onClose();
+      toast.success(t('feedback.invited', { email: draft.email }));
+      setCreated({ email: draft.email, password: draft.password, field });
     } catch (cause) {
       setError(readUserError(cause) ?? t('form.genericError'));
     }
   }
+
+  if (created) return <Created credentials={created} onClose={onClose} />;
 
   return (
     <Modal
@@ -91,6 +110,7 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
             value={chosen?.code ?? ''}
             onChange={(event) => setDraft({ ...draft, role: event.target.value })}
           >
+            <option value="">{t('form.pickRole')}</option>
             {available.map((role) => (
               <option key={role.code} value={role.code}>
                 {roleLabel(role)}
@@ -127,11 +147,27 @@ export function UserFormModal({ onClose }: { onClose: () => void }) {
           hint={t('form.passwordHint', { count: MIN_PASSWORD })}
           error={passwordTooShort ? t('form.passwordShort', { count: MIN_PASSWORD }) : undefined}
         >
-          <TextInput
-            type="password"
-            value={draft.password}
-            onChange={(event) => setDraft({ ...draft, password: event.target.value })}
-          />
+          <div className="flex gap-2">
+            <TextInput
+              type={reveal ? 'text' : 'password'}
+              value={draft.password}
+              autoComplete="new-password"
+              onChange={(event) => setDraft({ ...draft, password: event.target.value })}
+              className="font-mono"
+            />
+            <Button type="button" onClick={() => setReveal(!reveal)}>
+              {reveal ? t('form.hide') : t('form.show')}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setDraft({ ...draft, password: generatePassword() });
+                setReveal(true);
+              }}
+            >
+              {t('form.generate')}
+            </Button>
+          </div>
         </FormField>
 
         {field && (
@@ -174,4 +210,49 @@ export function readUserError(cause: unknown): string | null {
   }
   if (typeof data === 'string') return data;
   return null;
+}
+
+/** What the administrator hands to the new person, shown once. */
+function Created({
+  credentials,
+  onClose,
+}: {
+  credentials: { email: string; password: string; field: boolean };
+  onClose: () => void;
+}) {
+  const { t } = useTranslation(['users', 'common']);
+  const toast = useToast();
+  const text = `${credentials.email}\n${credentials.password}`;
+  return (
+    <Modal
+      title={t('created.title')}
+      description={t('created.hint')}
+      onClose={onClose}
+      footer={
+        <>
+          <Button
+            onClick={() =>
+              void navigator.clipboard
+                .writeText(text)
+                .then(() => toast.success(t('created.copied')))
+                .catch(() => toast.error(t('created.copyFailed')))
+            }
+          >
+            {t('created.copy')}
+          </Button>
+          <Button variant="primary" onClick={onClose}>
+            {t('created.done')}
+          </Button>
+        </>
+      }
+    >
+      <dl className="grid grid-cols-[8rem_1fr] gap-y-2 rounded-lg bg-slate-50 p-4 text-sm dark:bg-slate-800">
+        <dt className="text-slate-500">{t('form.email')}</dt>
+        <dd className="font-mono">{credentials.email}</dd>
+        <dt className="text-slate-500">{t('form.password')}</dt>
+        <dd className="font-mono">{credentials.password}</dd>
+      </dl>
+      {credentials.field && <p className="text-sm text-sky-800 dark:text-sky-200">{t('form.codeNotice')}</p>}
+    </Modal>
+  );
 }

@@ -104,5 +104,14 @@
     "archiving": "Archivando…",
     "since": "Desde",
     "until": "Hasta"
+  },
+  "feedback": {
+    "confirm": "Confirmar",
+    "cannotUndo": "Esta acción no se puede deshacer.",
+    "dismiss": "Cerrar aviso",
+    "saved": "Cambios guardados",
+    "deleted": "Eliminado",
+    "failed": "No se pudo completar la acción",
+    "undo": "Deshacer"
   }
 }

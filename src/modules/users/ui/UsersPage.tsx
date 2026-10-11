@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@app/hooks';
 import { formatDate } from '@app/i18n/format';
 import { useTableFilter, type FilterSpec } from '@shared/hooks/useTableFilter';
+import { useConfirm, useToast } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
@@ -53,18 +54,54 @@ export default function UsersPage() {
   const roleLabel = useRoleLabel();
   const [updateUser, updating] = useUpdateUserMutation();
   const [removeUser] = useRemoveUserMutation();
-  const [error, setError] = useState<string | null>(null);
+  const confirm = useConfirm();
+  const toast = useToast();
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<CompanyUser | null>(null);
   const [inspecting, setInspecting] = useState<CompanyUser | null>(null);
 
-  async function run(action: () => Promise<unknown>) {
-    setError(null);
+  async function run(action: () => Promise<unknown>, done?: string, undo?: () => Promise<unknown>) {
     try {
       await action();
+      if (done) toast.success(done, undo ? { label: t('common:feedback.undo'), run: () => void run(undo) } : undefined);
     } catch (cause) {
-      setError(readUserError(cause) ?? t('form.genericError'));
+      toast.error(readUserError(cause) ?? t('form.genericError'));
     }
+  }
+
+  async function changeRole(row: CompanyUser, code: string) {
+    const next = roleByCode.get(code);
+    await run(
+      () => updateUser({ id: row.id, role: code }).unwrap(),
+      t('feedback.roleChanged', { name: row.full_name, role: next ? roleLabel(next) : code }),
+      () => updateUser({ id: row.id, role: row.role }).unwrap(),
+    );
+  }
+
+  async function toggleActive(row: CompanyUser) {
+    if (row.is_active) {
+      const ok = await confirm({
+        title: t('feedback.deactivateTitle', { name: row.full_name }),
+        body: t('feedback.deactivateBody'),
+        confirmLabel: t('action.deactivate'),
+        tone: 'primary',
+      });
+      if (!ok) return;
+    }
+    await run(
+      () => updateUser({ id: row.id, is_active: !row.is_active }).unwrap(),
+      t(row.is_active ? 'feedback.deactivated' : 'feedback.activated', { name: row.full_name }),
+      () => updateUser({ id: row.id, is_active: row.is_active }).unwrap(),
+    );
+  }
+
+  async function revoke(row: CompanyUser) {
+    const ok = await confirm({
+      title: t('feedback.revokeTitle', { name: row.full_name }),
+      body: t('feedback.revokeBody'),
+      confirmLabel: t('action.revoke'),
+    });
+    if (ok) await run(() => removeUser(row.id).unwrap(), t('feedback.revoked', { name: row.full_name }));
   }
 
   const loaded = data ?? [];
@@ -131,9 +168,7 @@ export default function UsersPage() {
             <select
               value={row.role}
               disabled={updating.isLoading}
-              onChange={(event) =>
-                void run(() => updateUser({ id: row.id, role: event.target.value }).unwrap())
-              }
+              onChange={(event) => void changeRole(row, event.target.value)}
               className="max-w-52 rounded-lg border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800"
             >
               {catalogue.map((role) => (
@@ -182,7 +217,10 @@ export default function UsersPage() {
           <select
             value={row.shift}
             onChange={(event) =>
-              void run(() => updateUser({ id: row.id, shift: event.target.value }).unwrap())
+              void run(
+                () => updateUser({ id: row.id, shift: event.target.value }).unwrap(),
+                t('feedback.shiftChanged', { name: row.full_name }),
+              )
             }
             className="rounded-lg border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800"
           >
@@ -211,7 +249,7 @@ export default function UsersPage() {
         return (
           <button
             disabled={updating.isLoading}
-            onClick={() => void run(() => updateUser({ id: row.id, is_active: !row.is_active }).unwrap())}
+            onClick={() => void toggleActive(row)}
             className="rounded-lg border border-slate-200 px-2 py-1 text-xs font-medium hover:bg-slate-100 disabled:opacity-40 dark:border-slate-700 dark:hover:bg-slate-800"
           >
             {t(row.is_active ? 'action.deactivate' : 'action.activate')}
@@ -237,7 +275,7 @@ export default function UsersPage() {
               <button
                 disabled={row.id === currentUserId}
                 title={t('action.revokeHint')}
-                onClick={() => void run(() => removeUser(row.id).unwrap())}
+                onClick={() => void revoke(row)}
                 className="text-xs font-medium text-red-600 disabled:cursor-not-allowed disabled:text-slate-400"
               >
                 {t('action.revoke')}
@@ -255,7 +293,6 @@ export default function UsersPage() {
 
   return (
     <Page>
-      {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       <PageHeader
         title={t('title')}
         description={t('subtitle')}
@@ -290,22 +327,6 @@ export default function UsersPage() {
             />
           </MetricRow>
 
-          <Card title={t('profiles.title')} description={t('profiles.hint')}>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {shown.map((role) => (
-                <ProfileCard
-                  key={role.code}
-                  role={role}
-                  members={loaded.filter((row) => row.role === role.code)}
-                  active={table.active.role === role.code}
-                  onPick={() =>
-                    table.setFilter('role', table.active.role === role.code ? '' : role.code)
-                  }
-                />
-              ))}
-            </div>
-          </Card>
-
           <Card
             title={t('table.title')}
             description={canManage ? t('table.hintManage') : t('table.hintRead')}
@@ -335,6 +356,22 @@ export default function UsersPage() {
               rowKey={(row) => row.id}
               empty={<div className="p-6"><EmptyState title={t('empty')} /></div>}
             />
+          </Card>
+
+          <Card title={t('profiles.title')} description={t('profiles.hint')}>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {shown.map((role) => (
+                <ProfileCard
+                  key={role.code}
+                  role={role}
+                  members={loaded.filter((row) => row.role === role.code)}
+                  active={table.active.role === role.code}
+                  onPick={() =>
+                    table.setFilter('role', table.active.role === role.code ? '' : role.code)
+                  }
+                />
+              ))}
+            </div>
           </Card>
         </>
       )}

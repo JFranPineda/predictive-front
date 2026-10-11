@@ -74,7 +74,11 @@
     "externalNotice": "Un inspector externo verá los equipos pero solo podrá editar las visitas que él mismo ejecute, y solo mientras estén abiertas.",
     "shift": "Turno",
     "shiftHint": "Uno de los tres relevos de 8 horas",
-    "codeNotice": "Tras crearlo, emite su código único desde «Editar»: es con lo que entrará en planta."
+    "codeNotice": "Tras crearlo, emite su código único desde «Editar»: es con lo que entrará en planta.",
+    "pickRole": "— Elige un rol —",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "generate": "Generar"
   },
   "roles": {
     "title": "Permisos",
@@ -105,7 +109,13 @@
     "pending_one": "{{count}} cambio sin guardar en este rol",
     "pending_other": "{{count}} cambios sin guardar en este rol",
     "discard": "Descartar",
-    "leaveUnsaved": "Hay cambios sin guardar en este rol. ¿Descartarlos y abrir el otro?"
+    "leaveUnsaved": "Hay cambios sin guardar en este rol. ¿Descartarlos y abrir el otro?",
+    "leaveUnsavedTitle": "Hay cambios sin guardar",
+    "deleteTitle": "¿Eliminar el rol «{{name}}»?",
+    "deleted": "Rol «{{name}}» eliminado",
+    "created": "Rol «{{name}}» creado: marca ahora sus permisos",
+    "savedToast": "Permisos guardados",
+    "baseChanged": "Comportamiento del rol actualizado"
   },
   "edit": {
     "title": "Editar a {{name}}",
@@ -179,7 +189,11 @@
     "hint": "El técnico entra con este código en vez de correo y contraseña. Emitir uno nuevo invalida el anterior.",
     "issue": "Emitir código",
     "reissue": "Emitir código nuevo",
-    "revoke": "Revocar"
+    "revoke": "Revocar",
+    "reissueTitle": "¿Emitir un código nuevo?",
+    "reissueBody": "El código actual deja de funcionar en ese momento: el técnico necesitará el nuevo para entrar.",
+    "revokeTitle": "¿Revocar el código?",
+    "revokeBody": "El técnico no podrá entrar con código hasta que emitas uno nuevo."
   },
   "panel": {
     "title": "Qué puede hacer {{name}}",
@@ -263,5 +277,27 @@
   "validationShort": {
     "corporate": "Credencial",
     "personal_code": "Código único"
+  },
+  "feedback": {
+    "roleChanged": "{{name}} ahora es {{role}}",
+    "shiftChanged": "Turno de {{name}} actualizado",
+    "deactivateTitle": "¿Desactivar a {{name}}?",
+    "deactivateBody": "No podrá entrar hasta que lo reactives. Sus registros siguen a su nombre.",
+    "deactivated": "{{name}} quedó desactivado",
+    "activated": "{{name}} vuelve a tener acceso",
+    "revokeTitle": "¿Quitar a {{name}} de la empresa?",
+    "revokeBody": "Deja de poder entrar y desaparece de esta lista. Sus lecturas, firmas y conclusiones siguen a su nombre.",
+    "revoked": "{{name}} ya no tiene acceso a la empresa",
+    "invited": "{{email}} ya tiene acceso",
+    "saved": "Datos de {{name}} guardados",
+    "savedWithPassword": "Datos de {{name}} guardados, con la contraseña nueva: entrégasela en persona"
+  },
+  "created": {
+    "title": "Usuario creado",
+    "hint": "Entrégale estos datos en persona: no se envían por correo. Podrá cambiar la contraseña después.",
+    "copy": "Copiar datos",
+    "copied": "Datos copiados",
+    "copyFailed": "No se pudo copiar: anótalos a mano",
+    "done": "Listo"
   }
 }
