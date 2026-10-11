@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
 import { useTechniquesQuery, useUnitsQuery } from '@modules/thresholds';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { DataTable, type Column } from '@shared/ui/DataTable';
@@ -37,6 +38,7 @@ const EMPTY = {
  * trend until somebody can change the flag.
  */
 export default function OperatingParametersPage() {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['operating_data', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('operating_data.add');
@@ -110,7 +112,7 @@ export default function OperatingParametersPage() {
       render: (row) =>
         canManage ? (
           <button
-            onClick={() => void run(() => remove(row.id).unwrap())}
+            onClick={() => void confirmDelete(row.name).then((ok) => { if (ok) void run(() => remove(row.id).unwrap()); })}
             className="text-xs text-red-600"
           >
             {t('common:action.delete')}

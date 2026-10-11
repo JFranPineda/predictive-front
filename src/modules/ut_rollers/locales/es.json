@@ -145,7 +145,8 @@
     "active": "En servicio",
     "retired": "Retirado",
     "retire": "Retirar",
-    "restore": "Volver a servicio"
+    "restore": "Volver a servicio",
+    "rollerLabel": "el rodillo {{number}}"
   },
   "explain": {
     "title": "¿Qué se registra aquí?",

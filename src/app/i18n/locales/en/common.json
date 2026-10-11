@@ -115,7 +115,12 @@
     "saved": "Changes saved",
     "deleted": "Deleted",
     "failed": "The action could not be completed",
-    "undo": "Undo"
+    "undo": "Undo",
+    "deleteTitle": "Delete {{what}}?",
+    "thisPhoto": "this photo",
+    "thisEntry": "this note",
+    "thisFinding": "this finding",
+    "thisPlan": "the drawing"
   },
   "crash": {
     "title": "This screen ran into a problem",

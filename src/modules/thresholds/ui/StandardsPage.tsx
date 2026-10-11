@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -18,6 +19,7 @@ import { StandardFormModal } from './StandardFormModal';
 import { StandardScale } from './StandardScale';
 
 export default function StandardsPage() {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['thresholds', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('thresholds.manage_standard');
@@ -90,7 +92,7 @@ export default function StandardsPage() {
                         {!standard.is_builtin && standard.set_count === 0 && (
                           <Button
                             variant="danger"
-                            onClick={() => void deleteStandard(standard.id)}
+                            onClick={() => void confirmDelete(standard.name).then((ok) => { if (ok) void deleteStandard(standard.id); })}
                           >
                             {t('common:action.delete')}
                           </Button>

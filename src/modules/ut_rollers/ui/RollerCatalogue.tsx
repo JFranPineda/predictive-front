@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAreasQuery } from '@modules/assets';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -138,6 +139,7 @@ function NewGroup({ onCreated }: { onCreated: (id: number) => void }) {
 }
 
 function GroupRollers({ group, canManage }: { group: RollerGroup; canManage: boolean }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['ut_rollers', 'common']);
   const rollers = useRollersQuery(group.id);
   const [rename] = useRenameRollerGroupMutation();
@@ -176,7 +178,7 @@ function GroupRollers({ group, canManage }: { group: RollerGroup; canManage: boo
                 {t('catalogue.rename')}
               </Button>
               {rows.length === 0 && (
-                <Button variant="danger" onClick={() => void run(() => removeGroup(group.id).unwrap())}>
+                <Button variant="danger" onClick={() => void confirmDelete(group.name).then((ok) => { if (ok) void run(() => removeGroup(group.id).unwrap()); })}>
                   {t('common:action.delete')}
                 </Button>
               )}
@@ -225,6 +227,7 @@ function RollerRow({
   canManage: boolean;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['ut_rollers', 'common']);
   const [setRetired, retiring] = useSetRollerRetiredMutation();
   const [remove, removing] = useDeleteRollerMutation();
@@ -267,7 +270,7 @@ function RollerRow({
               <Button
                 variant="danger"
                 disabled={removing.isLoading}
-                onClick={() => void run(() => remove(roller.id).unwrap())}
+                onClick={() => void confirmDelete(t('catalogue.rollerLabel', { number: roller.number })).then((ok) => { if (ok) void run(() => remove(roller.id).unwrap()); })}
               >
                 {t('common:action.delete')}
               </Button>

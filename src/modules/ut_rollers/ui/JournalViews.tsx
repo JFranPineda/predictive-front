@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { FormField, Select, TextArea, TextInput } from '@shared/ui/Form';
@@ -238,6 +239,7 @@ function SideTable({
 }
 
 function Findings({ row, order, side, canEdit }: { row: JournalRow; order: number; side: Side; canEdit: boolean }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['ut_rollers', 'common']);
   const [create, creating] = useCreateIndicationMutation();
   const [remove] = useDeleteIndicationMutation();
@@ -275,7 +277,7 @@ function Findings({ row, order, side, canEdit }: { row: JournalRow; order: numbe
               <strong className="text-red-600">{t(`indication.kind.${finding.kind}`)}</strong> · {finding.description}
             </span>
             {canEdit && (
-              <button onClick={() => void remove(finding.id)} className="text-xs text-red-600">
+              <button onClick={() => void confirmDelete(t('common:feedback.thisFinding')).then((ok) => { if (ok) void remove(finding.id); })} className="text-xs text-red-600">
                 {t('common:action.delete')}
               </button>
             )}
@@ -370,6 +372,7 @@ export function ResultsSummary({ order }: { order: number }) {
 
 /** What the report says about the group (Q15): conclusions, recommendations, plan and photos. */
 export function GroupReportCard({ order, group, canEdit }: { order: number; group: number; canEdit: boolean }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['ut_rollers', 'common']);
   const { data } = useGroupReportQuery({ order, group });
   const [save, saving] = useSaveGroupReportMutation();
@@ -448,7 +451,7 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
               <img src={data.plan.url} alt={t('report.plan')} className="max-h-[28rem] w-full rounded-lg object-contain ring-1 ring-slate-200 dark:ring-slate-700" />
             </a>
             {editable && (
-              <Button variant="ghost" onClick={() => void remove({ order, group, asset: data.plan!.id })}>
+              <Button variant="ghost" onClick={() => void confirmDelete(t('common:feedback.thisPlan')).then((ok) => { if (ok) void remove({ order, group, asset: data.plan!.id }); })}>
                 {t('report.removePlan')}
               </Button>
             )}
@@ -463,7 +466,7 @@ export function GroupReportCard({ order, group, canEdit }: { order: number; grou
       <Card title={t('report.photos')} description={t('report.photosHint')}>
         <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {data.photos.map((photo) => (
-            <Photo key={photo.id} photo={photo} canEdit={editable} onRemove={() => void remove({ order, group, asset: photo.id })} />
+            <Photo key={photo.id} photo={photo} canEdit={editable} onRemove={() => void confirmDelete(t('common:feedback.thisPhoto')).then((ok) => { if (ok) void remove({ order, group, asset: photo.id }); })} />
           ))}
         </div>
         {editable && (

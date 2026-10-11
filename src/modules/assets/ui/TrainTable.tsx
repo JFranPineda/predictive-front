@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { StatusBadge } from '@shared/ui/StatusBadge';
 
 import { overdueDays } from '../domain/status';
@@ -25,6 +26,7 @@ export function TrainTable({
   canManage: boolean;
   onEdit: (equipment: Equipment) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const [open, setOpen] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +45,7 @@ export function TrainTable({
 
   async function remove(equipment: Equipment) {
     setError(null);
+    if (!(await confirmDelete(equipment.name, t('assets:structure.deleteHint')))) return;
     try {
       // The server deactivates anything with readings behind it rather than
       // destroying it, and says so in the response.

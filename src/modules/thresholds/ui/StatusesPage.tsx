@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -99,6 +100,7 @@ function StatusRow({
   canManage: boolean;
   onEdit: (status: ConditionStatus) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['thresholds', 'common']);
   const [updateStatus, updating] = useUpdateStatusMutation();
   const [removeStatus] = useDeleteStatusMutation();
@@ -158,7 +160,7 @@ function StatusRow({
           <button onClick={() => onEdit(status)} className="text-xs text-sky-600">
             {t('common:action.edit')}
           </button>
-          <button onClick={() => void remove()} className="text-xs text-red-600">
+          <button onClick={() => void confirmDelete(status.name).then((ok) => { if (ok) void remove(); })} className="text-xs text-red-600">
             {t('common:action.delete')}
           </button>
         </span>

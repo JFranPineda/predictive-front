@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -37,6 +38,7 @@ const EMPTY = {
  * anybody can defend in front of the customer.
  */
 export default function InstrumentsPage() {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['measurements', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('thresholds.manage_set');
@@ -109,7 +111,7 @@ export default function InstrumentsPage() {
       render: (row) =>
         canManage ? (
           <button
-            onClick={() => void run(() => remove(row.id).unwrap())}
+            onClick={() => void confirmDelete(row.name).then((ok) => { if (ok) void run(() => remove(row.id).unwrap()); })}
             className="text-xs text-red-600"
           >
             {t('common:action.delete')}

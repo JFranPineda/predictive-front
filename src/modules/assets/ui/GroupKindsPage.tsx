@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAppSelector, useInstalled } from '@app/hooks';
 import { useMagnitudesQuery } from '@modules/thresholds';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -27,6 +28,7 @@ import { KindFormModal } from './KindFormModal';
  * generic points somebody has to rename by hand.
  */
 export default function GroupKindsPage() {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('assets.manage_equipment');
@@ -100,6 +102,7 @@ export default function GroupKindsPage() {
                         variant="danger"
                         onClick={() => void (async () => {
                           setError(null);
+                          if (!(await confirmDelete(kind.name))) return;
                           try {
                             await remove(kind.id).unwrap();
                           } catch (cause) {

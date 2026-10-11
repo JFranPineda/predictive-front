@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatDate } from '@app/i18n/format';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -214,6 +215,7 @@ function SurveyImage({
   image: Image | null;
   canEdit: boolean;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['topography', 'common']);
   const [upload, { isLoading }] = useUploadSurveyImageMutation();
   const [remove] = useRemoveSurveyImageMutation();
@@ -236,7 +238,7 @@ function SurveyImage({
       <div className="mb-2 flex items-center justify-between gap-2">
         <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{t(`survey.image.${role}`)}</span>
         {image && canEdit && (
-          <button type="button" className="text-xs text-red-600 hover:underline" onClick={() => void remove({ visitId, role })}>
+          <button type="button" className="text-xs text-red-600 hover:underline" onClick={() => void confirmDelete(t('common:feedback.thisPhoto')).then((ok) => { if (ok) void remove({ visitId, role }); })}>
             {t('photo.remove')}
           </button>
         )}
@@ -268,6 +270,7 @@ function RollerSheet({
   main: string;
   canEdit: boolean;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['topography', 'common']);
   const [update] = useUpdateTopographyElementMutation();
   const [remove] = useDeleteTopographyElementMutation();
@@ -294,7 +297,7 @@ function RollerSheet({
             {t('column.history')}
           </Button>
           {canEdit && (
-            <Button variant="ghost" onClick={() => void remove({ id: row.id, visitId })}>
+            <Button variant="ghost" onClick={() => void confirmDelete(row.element_label).then((ok) => { if (ok) void remove({ id: row.id, visitId }); })}>
               {t('form.remove')}
             </Button>
           )}
@@ -362,6 +365,7 @@ function BoxCell({
   canEdit: boolean;
   onSave: (value: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['topography', 'common']);
   const [upload, { isLoading }] = useUploadBoxPhotoMutation();
   const [remove] = useRemoveBoxPhotoMutation();
@@ -405,7 +409,7 @@ function BoxCell({
               <button
                 type="button"
                 aria-label={t('photo.remove')}
-                onClick={() => void remove({ id: row.id, visitId, box })}
+                onClick={() => void confirmDelete(t('common:feedback.thisPhoto')).then((ok) => { if (ok) void remove({ id: row.id, visitId, box }); })}
                 className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white"
               >
                 ✕

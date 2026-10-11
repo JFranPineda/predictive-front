@@ -9,6 +9,7 @@ import { formatDateTime } from '@app/i18n/format';
 import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
 import { useCompanyUsersQuery } from '@modules/users';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card, Field } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -497,6 +498,7 @@ function DiaryText({
   canEdit: boolean;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['services', 'common']);
   const [update] = useUpdateLogEntryMutation();
   const [remove] = useDeleteLogEntryMutation();
@@ -549,7 +551,7 @@ function DiaryText({
             {t('common:action.edit')}
           </button>
           <button
-            onClick={() => void run(() => remove({ id: entry.id, visitId }).unwrap())}
+            onClick={() => void confirmDelete(t('common:feedback.thisEntry')).then((ok) => { if (ok) void run(() => remove({ id: entry.id, visitId }).unwrap()); })}
             className="text-xs text-red-600"
           >
             {t('common:action.delete')}

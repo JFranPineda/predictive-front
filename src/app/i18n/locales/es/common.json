@@ -115,7 +115,12 @@
     "saved": "Cambios guardados",
     "deleted": "Eliminado",
     "failed": "No se pudo completar la acción",
-    "undo": "Deshacer"
+    "undo": "Deshacer",
+    "deleteTitle": "¿Eliminar {{what}}?",
+    "thisPhoto": "esta foto",
+    "thisEntry": "esta anotación",
+    "thisFinding": "esta indicación",
+    "thisPlan": "el plano"
   },
   "crash": {
     "title": "Esta pantalla tuvo un problema",

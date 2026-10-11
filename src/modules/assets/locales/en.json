@@ -71,7 +71,8 @@
     "noSectors": "Create a sector first",
     "pointCount": "{{count}} points",
     "editPoints": "Points",
-    "kindHint": "Sets the point template that will be applied"
+    "kindHint": "Sets the point template that will be applied",
+    "deleteHint": "If it holds anything or has history, it is deactivated instead of deleted, and its reports stay complete."
   },
   "type": {
     "motor": "Motor",

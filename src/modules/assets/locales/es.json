@@ -71,7 +71,8 @@
     "noSectors": "Crea primero un sector",
     "pointCount": "{{count}} puntos",
     "editPoints": "Puntos",
-    "kindHint": "Define la plantilla de puntos que se aplicará"
+    "kindHint": "Define la plantilla de puntos que se aplicará",
+    "deleteHint": "Si tiene contenido o historial, queda desactivado en lugar de borrarse, y sus informes siguen completos."
   },
   "type": {
     "motor": "Motor",

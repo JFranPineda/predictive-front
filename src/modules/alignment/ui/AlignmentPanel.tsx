@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useStandardsQuery } from '@modules/thresholds';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -511,6 +512,7 @@ function Images({ record, canEdit }: { record: AlignmentRecord; canEdit: boolean
 }
 
 function PhotoSlot({ record, kind, canEdit }: { record: AlignmentRecord; kind: PhotoKind; canEdit: boolean }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['alignment', 'common']);
   const [upload, { isLoading }] = useUploadAlignmentPhotoMutation();
   const [remove] = useDeleteAlignmentPhotoMutation();
@@ -556,7 +558,7 @@ function PhotoSlot({ record, kind, canEdit }: { record: AlignmentRecord; kind: P
               <button
                 type="button"
                 aria-label={t('photos.remove')}
-                onClick={() => void remove({ recordId: record.id, photoId: photo.id })}
+                onClick={() => void confirmDelete(t('common:feedback.thisPhoto')).then((ok) => { if (ok) void remove({ recordId: record.id, photoId: photo.id }); })}
                 className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white shadow"
               >
                 ✕

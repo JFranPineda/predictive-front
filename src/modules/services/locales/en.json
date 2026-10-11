@@ -175,5 +175,8 @@
   "card": {
     "group": "Train",
     "equipment": "Equipment"
+  },
+  "authorship": {
+    "thisVisit": "this visit"
   }
 }

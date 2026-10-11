@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -32,6 +33,7 @@ export function GroupPointsModal({
   groupName: string;
   onClose: () => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const { data, isLoading } = useGroupPointsQuery(groupId);
   const [applyTemplate, applying] = useApplyPointTemplateMutation();
@@ -124,7 +126,7 @@ export function GroupPointsModal({
                           </span>
                         )}
                         <button
-                          onClick={() => void run(() => deletePoint(point.id).unwrap())}
+                          onClick={() => void confirmDelete(point.label).then((ok) => { if (ok) void run(() => deletePoint(point.id).unwrap()); })}
                           className="text-slate-400 hover:text-red-600"
                           aria-label={t('common:action.delete')}
                         >

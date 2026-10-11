@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
 import { formatDateTime } from '@app/i18n/format';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -95,6 +96,7 @@ function VisitCard({
   currentUserId: number;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['services', 'common']);
   const [updateVisit] = useUpdateVisitMutation();
   const [deleteVisit] = useDeleteVisitMutation();
@@ -194,7 +196,7 @@ function VisitCard({
             </button>
             {visit.reading_count === 0 && (
               <button
-                onClick={() => void run(() => deleteVisit(visit.visit_id).unwrap())}
+                onClick={() => void confirmDelete(t('authorship.thisVisit')).then((ok) => { if (ok) void run(() => deleteVisit(visit.visit_id).unwrap()); })}
                 className="font-medium text-red-600"
               >
                 {t('common:action.delete')}

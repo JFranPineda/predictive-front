@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { readError } from '@shared/lib/apiError';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -40,6 +41,7 @@ const AGGREGATIONS = ['rms', 'peak', 'peak_to_peak', 'avg', 'max', 'min'] as con
  * magnitude together, in the order its tables appear in the record.
  */
 export default function MagnitudesPage() {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['thresholds', 'common']);
   const permissions = useAppSelector((state) => state.session.permissions);
   const canManage = permissions.includes('thresholds.manage_set');
@@ -108,7 +110,7 @@ export default function MagnitudesPage() {
             <button
               disabled={Boolean(row.magnitude_count)}
               title={row.magnitude_count ? t('units.inUse') : undefined}
-              onClick={() => void removeUnit(row)}
+              onClick={() => void confirmDelete(row.code).then((ok) => { if (ok) void removeUnit(row); })}
               className="text-xs text-red-600 disabled:cursor-not-allowed disabled:text-slate-400"
             >
               {t('common:action.delete')}

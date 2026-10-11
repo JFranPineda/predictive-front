@@ -145,7 +145,8 @@
     "active": "In service",
     "retired": "Retired",
     "retire": "Retire",
-    "restore": "Back in service"
+    "restore": "Back in service",
+    "rollerLabel": "roller {{number}}"
   },
   "explain": {
     "title": "What is recorded here?",

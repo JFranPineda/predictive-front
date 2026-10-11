@@ -164,3 +164,10 @@ export function useToast() {
     info: (text: string) => toast('info', text),
   };
 }
+
+/** The confirmation every delete button asks: `if (await confirmDelete(name))`. */
+export function useConfirmDelete(): (what: string, body?: string) => Promise<boolean> {
+  const confirm = useConfirm();
+  const { t } = useTranslation('common');
+  return (what, body) => confirm({ title: t('feedback.deleteTitle', { what }), body, confirmLabel: t('action.delete') });
+}

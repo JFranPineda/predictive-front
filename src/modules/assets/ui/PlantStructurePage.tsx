@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '@app/hooks';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -315,6 +316,7 @@ function AreaRow({
   canManage: boolean;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const [remove] = useDeleteAreaMutation();
   const [rename] = useUpdateAreaMutation();
@@ -335,6 +337,7 @@ function AreaRow({
           variant="ghost"
           onClick={() => void (async () => {
             onError(null);
+            if (!(await confirmDelete(area.name, t('assets:structure.deleteHint')))) return;
             try {
               await remove(area.id).unwrap();
             } catch (cause) {
@@ -365,6 +368,7 @@ function GroupRow({
   canManage: boolean;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const [remove] = useDeleteAssetGroupMutation();
   const [rename] = useUpdateAssetGroupMutation();
@@ -401,6 +405,7 @@ function GroupRow({
           variant="ghost"
           onClick={() => void (async () => {
             onError(null);
+            if (!(await confirmDelete(group.name, t('assets:structure.deleteHint')))) return;
             try {
               await remove(group.id).unwrap();
             } catch (cause) {
@@ -514,12 +519,14 @@ function PlantRow({
   canManage: boolean;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const [rename] = useUpdatePlantMutation();
   const [remove] = useDeletePlantMutation();
 
   async function removePlant() {
     onError(null);
+    if (!(await confirmDelete(plant.name, t('assets:structure.deleteHint')))) return;
     try {
       await remove(plant.id).unwrap();
     } catch (cause) {
@@ -559,12 +566,14 @@ function SectorRow({
   canManage: boolean;
   onError: (message: string | null) => void;
 }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['assets', 'common']);
   const [rename] = useUpdateSectorMutation();
   const [remove] = useDeleteSectorMutation();
 
   async function removeSector() {
     onError(null);
+    if (!(await confirmDelete(sector.name, t('assets:structure.deleteHint')))) return;
     try {
       await remove(sector.id).unwrap();
     } catch (cause) {

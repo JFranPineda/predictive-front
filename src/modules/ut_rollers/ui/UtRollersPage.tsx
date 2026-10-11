@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { usePermissions } from '@app/hooks';
 import { MediaGallery } from '@modules/media';
 import { useServiceOrdersQuery } from '@modules/services';
+import { useConfirmDelete } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
@@ -435,6 +436,7 @@ function RowView({
 }
 
 function Indications({ equipmentId, canEdit }: { equipmentId: number; canEdit: boolean }) {
+  const confirmDelete = useConfirmDelete();
   const { t } = useTranslation(['ut_rollers', 'common']);
   const { data } = useIndicationsQuery({ equipment: equipmentId });
   const [create, creating] = useCreateIndicationMutation();
@@ -472,7 +474,7 @@ function Indications({ equipmentId, canEdit }: { equipmentId: number; canEdit: b
               </span>
             </p>
             {canEdit && (
-              <button onClick={() => void remove(row.id)} className="text-xs text-red-600">
+              <button onClick={() => void confirmDelete(t('common:feedback.thisFinding')).then((ok) => { if (ok) void remove(row.id); })} className="text-xs text-red-600">
                 {t('common:action.delete')}
               </button>
             )}
