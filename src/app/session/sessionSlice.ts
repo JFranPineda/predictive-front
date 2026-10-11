@@ -40,6 +40,9 @@ interface SessionState {
    * ownership checks need is duplicated here. */
   userId: number | null;
   permissions: string[];
+  /** Codes of the modules this tenant has installed: a screen that borrows a
+   * piece of another module asks before showing it. */
+  installed: string[];
   endedBy: LogoutReason | null;
 }
 
@@ -49,6 +52,7 @@ const initialState: SessionState = {
   companyId: Number(localStorage.getItem('company')) || null,
   userId: null,
   permissions: [],
+  installed: [],
   endedBy: null,
 };
 
@@ -67,9 +71,10 @@ const sessionSlice = createSlice({
       state.companyId = action.payload;
       localStorage.setItem('company', String(action.payload));
     },
-    identityLoaded(state, action: PayloadAction<{ userId: number; permissions: string[] }>) {
+    identityLoaded(state, action: PayloadAction<{ userId: number; permissions: string[]; installed: string[] }>) {
       state.userId = action.payload.userId;
       state.permissions = action.payload.permissions;
+      state.installed = action.payload.installed;
     },
     loggedOut(state, action: PayloadAction<LogoutReason | undefined>) {
       const reason = action.payload ?? 'expired';

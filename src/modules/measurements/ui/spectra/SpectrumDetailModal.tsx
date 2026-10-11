@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useInstalled } from '@app/hooks';
 import { formatDate } from '@app/i18n/format';
 import { useFaultModesQuery } from '@modules/diagnostics';
 import { Button } from '@shared/ui/Button';
@@ -33,7 +34,9 @@ export function SpectrumDetailModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation(['measurements', 'common']);
-  const faults = useFaultModesQuery({ technique: 'vibration' });
+  // The fault list is diagnostics': without it the spectrum still opens.
+  const hasDiagnostics = useInstalled('diagnostics');
+  const faults = useFaultModesQuery({ technique: 'vibration' }, { skip: !hasDiagnostics });
   const [update, updating] = useUpdateSpectrumMutation();
   const [remove, removing] = useDeleteSpectrumMutation();
   const [caption, setCaption] = useState(spectrum.caption);

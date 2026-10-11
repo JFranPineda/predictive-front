@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useInstalled } from '@app/hooks';
 import { usePlantsQuery } from '@modules/assets';
 import { byFamily, useStandardsQuery, useTechniquesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
@@ -29,7 +30,8 @@ export function OrderFormModal({ order, onClose }: { order?: ServiceOrder; onClo
   const techniques = useTechniquesQuery();
   const providers = useServiceProvidersQuery({ active: true });
   const analysts = useAnalystsQuery();
-  const standards = useStandardsQuery();
+  const hasThresholds = useInstalled('thresholds');
+  const standards = useStandardsQuery(undefined, { skip: !hasThresholds });
   const [create, creating] = useCreateServiceOrderMutation();
   const [update, updating] = useUpdateServiceOrderMutation();
   const isLoading = creating.isLoading || updating.isLoading;

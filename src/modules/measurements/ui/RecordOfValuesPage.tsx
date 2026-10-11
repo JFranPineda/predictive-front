@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { usePermissions } from '@app/hooks';
+import { useInstalled, usePermissions } from '@app/hooks';
 import { formatDate } from '@app/i18n/format';
 import { Button } from '@shared/ui/Button';
 import { Select } from '@shared/ui/Form';
@@ -50,6 +50,8 @@ export default function RecordOfValuesPage() {
   // Only asked for when the maintenance module is installed and readable:
   // uninstalling it revokes the permission, and the chart simply has no marks.
   const permissions = usePermissions();
+  const hasMedia = useInstalled('media');
+  const hasNameplate = useInstalled('nameplate');
   const workRecords = useWorkRecordMarkersQuery(group, {
     skip: !permissions.has('maintenance.view'),
   });
@@ -147,7 +149,7 @@ export default function RecordOfValuesPage() {
                 </option>
               ))}
             </Select>
-            {machine && <Button onClick={() => setEditingPlate(true)}>{t('nameplate:open')}</Button>}
+            {machine && hasNameplate && <Button onClick={() => setEditingPlate(true)}>{t('nameplate:open')}</Button>}
             <Button
               disabled={isDownloading}
               onClick={() =>
@@ -171,22 +173,24 @@ export default function RecordOfValuesPage() {
 
       {/* The report opens with the train's schematic and a real photo of it:
           the analyst reads the points against the drawing (V3-14). */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <LatestImagePanel
-          ownerType="group"
-          ownerId={group}
-          kind="schematic"
-          title={t('record.schematic')}
-          emptyHint={t('record.noSchematic')}
-        />
-        <LatestImagePanel
-          ownerType="group"
-          ownerId={group}
-          kind="site_photo"
-          title={t('record.sitePhoto')}
-          emptyHint={t('record.noSitePhoto')}
-        />
-      </div>
+      {hasMedia && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <LatestImagePanel
+            ownerType="group"
+            ownerId={group}
+            kind="schematic"
+            title={t('record.schematic')}
+            emptyHint={t('record.noSchematic')}
+          />
+          <LatestImagePanel
+            ownerType="group"
+            ownerId={group}
+            kind="site_photo"
+            title={t('record.sitePhoto')}
+            emptyHint={t('record.noSitePhoto')}
+          />
+        </div>
+      )}
 
       {data.blocks.length === 0 ? (
         <EmptyState title={t('trend.empty')} body={t('trend.emptyBody')} />

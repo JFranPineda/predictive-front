@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { useVisitSections } from '@app/contributions';
 import type { VisitSectionProps } from '@app/moduleDefinition';
+import { useAppSelector } from '@app/hooks';
 import { formatDateTime } from '@app/i18n/format';
 import { FaultPicker } from '@modules/diagnostics';
 import { captureKindFor, MediaGallery } from '@modules/media';
@@ -33,6 +34,9 @@ import { readServiceError } from './readServiceError';
 
 export default function VisitDetailPage() {
   const { t } = useTranslation(['services', 'media', 'assets']);
+  // Each section borrowed from another module shows only while it is installed.
+  const installed = useAppSelector((state) => state.session.installed);
+  const shows = (section: Section) => !SECTION_OWNER[section] || installed.includes(SECTION_OWNER[section]);
   const { visitId } = useParams();
   const id = Number(visitId);
   const { data, isLoading, isError } = useVisitQuery(id);
@@ -138,7 +142,7 @@ export default function VisitDetailPage() {
       )}
 
       <nav className="flex flex-wrap gap-2 text-sm">
-        {SECTIONS.map((section) => (
+        {SECTIONS.filter(shows).map((section) => (
           <a
             key={section}
             href={`#${section}`}
@@ -394,19 +398,23 @@ export default function VisitDetailPage() {
         </div>
       </div>
 
-      <div id="operating">
-        <OperatingSection visitId={id} canEdit={data.can_edit} />
-      </div>
+      {shows('operating') && (
+        <div id="operating">
+          <OperatingSection visitId={id} canEdit={data.can_edit} />
+        </div>
+      )}
 
-      <div id="faults">
-        <FaultPicker
-          visitId={id}
-          technique={data.technique_code}
-          selected={data.fault_modes}
-          other={data.other_fault}
-          canEdit={data.can_edit}
-        />
-      </div>
+      {shows('faults') && (
+        <div id="faults">
+          <FaultPicker
+            visitId={id}
+            technique={data.technique_code}
+            selected={data.fault_modes}
+            other={data.other_fault}
+            canEdit={data.can_edit}
+          />
+        </div>
+      )}
 
       {data.can_edit && data.points.length > 0 && (
         <Link
@@ -417,37 +425,50 @@ export default function VisitDetailPage() {
         </Link>
       )}
 
-      <div id="captures">
-        <MediaGallery
-          ownerType="visit"
-          ownerId={id}
-          kind={captureKindFor(data.technique_code)}
-          title={t(`media:captures.${data.technique_code}`, {
-            defaultValue: t('media:captures.maintenance'),
-          })}
-          description={t(`media:captures.${data.technique_code}Hint`, {
-            defaultValue: t('media:captures.maintenanceHint'),
-          })}
-          canEdit={data.can_edit}
-        />
-      </div>
+      {shows('captures') && (
+        <div id="captures">
+          <MediaGallery
+            ownerType="visit"
+            ownerId={id}
+            kind={captureKindFor(data.technique_code)}
+            title={t(`media:captures.${data.technique_code}`, {
+              defaultValue: t('media:captures.maintenance'),
+            })}
+            description={t(`media:captures.${data.technique_code}Hint`, {
+              defaultValue: t('media:captures.maintenanceHint'),
+            })}
+            canEdit={data.can_edit}
+          />
+        </div>
+      )}
 
-      <div id="photos">
-        <MediaGallery
-          ownerType="visit"
-          ownerId={id}
-          kind="photo"
-          title={t('media:equipmentPhotos')}
-          description={t('media:equipmentPhotosHint')}
-          canEdit={data.can_edit}
-        />
-      </div>
+      {shows('photos') && (
+        <div id="photos">
+          <MediaGallery
+            ownerType="visit"
+            ownerId={id}
+            kind="photo"
+            title={t('media:equipmentPhotos')}
+            description={t('media:equipmentPhotosHint')}
+            canEdit={data.can_edit}
+          />
+        </div>
+      )}
     </Page>
   );
 }
 
 /** The order the customer's own report prints them in. */
 const SECTIONS = ['readings', 'operating', 'faults', 'captures', 'photos', 'diary'] as const;
+type Section = (typeof SECTIONS)[number];
+
+/** The module a section is borrowed from; the rest belong to services. */
+const SECTION_OWNER: Partial<Record<Section, string>> = {
+  operating: 'operating_data',
+  faults: 'diagnostics',
+  captures: 'media',
+  photos: 'media',
+};
 
 /** `0.8700` for a two-decimal magnitude is false precision, and it is what the
  * database column happens to store, not what was measured. */

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppSelector } from '@app/hooks';
+import { useAppSelector, useInstalled } from '@app/hooks';
 import { useMagnitudesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -173,7 +173,9 @@ function Matches({ matches }: { matches: NonNullable<AssetGroupKind['matches']> 
 /** The layout as the report reads it: one row per point, columns per axis. */
 function PointLayout({ kind }: { kind: AssetGroupKind }) {
   const { t } = useTranslation('assets');
-  const catalogue = useMagnitudesQuery().data ?? [];
+  // Magnitude names come from measurements; without it the codes are shown.
+  const hasMeasurements = useInstalled('measurements');
+  const catalogue = useMagnitudesQuery(undefined, { skip: !hasMeasurements }).data ?? [];
   const numbers = [...new Set(kind.point_templates.map((row) => row.number))].sort((a, b) => a - b);
 
   if (numbers.length === 0) {

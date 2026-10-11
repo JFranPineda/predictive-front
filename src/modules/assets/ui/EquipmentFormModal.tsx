@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useInstalled } from '@app/hooks';
 import { useStandardsQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
@@ -36,7 +37,9 @@ export function EquipmentFormModal({
 }) {
   const { t } = useTranslation(['assets', 'common']);
   const groups = useAssetGroupsQuery();
-  const standards = useStandardsQuery();
+  // The norma picker is thresholds': without that module the form still works.
+  const hasThresholds = useInstalled('thresholds');
+  const standards = useStandardsQuery(undefined, { skip: !hasThresholds });
   const normas = (standards.data ?? []).filter((row) => row.is_active);
   const [create, creating] = useCreateEquipmentMutation();
   const [update, updating] = useUpdateEquipmentMutation();

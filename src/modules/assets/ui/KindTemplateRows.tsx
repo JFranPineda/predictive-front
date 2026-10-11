@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
+import { useInstalled } from '@app/hooks';
 import { useMagnitudesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 import { Select, TextInput } from '@shared/ui/Form';
@@ -21,7 +22,8 @@ export function KindTemplateRows({
   onChange: (rows: PointTemplateRow[]) => void;
 }) {
   const { t } = useTranslation('assets');
-  const magnitudes = useMagnitudesQuery();
+  const hasMeasurements = useInstalled('measurements');
+  const magnitudes = useMagnitudesQuery(undefined, { skip: !hasMeasurements });
   const byService = groupByService(magnitudes.data ?? []);
 
   const edit = (index: number, changes: Partial<PointTemplateRow>) =>

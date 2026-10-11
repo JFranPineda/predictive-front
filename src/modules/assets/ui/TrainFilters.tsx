@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { useInstalled } from '@app/hooks';
 import { useConditionStatusesQuery } from '@modules/thresholds';
 import { Button } from '@shared/ui/Button';
 
@@ -26,7 +27,8 @@ export function TrainFilters({
   const { t } = useTranslation(['assets', 'common']);
   const areas = useAreasQuery();
   const kinds = useGroupKindsQuery();
-  const statuses = useConditionStatusesQuery();
+  const hasThresholds = useInstalled('thresholds');
+  const statuses = useConditionStatusesQuery(undefined, { skip: !hasThresholds });
 
   const select = (key: string, label: string, options: { value: string; label: string }[]) => (
     <select

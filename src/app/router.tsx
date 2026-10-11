@@ -28,7 +28,13 @@ export function AppRoutes() {
 
   useEffect(() => {
     if (!data) return;
-    dispatch(identityLoaded({ userId: data.user.id, permissions: data.permissions }));
+    dispatch(
+      identityLoaded({
+        userId: data.user.id,
+        permissions: data.permissions,
+        installed: data.modules.map((module) => module.code),
+      }),
+    );
     let cancelled = false;
     void loadModules(data.modules.map((module) => module.code)).then((loaded) => {
       if (cancelled) return;
