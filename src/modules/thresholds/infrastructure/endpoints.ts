@@ -146,7 +146,7 @@ export const thresholdsApi = baseApi.injectEndpoints({
     }),
     /** Answers "how many equipments change state if I apply this" before the
      * change is committed. */
-    simulate: build.mutation<{ changed: number; by_status: Record<string, number> }, number>({
+    simulate: build.mutation<{ judged: number; changed: number; by_status: Record<string, number> }, number>({
       query: (id) => ({ url: `threshold-sets/${id}/simulate/`, method: 'POST' }),
     }),
   }),
