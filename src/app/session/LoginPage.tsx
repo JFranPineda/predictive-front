@@ -36,6 +36,10 @@ export function LoginPage() {
   // 429 is the throttle, not a wrong code: saying "wrong code" there would
   // send the technician to retype a code that was right.
   const throttled = (byCode.error as { status?: number } | undefined)?.status === 429;
+  // A right password for someone whose access was removed: the server says
+  // why, and "wrong password" would send them to retype it forever.
+  const refused = failed as { status?: number; data?: { detail?: string } } | undefined;
+  const refusal = refused?.status === 403 ? refused.data?.detail : undefined;
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -122,7 +126,7 @@ export function LoginPage() {
 
         {failed && (
           <p className="text-sm text-red-600">
-            {throttled ? t('auth.throttled') : t(mode === 'code' ? 'auth.codeFailed' : 'auth.failed')}
+            {refusal ?? (throttled ? t('auth.throttled') : t(mode === 'code' ? 'auth.codeFailed' : 'auth.failed'))}
           </p>
         )}
         <button
