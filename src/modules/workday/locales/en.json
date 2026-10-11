@@ -156,5 +156,14 @@
     "done": "Closed on {{end}} by {{who}}. That is the service's end time.",
     "modalTitle": "Close the service",
     "modalHint": "Type your password to sign the close. The time of this signature becomes the service's end time."
+  },
+  "how": {
+    "title": "How does the workday work?",
+    "open": "The chief engineer opens the day's workday.",
+    "register": "Each job on a train is registered as a service: train, order (or one-off job) and activity.",
+    "sign": "The service needs three start signatures: production engineer, service lead and plant supervisor. Without them, technicians cannot fill that train's data (an administrator can unlock it).",
+    "ats": "The service's ATS is filled and signed by the crew who does the work.",
+    "closeService": "The chief engineer closes the service with their password: that time is the end time. Only with the ATS complete and signed.",
+    "closeDay": "Once the day is closed nobody changes its data. Reopening it is the chief engineer's or an administrator's."
   }
 }

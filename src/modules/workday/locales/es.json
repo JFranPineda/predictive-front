@@ -156,5 +156,14 @@
     "done": "Cerrado el {{end}} por {{who}}. Esa es la hora final del servicio.",
     "modalTitle": "Cerrar el servicio",
     "modalHint": "Escribe tu clave para firmar el cierre. La hora de esta firma queda como hora final del servicio."
+  },
+  "how": {
+    "title": "¿Cómo funciona la jornada?",
+    "open": "El ingeniero jefe abre la jornada del día.",
+    "register": "Por cada trabajo sobre un conjunto se registra un servicio: conjunto, orden (o trabajo puntual) y actividad.",
+    "sign": "El servicio necesita tres firmas de inicio: ingeniero de producción, líder del servicio y supervisor de planta. Sin ellas, los técnicos no pueden llenar datos de ese conjunto (un administrador puede desbloquearlo).",
+    "ats": "Se llena el ATS del servicio y firma el personal que lo ejecuta.",
+    "closeService": "El ingeniero jefe cierra el servicio con su clave: esa hora es la hora final. Solo con el ATS completo y firmado.",
+    "closeDay": "Cerrada la jornada, nadie modifica los datos de ese día. Reabrirla es del ingeniero jefe o un administrador."
   }
 }

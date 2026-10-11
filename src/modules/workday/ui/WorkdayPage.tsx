@@ -78,6 +78,8 @@ export default function WorkdayPage() {
         </div>
       </PageHeader>
 
+      <HowItWorks />
+
       {error && <p className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
 
       {days.isLoading || detail.isLoading ? (
@@ -513,4 +515,20 @@ function GroupSelect({
 function time(value: string | null): string {
   if (!value) return '—';
   return new Intl.DateTimeFormat(currentLocale(), { timeStyle: 'short' }).format(new Date(value));
+}
+
+/** The day's rules in order — the question everyone new asks first. */
+function HowItWorks() {
+  const { t } = useTranslation('workday');
+  const steps = ['open', 'register', 'sign', 'ats', 'closeService', 'closeDay'] as const;
+  return (
+    <details className="rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm dark:border-sky-900 dark:bg-sky-950/40">
+      <summary className="cursor-pointer font-medium text-sky-900 dark:text-sky-200">{t('how.title')}</summary>
+      <ol className="mt-3 list-decimal space-y-1 pl-5 text-slate-700 dark:text-slate-300">
+        {steps.map((step) => (
+          <li key={step}>{t(`how.${step}`)}</li>
+        ))}
+      </ol>
+    </details>
+  );
 }

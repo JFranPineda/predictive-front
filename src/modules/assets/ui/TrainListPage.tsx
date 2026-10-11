@@ -94,8 +94,20 @@ export default function TrainListPage() {
         <>
           <MetricRow>
             <Metric label={t('trains.metric.trains')} value={totals?.trains ?? 0} />
-            <Metric label={t('metric.alarm')} value={totals?.alarm ?? 0} tone="warn" />
-            <Metric label={t('metric.shutdown')} value={totals?.shutdown ?? 0} tone="bad" />
+            <Metric
+              label={t('metric.alarm')}
+              value={totals?.alarm ?? 0}
+              tone="warn"
+              active={query.status === 'alarm'}
+              onClick={() => setParam('status', query.status === 'alarm' ? '' : 'alarm')}
+            />
+            <Metric
+              label={t('metric.shutdown')}
+              value={totals?.shutdown ?? 0}
+              tone="bad"
+              active={query.status === 'shutdown'}
+              onClick={() => setParam('status', query.status === 'shutdown' ? '' : 'shutdown')}
+            />
             <Metric
               label={t('metric.notMeasured')}
               value={totals?.not_measured ?? 0}
