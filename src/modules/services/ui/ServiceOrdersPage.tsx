@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
 import { formatDateRange } from '@app/i18n/format';
+import { useConfirm } from '@shared/feedback/FeedbackProvider';
 import { useDebouncedValue } from '@shared/hooks/useDebouncedValue';
 import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
@@ -167,6 +168,7 @@ function useOrderColumns({
   const { t } = useTranslation(['services', 'common']);
   const [update] = useUpdateServiceOrderMutation();
   const [cancelOrder] = useCancelServiceOrderMutation();
+  const confirm = useConfirm();
 
   async function run(action: () => Promise<unknown>) {
     onError(null);
@@ -181,7 +183,7 @@ function useOrderColumns({
     {
       key: 'code',
       header: t('orders.column.code'),
-      render: (row) => <span className="font-mono text-xs font-medium">{row.code}</span>,
+      render: (row) => <span className="whitespace-nowrap font-mono text-xs font-medium">{row.code}</span>,
     },
     {
       key: 'technique',
@@ -220,7 +222,12 @@ function useOrderColumns({
       header: t('orders.column.visits'),
       headerHint: t('orders.visitsHint'),
       numeric: true,
-      render: (row) => row.visit_count,
+      // The count opens the visits themselves, in Ejecución.
+      render: (row) => (
+        <Link to={`/services/authorship?order=${row.id}`} className="text-sky-700 hover:underline dark:text-sky-400">
+          {row.visit_count}
+        </Link>
+      ),
     },
     {
       key: 'status',
@@ -260,7 +267,15 @@ function useOrderColumns({
             </button>
             {canChangeStatus && (
               <button
-                onClick={() => void run(() => cancelOrder(row.id).unwrap())}
+                onClick={() =>
+                  void confirm({
+                    title: t('orders.cancelTitle', { code: row.code }),
+                    body: t('orders.cancelBody'),
+                    confirmLabel: t('orders.cancel'),
+                  }).then((ok) => {
+                    if (ok) void run(() => cancelOrder(row.id).unwrap());
+                  })
+                }
                 className="text-xs font-medium text-red-600"
               >
                 {t('orders.cancel')}

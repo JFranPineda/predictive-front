@@ -2,8 +2,14 @@ import clsx from 'clsx';
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 const CONTROL =
-  'w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm ' +
+  'rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm ' +
   'dark:border-slate-700 dark:bg-slate-800 disabled:opacity-50';
+
+/** Full width unless the caller sets one: `w-full` and `w-48` side by side
+ * left the width to stylesheet order, and the full one always won. */
+function control(className?: string): string {
+  return clsx(CONTROL, !/(^|\s)w-/.test(className ?? '') && 'w-full', className);
+}
 
 export function FormField({
   label,
@@ -28,15 +34,15 @@ export function FormField({
 }
 
 export function TextInput({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
-  return <input {...props} className={clsx(CONTROL, className)} />;
+  return <input {...props} className={control(className)} />;
 }
 
 export function Select({ className, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select {...props} className={clsx(CONTROL, className)} />;
+  return <select {...props} className={control(className)} />;
 }
 
 export function TextArea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea {...props} className={clsx(CONTROL, className)} />;
+  return <textarea {...props} className={control(className)} />;
 }
 
 /** Several codes at once, as chips. Used for the service types a standard

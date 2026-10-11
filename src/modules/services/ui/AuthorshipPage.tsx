@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { useAppSelector } from '@app/hooks';
 import { formatDateTime } from '@app/i18n/format';
@@ -9,6 +9,7 @@ import { Button } from '@shared/ui/Button';
 import { Card } from '@shared/ui/Card';
 import { EmptyState } from '@shared/ui/EmptyState';
 import { ErrorState } from '@shared/ui/ErrorState';
+import { Select, TextInput } from '@shared/ui/Form';
 import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
@@ -17,11 +18,15 @@ import { groupEntries, lockReason, signature } from '../domain/authorship';
 import type { ServiceAuthorship } from '../domain/types';
 import {
   useAuthorshipQuery,
+  useServiceOrdersQuery,
   useDeleteVisitMutation,
   useUpdateVisitMutation,
 } from '../infrastructure/endpoints';
 import { readServiceError } from './readServiceError';
 import { VisitFormModal } from './VisitFormModal';
+
+// What the server serves per page (`AuthorshipView`).
+const PAGE_SIZE = 20;
 
 export default function AuthorshipPage() {
   const { t } = useTranslation(['services', 'common']);
@@ -31,13 +36,39 @@ export default function AuthorshipPage() {
   const canCreate = permissions.includes('measurements.add_reading');
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data, isLoading, isError } = useAuthorshipQuery(
-    onlyMine && currentUserId ? { performed_by: currentUserId } : {},
-  );
+  // The filters live in the URL: an order's "equipos inspeccionados" links
+  // here, and a filtered list can be sent to someone.
+  const [params, setParams] = useSearchParams();
+  const order = Number(params.get('order')) || undefined;
+  const page = Number(params.get('page')) || 1;
+  const [search, setSearch] = useState(params.get('q') ?? '');
+  const orders = useServiceOrdersQuery({});
+  useEffect(() => {
+    const timer = window.setTimeout(() => setParam('q', search.trim()), 350);
+    return () => window.clearTimeout(timer);
+  }, [search]);
+  const { data, isLoading, isFetching, isError } = useAuthorshipQuery({
+    ...(onlyMine && currentUserId ? { performed_by: currentUserId } : {}),
+    order,
+    q: params.get('q') || undefined,
+    since: params.get('since') || undefined,
+    until: params.get('until') || undefined,
+    page,
+  });
+
+  function setParam(key: string, value: string) {
+    const next = new URLSearchParams(params);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    // Any new filter starts again from the first page.
+    if (key !== 'page') next.delete('page');
+    if ((params.get(key) ?? '') !== value) setParams(next, { replace: true });
+  }
 
   if (isLoading) return <Spinner label={t('loading')} />;
 
   const rows = data?.results ?? [];
+  const pages = Math.max(1, Math.ceil((data?.count ?? 0) / PAGE_SIZE));
 
   return (
     <Page>
@@ -65,6 +96,46 @@ export default function AuthorshipPage() {
 
       {error && <ErrorState title={error} />}
 
+      <div className="flex flex-wrap items-end gap-3">
+        <TextInput
+          type="search"
+          value={search}
+          placeholder={t('authorship.searchHint')}
+          aria-label={t('authorship.search')}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-72"
+        />
+        <Select value={order ?? ''} onChange={(event) => setParam('order', event.target.value)} className="w-64">
+          <option value="">{t('authorship.allOrders')}</option>
+          {orders.data?.results.map((row) => (
+            <option key={row.id} value={row.id}>
+              {row.code} · {row.technique_name}
+            </option>
+          ))}
+        </Select>
+        <label className="flex flex-col gap-1 text-xs text-slate-500">
+          {t('authorship.since')}
+          <input
+            type="date"
+            value={params.get('since') ?? ''}
+            onChange={(event) => setParam('since', event.target.value)}
+            className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-slate-500">
+          {t('authorship.until')}
+          <input
+            type="date"
+            value={params.get('until') ?? ''}
+            onChange={(event) => setParam('until', event.target.value)}
+            className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-800"
+          />
+        </label>
+        <span className="pb-2 text-xs text-slate-500">
+          {isFetching ? t('common:state.loading') : t('authorship.count', { count: data?.count ?? 0 })}
+        </span>
+      </div>
+
       {isError ? (
         <ErrorState title={t('common:state.failed')} body={t('common:state.failedBody')} />
       ) : rows.length === 0 ? (
@@ -79,6 +150,17 @@ export default function AuthorshipPage() {
               onError={setError}
             />
           ))}
+          {pages > 1 && (
+            <nav className="flex items-center justify-center gap-3 text-sm">
+              <Button disabled={page <= 1} onClick={() => setParam('page', String(page - 1))}>
+                ← {t('authorship.previous')}
+              </Button>
+              <span className="text-slate-500">{t('authorship.page', { page, pages })}</span>
+              <Button disabled={page >= pages} onClick={() => setParam('page', String(page + 1))}>
+                {t('authorship.next')} →
+              </Button>
+            </nav>
+          )}
         </div>
       )}
 

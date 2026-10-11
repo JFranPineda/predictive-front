@@ -60,7 +60,9 @@
     "allTechniques": "All techniques",
     "allStatuses": "All statuses",
     "clearFilters": "Clear filters",
-    "page": "Page {{page}}"
+    "page": "Page {{page}}",
+    "cancelTitle": "Cancel order {{code}}?",
+    "cancelBody": "A cancelled order cannot change status any more. Its visits and readings are kept."
   },
   "viewOnly": "View detail",
   "side": {
@@ -177,6 +179,16 @@
     "equipment": "Equipment"
   },
   "authorship": {
-    "thisVisit": "this visit"
+    "thisVisit": "this visit",
+    "search": "Search visit",
+    "searchHint": "Machine, TAG, train or order",
+    "allOrders": "All orders",
+    "since": "From",
+    "until": "To",
+    "count_one": "{{count}} visit",
+    "count_other": "{{count}} visits",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}} of {{pages}}"
   }
 }

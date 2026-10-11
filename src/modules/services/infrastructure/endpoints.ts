@@ -37,8 +37,16 @@ export const servicesApi = baseApi.injectEndpoints({
       invalidatesTags: ['ServiceProvider', 'ServiceOrder'],
     }),
     authorship: build.query<
-      { results: ServiceAuthorship[]; next: string | null },
-      { equipment?: number; technique?: string; performed_by?: number; from?: string; to?: string }
+      { results: ServiceAuthorship[]; next: string | null; count: number },
+      {
+        equipment?: number;
+        performed_by?: number;
+        order?: number;
+        q?: string;
+        since?: string;
+        until?: string;
+        page?: number;
+      }
     >({
       query: (params) => ({ url: 'service-visits/authorship/', params }),
       providesTags: ['ServiceOrder'],

@@ -60,7 +60,9 @@
     "allTechniques": "Todas las técnicas",
     "allStatuses": "Todos los estados",
     "clearFilters": "Limpiar filtros",
-    "page": "Página {{page}}"
+    "page": "Página {{page}}",
+    "cancelTitle": "¿Anular la orden {{code}}?",
+    "cancelBody": "Una orden anulada deja de poder cambiar de estado. Sus visitas y lecturas se conservan."
   },
   "viewOnly": "Ver detalle",
   "side": {
@@ -177,6 +179,16 @@
     "equipment": "Equipo"
   },
   "authorship": {
-    "thisVisit": "esta visita"
+    "thisVisit": "esta visita",
+    "search": "Buscar visita",
+    "searchHint": "Equipo, TAG, conjunto u orden",
+    "allOrders": "Todas las órdenes",
+    "since": "Desde",
+    "until": "Hasta",
+    "count_one": "{{count}} visita",
+    "count_other": "{{count}} visitas",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {{page}} de {{pages}}"
   }
 }
