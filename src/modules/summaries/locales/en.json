@@ -39,7 +39,7 @@
     "allStatuses": "All statuses"
   },
   "driver": {
-    "hint": "The area's worst reading, on {{tag}}",
+    "hint": "Worst reading among the machines in {{status}}, on {{tag}}",
     "measured": "Measured on {{when}}",
     "recorded": "Recorded on {{when}}"
   },
@@ -53,6 +53,7 @@
     "what": "Nobody creates it: it is computed from the latest reading of each machine in each service (vibration, thermography, ultrasound…). One tab per service.",
     "who": "It changes every time someone saves a round, a visit or the record of values. That is why each area says which machine colours it, who measured it and when.",
     "read": "An area's colour is the WORST state among its machines. Open an area to see its sectors and trains; a train's name opens its record of values.",
-    "print": "For a document handed to the customer there are MPd reports (per train and order, plus the monthly summary) and NDT reports."
+    "print": "For a document handed to the customer there are MPd reports (per train and order, plus the monthly summary) and NDT reports.",
+    "number": "The number comes from a machine with that colour: the highest reading among those in the worst status. Each machine is judged by the threshold of its type, so a higher value is not always a worse status. With today's thresholds, for instance, a gearbox at 7.28 mm/s is in Alarm (its Shutdown starts at 8.1) while a motor at 7.14 is already in Shutdown (from 7.1)."
   }
 }

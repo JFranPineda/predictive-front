@@ -257,7 +257,7 @@ function NodeRow({ node, depth, startOpen }: { node: SummaryNode; depth: number;
               A red area says something is wrong; this says how wrong. */}
           {node.driver && (
             <span
-              title={t('driver.hint', { tag: node.driver.equipment_tag })}
+              title={t('driver.hint', { tag: node.driver.equipment_tag, status: node.worst.name })}
               className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[11px] font-semibold tabular-nums shadow-sm"
               style={{
                 backgroundColor: node.worst.color,
@@ -330,6 +330,7 @@ function Explainer() {
         <li>{t('explain.what')}</li>
         <li>{t('explain.who')}</li>
         <li>{t('explain.read')}</li>
+        <li>{t('explain.number')}</li>
         <li>{t('explain.print')}</li>
       </ul>
     </details>
