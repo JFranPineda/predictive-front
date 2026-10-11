@@ -14,5 +14,17 @@
     "installed": "instalado",
     "available": "disponible"
   },
-  "coreLocked": "Un módulo del núcleo no se puede desinstalar"
+  "coreLocked": "Un módulo del núcleo no se puede desinstalar",
+  "confirmUninstall": {
+    "title": "¿Desinstalar «{{name}}»?",
+    "body": "Sus pantallas salen del menú y sus permisos se retiran a todos los roles. Los datos se conservan: si lo reinstalas, vuelven con los permisos de cada rol."
+  },
+  "done": {
+    "installed": "«{{name}}» instalado. Sus permisos nuevos los tiene el Administrador: dalos a otros roles en Permisos.",
+    "uninstalled": "«{{name}}» desinstalado",
+    "upgraded": "«{{name}}» actualizado"
+  },
+  "permissionsHint_one": "Declara {{count}} permiso.",
+  "permissionsHint_other": "Declara {{count}} permisos.",
+  "openRoles": "Asignarlos en Permisos"
 }

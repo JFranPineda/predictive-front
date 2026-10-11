@@ -14,5 +14,17 @@
     "installed": "installed",
     "available": "available"
   },
-  "coreLocked": "A core module cannot be uninstalled"
+  "coreLocked": "A core module cannot be uninstalled",
+  "confirmUninstall": {
+    "title": "Uninstall “{{name}}”?",
+    "body": "Its screens leave the menu and its permissions are withdrawn from every role. The data is kept: reinstalling brings it back with each role's permissions."
+  },
+  "done": {
+    "installed": "“{{name}}” installed. Its new permissions are held by the Administrator: give them to other roles in Permissions.",
+    "uninstalled": "“{{name}}” uninstalled",
+    "upgraded": "“{{name}}” upgraded"
+  },
+  "permissionsHint_one": "Declares {{count}} permission.",
+  "permissionsHint_other": "Declares {{count}} permissions.",
+  "openRoles": "Assign them in Permissions"
 }

@@ -12,7 +12,8 @@ export function readError(cause: unknown): string | null {
   if (Array.isArray(data)) return String(data[0]);
   if (data && typeof data === 'object') {
     const record = data as Record<string, unknown>;
-    const first = 'detail' in record ? record.detail : Object.values(record)[0];
+    // DRF says `detail`; the problem+json answers (modules, users) say `title`.
+    const first = record.detail ?? record.title ?? Object.values(record)[0];
     if (Array.isArray(first)) return String(first[0]);
     if (typeof first === 'string') return first;
   }

@@ -18,6 +18,9 @@ export interface ConfirmRequest {
   confirmLabel?: string;
   /** Destructive actions get the red button; the rest the primary one. */
   tone?: 'danger' | 'primary';
+  /** A red action that can be taken back (uninstall, deactivate): no
+   * "cannot be undone" line, which would be untrue. */
+  reversible?: boolean;
 }
 
 type ToastTone = 'success' | 'error' | 'info';
@@ -99,7 +102,7 @@ function ConfirmDialog({
       }
     >
       {request.body && <p className="text-sm text-slate-700 dark:text-slate-200">{request.body}</p>}
-      {request.tone !== 'primary' && (
+      {request.tone !== 'primary' && !request.reversible && (
         <p className="text-sm text-slate-500 dark:text-slate-400">{t('feedback.cannotUndo')}</p>
       )}
     </Modal>
