@@ -4,7 +4,10 @@
   },
   "nav": {
     "settings": "Settings",
-    "back": "Back"
+    "back": "Back",
+    "search": "Search the menu",
+    "noMatch": "No entry matches",
+    "open": "Open the menu"
   },
   "action": {
     "save": "Save",
@@ -113,5 +116,11 @@
     "deleted": "Deleted",
     "failed": "The action could not be completed",
     "undo": "Undo"
+  },
+  "crash": {
+    "title": "This screen ran into a problem",
+    "body": "The rest of the system still works. Try again; if it happens again, reload the page or tell the administrator.",
+    "retry": "Try again",
+    "reload": "Reload the page"
   }
 }

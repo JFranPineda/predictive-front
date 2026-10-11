@@ -4,6 +4,7 @@ import { Link, Navigate, Route, Routes } from 'react-router-dom';
 
 import { ContributionsProvider } from '@app/contributions';
 import { AppShell } from '@app/layout/AppShell';
+import { ScreenErrorBoundary } from '@app/layout/ScreenErrorBoundary';
 import type { ModuleDefinition } from '@app/moduleDefinition';
 import { loadModules, renderableMenu, routesFor } from '@app/moduleRegistry';
 import { useBootstrapQuery } from '@app/session/sessionApi';
@@ -73,9 +74,11 @@ export function AppRoutes() {
               key={`${code}:${route.path}`}
               path={route.path}
               element={
-                <Suspense fallback={<Spinner label="" />}>
-                  <route.component />
-                </Suspense>
+                <ScreenErrorBoundary>
+                  <Suspense fallback={<Spinner label="" />}>
+                    <route.component />
+                  </Suspense>
+                </ScreenErrorBoundary>
               }
             />
           ))}

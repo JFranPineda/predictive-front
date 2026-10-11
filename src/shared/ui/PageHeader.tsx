@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
+
+const APP_NAME = '1A-MIG Predictivo';
 
 /**
  * Every screen opens the same way: what this is, what it means, what you can
@@ -16,6 +18,12 @@ export function PageHeader({
   actions?: ReactNode;
   children?: ReactNode;
 }) {
+  // The browser tab says which screen it is: with five tabs open, "SimiAI"
+  // five times is no help.
+  useEffect(() => {
+    document.title = `${title} · ${APP_NAME}`;
+  }, [title]);
+
   return (
     <header className="mb-6 border-b border-slate-200 pb-5 dark:border-slate-800">
       <div className="flex flex-wrap items-start gap-4">

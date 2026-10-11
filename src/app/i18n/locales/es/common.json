@@ -4,7 +4,10 @@
   },
   "nav": {
     "settings": "Configuración",
-    "back": "Atrás"
+    "back": "Atrás",
+    "search": "Buscar en el menú",
+    "noMatch": "Ninguna opción coincide",
+    "open": "Abrir el menú"
   },
   "action": {
     "save": "Guardar",
@@ -113,5 +116,11 @@
     "deleted": "Eliminado",
     "failed": "No se pudo completar la acción",
     "undo": "Deshacer"
+  },
+  "crash": {
+    "title": "Esta pantalla tuvo un problema",
+    "body": "El resto del sistema sigue funcionando. Vuelve a intentarlo; si se repite, recarga la página o avisa al administrador.",
+    "retry": "Reintentar",
+    "reload": "Recargar la página"
   }
 }
