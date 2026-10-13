@@ -8,7 +8,9 @@
  */
 export function readError(cause: unknown): string | null {
   const data = (cause as { data?: unknown })?.data;
-  if (typeof data === 'string') return data;
+  // A server crash answers with a whole HTML debug page; printing it buried
+  // the screen under a traceback. Only a short sentence is a message.
+  if (typeof data === 'string') return data.length <= 300 && !data.trimStart().startsWith('<') ? data : null;
   if (Array.isArray(data)) return String(data[0]);
   if (data && typeof data === 'object') {
     const record = data as Record<string, unknown>;
