@@ -121,13 +121,17 @@
   "visitForm": {
     "new": "New visit",
     "title": "New visit",
-    "hint": "A visit records what was measured on one equipment within an order. Empty readings are created ready to fill in.",
+    "hint": "A visit records what was measured on one machine within an order: a train's motor and compressor get one visit each. Empty readings are created ready to fill.",
     "order": "Service order",
     "orderHint": "The round it belongs to",
     "equipment": "Equipment",
     "search": "Search equipment",
     "searchPlaceholder": "TAG or name",
-    "create": "Create and open"
+    "create": "Create and open",
+    "wholeTrain": "Also open the train's other machines",
+    "wholeTrainHint": "Motor, compressor, fan…: one visit per machine, on the same order. Those that already have a visit on it keep theirs.",
+    "opened_one": "{{count}} visit opened",
+    "opened_other": "{{count}} visits opened: one per machine of the train"
   },
   "orderForm": {
     "new": "New order",
@@ -190,5 +194,10 @@
     "previous": "Previous",
     "next": "Next",
     "page": "Page {{page}} of {{pages}}"
+  },
+  "train": {
+    "title": "Machines of the train",
+    "openHint": "Open {{name}}'s visit on this same order",
+    "noVisit": "No visit on this order"
   }
 }

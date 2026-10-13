@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useEquipmentsQuery } from '@modules/assets';
+import { useToast } from '@shared/feedback/FeedbackProvider';
 import { Button } from '@shared/ui/Button';
 import { FormField, Select, TextInput } from '@shared/ui/Form';
 import { Modal } from '@shared/ui/Modal';
@@ -18,12 +19,16 @@ export function VisitFormModal({ onClose }: { onClose: () => void }) {
   const equipments = useEquipmentsQuery({ search: search || undefined, page_size: 50 });
   const [create, { isLoading }] = useCreateVisitMutation();
   const [error, setError] = useState<string | null>(null);
-  const [draft, setDraft] = useState({ service_order: 0, equipment: 0 });
+  const toast = useToast();
+  // A round measures motor and compressor together: open the whole train
+  // unless told otherwise.
+  const [draft, setDraft] = useState({ service_order: 0, equipment: 0, whole_train: true });
 
   async function submit() {
     setError(null);
     try {
       const created = await create(draft).unwrap();
+      if (created.opened > 1) toast.success(t('visitForm.opened', { count: created.opened }));
       onClose();
       // Straight into the form the visit exists for.
       void navigate(`/services/visits/${created.visit_id}`);
@@ -91,6 +96,19 @@ export function VisitFormModal({ onClose }: { onClose: () => void }) {
           ))}
         </Select>
       </FormField>
+
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          type="checkbox"
+          className="mt-1"
+          checked={draft.whole_train}
+          onChange={(event) => setDraft({ ...draft, whole_train: event.target.checked })}
+        />
+        <span>
+          {t('visitForm.wholeTrain')}
+          <span className="block text-xs text-slate-500">{t('visitForm.wholeTrainHint')}</span>
+        </span>
+      </label>
     </Modal>
   );
 }

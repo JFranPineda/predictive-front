@@ -135,7 +135,9 @@ export interface VisitDetail {
     area_label: string;
     sector: string;
   };
-  service_order: { code: string; client_work_order: string };
+  service_order: { id: number; code: string; client_work_order: string };
+  /** Every machine of the train, with its visit on this order if it has one. */
+  train: TrainMachine[];
   technique_code: string;
   evidence_only: boolean;
   technique_name: string;
@@ -154,4 +156,12 @@ export interface VisitDetail {
   /** Why another module keeps it read-only now (the workday, Q19). */
   lock_reason: string | null;
   can_edit: boolean;
+}
+
+/** A machine of the visit's train: the round is one train, a visit is one machine. */
+export interface TrainMachine {
+  equipment_id: number;
+  tag: string;
+  name: string;
+  visit_id: number | null;
 }

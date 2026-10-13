@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { useVisitSections } from '@app/contributions';
 import type { VisitSectionProps } from '@app/moduleDefinition';
@@ -21,10 +21,11 @@ import { StatusBadge } from '@shared/ui/StatusBadge';
 
 import { ENTRY_ORDER } from '../domain/authorship';
 import { OperatingSection } from './OperatingSection';
-import type { EntryType } from '../domain/types';
+import type { EntryType, VisitDetail } from '../domain/types';
 import {
   useAddParticipantMutation,
   useAddVisitEntryMutation,
+  useCreateVisitMutation,
   useDeleteLogEntryMutation,
   useRemoveParticipantMutation,
   useSaveVisitReadingsMutation,
@@ -134,6 +135,8 @@ export default function VisitDetailPage() {
           tag: data.equipment.tag,
         })}
       />
+
+      <TrainStrip visit={data} />
 
       {!data.can_edit && (
         <ErrorState
@@ -635,5 +638,85 @@ function ParticipantPicker({
         {t('common:action.cancel')}
       </button>
     </span>
+  );
+}
+
+/**
+ * The other machines of the train. A visit is one machine, but the round is
+ * the whole train: from the compressor's visit the motor's is one click away,
+ * and opened here when it does not exist yet.
+ */
+function TrainStrip({ visit }: { visit: VisitDetail }) {
+  const { t } = useTranslation('services');
+  const navigate = useNavigate();
+  const canCreate = useAppSelector((state) => state.session.permissions).includes('measurements.add_reading');
+  const [create, creating] = useCreateVisitMutation();
+  const [error, setError] = useState<string | null>(null);
+  if (visit.train.length < 2) return null;
+
+  async function open(equipmentId: number) {
+    setError(null);
+    try {
+      const created = await create({ service_order: visit.service_order.id, equipment: equipmentId }).unwrap();
+      void navigate(`/services/visits/${created.visit_id}`);
+    } catch (cause) {
+      setError(readServiceError(cause) ?? t('form.genericError'));
+    }
+  }
+
+  return (
+    <nav aria-label={t('train.title')} className="space-y-1.5">
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        <span className="text-xs text-slate-400">
+          <span className="uppercase tracking-wide">{t('train.title')}</span> · {visit.service_order.code}
+        </span>
+        {visit.train.map((machine) => {
+          const label = `${machine.name} · ${machine.tag}`;
+          if (machine.visit_id === visit.visit_id) {
+            return (
+              <span
+                key={machine.equipment_id}
+                aria-current="page"
+                className="rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white dark:bg-slate-100 dark:text-slate-900"
+              >
+                {label}
+              </span>
+            );
+          }
+          if (machine.visit_id) {
+            return (
+              <Link
+                key={machine.equipment_id}
+                to={`/services/visits/${machine.visit_id}`}
+                className="rounded-full border border-slate-300 px-3 py-1 text-xs hover:border-slate-500 dark:border-slate-700"
+              >
+                {label}
+              </Link>
+            );
+          }
+          return canCreate ? (
+            <button
+              key={machine.equipment_id}
+              type="button"
+              disabled={creating.isLoading}
+              title={t('train.openHint', { name: machine.name })}
+              onClick={() => void open(machine.equipment_id)}
+              className="rounded-full border border-dashed border-sky-400 px-3 py-1 text-xs text-sky-700 hover:bg-sky-50 disabled:opacity-50 dark:text-sky-300 dark:hover:bg-sky-950"
+            >
+              + {label}
+            </button>
+          ) : (
+            <span
+              key={machine.equipment_id}
+              title={t('train.noVisit')}
+              className="rounded-full border border-dashed border-slate-300 px-3 py-1 text-xs text-slate-400 dark:border-slate-700"
+            >
+              {label}
+            </span>
+          );
+        })}
+      </div>
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </nav>
   );
 }

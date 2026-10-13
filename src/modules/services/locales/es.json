@@ -121,13 +121,17 @@
   "visitForm": {
     "new": "Nueva visita",
     "title": "Nueva visita",
-    "hint": "Una visita registra lo que se midió en un equipo dentro de una orden. Se crean las lecturas vacías listas para llenar.",
+    "hint": "Una visita registra lo que se midió en un equipo dentro de una orden: el motor y el compresor de un conjunto llevan una visita cada uno. Se crean las lecturas vacías listas para llenar.",
     "order": "Orden de servicio",
     "orderHint": "La ronda a la que pertenece",
     "equipment": "Equipo",
     "search": "Buscar equipo",
     "searchPlaceholder": "TAG o nombre",
-    "create": "Crear y abrir"
+    "create": "Crear y abrir",
+    "wholeTrain": "Abrir también los demás equipos del conjunto",
+    "wholeTrainHint": "Motor, compresor, ventilador…: una visita por equipo, en la misma orden. Los que ya tienen visita en esa orden la conservan.",
+    "opened_one": "Se abrió {{count}} visita",
+    "opened_other": "Se abrieron {{count}} visitas: una por equipo del conjunto"
   },
   "orderForm": {
     "new": "Nueva orden",
@@ -190,5 +194,10 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "page": "Página {{page}} de {{pages}}"
+  },
+  "train": {
+    "title": "Equipos del conjunto",
+    "openHint": "Abrir la visita de {{name}} en esta misma orden",
+    "noVisit": "Sin visita en esta orden"
   }
 }

@@ -113,8 +113,15 @@ export const servicesApi = baseApi.injectEndpoints({
       invalidatesTags: ['ServiceOrder'],
     }),
     createVisit: build.mutation<
-      { visit_id: number; equipment: string },
-      { service_order: number; equipment: number; visited_at?: string; instrument?: number }
+      { visit_id: number; equipment: string; opened: number },
+      {
+        service_order: number;
+        equipment: number;
+        visited_at?: string;
+        instrument?: number;
+        /** Also opens the train's other machines that have no visit on the order yet. */
+        whole_train?: boolean;
+      }
     >({
       query: (body) => ({ url: 'service-visits/', method: 'POST', body }),
       invalidatesTags: ['ServiceOrder', 'Visit', 'Reading'],
