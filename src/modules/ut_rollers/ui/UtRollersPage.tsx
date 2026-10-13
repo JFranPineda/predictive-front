@@ -132,6 +132,16 @@ function OrderView({
   const orders = useServiceOrdersQuery({ technique: 'ndt_rollers' });
   const groups = useRollerGroupsQuery();
 
+  // With nothing chosen the screen showed two empty selects over data that
+  // was there: start on the latest order and the first group, one at a time
+  // so the second choice does not overwrite the first.
+  useEffect(() => {
+    const latest = orders.data?.results[0];
+    const first = groups.data?.[0];
+    if (!order && latest) choose('order', latest.id);
+    else if (!group && first) choose('group', first.id);
+  }, [order, group, orders.data, groups.data]);
+
   return (
     <>
         <div className="grid gap-4 sm:grid-cols-2">
