@@ -57,5 +57,15 @@
     "renewed": "Licence {{id}} loaded: valid until {{until}}.",
     "already": "Licence {{id}} was already loaded (valid until {{until}}).",
     "failed": "The licence could not be loaded."
+  },
+  "export": {
+    "title": "Export all data",
+    "hint": "Everything of this customer in one ZIP: every table in Excel, a SQL script that restores it, and the original photos, thermograms and spectra. It always works, also with the subscription lapsed. Passwords do not travel.",
+    "start": "Prepare full export",
+    "preparing": "Preparing the export… it may take a few minutes.",
+    "ready": "Ready on {{date}} · rows: {{rows}} · files: {{files}} · {{size}} MB",
+    "download": "Download ZIP",
+    "failed": "The export failed: {{error}}",
+    "downloadFailed": "The export could not be downloaded."
   }
 }

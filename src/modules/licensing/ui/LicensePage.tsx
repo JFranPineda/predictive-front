@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
+import { useAppSelector } from '@app/hooks';
+import { useLicenceStatusQuery } from '@app/licence/licenceApi';
 import { usePlanUsageQuery, usageRatio } from '@app/plan/planApi';
 import { Card, Field } from '@shared/ui/Card';
 import { ErrorState } from '@shared/ui/ErrorState';
@@ -8,13 +10,14 @@ import { Page } from '@shared/ui/Page';
 import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
-import { useLicenseStatusQuery } from '../infrastructure/endpoints';
+import { ExportCard } from './ExportCard';
 import { RenewalCard } from './RenewalCard';
 import { STATUS_TONE } from '../domain/presentation';
 
 export default function LicensePage() {
   const { t } = useTranslation(['licensing', 'common']);
-  const { data, isLoading, isError, refetch } = useLicenseStatusQuery();
+  const { data, isLoading, isError, refetch } = useLicenceStatusQuery();
+  const canExport = useAppSelector((state) => state.session.permissions.includes('licensing.export_data'));
 
   if (isLoading) return <Spinner label={t('loading')} />;
 
@@ -78,6 +81,8 @@ export default function LicensePage() {
       </Card>
 
       {data.renewable && <RenewalCard validUntil={data.valid_until} onRenewed={() => void refetch()} />}
+
+      {canExport && <ExportCard />}
 
       <PlanUsageCard />
 

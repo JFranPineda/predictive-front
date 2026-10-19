@@ -1,18 +1,21 @@
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { useAppDispatch } from '@app/hooks';
+import { useLicenceStatusQuery } from '@app/licence/licenceApi';
 import { SessionGuard } from '@app/session/SessionGuard';
 import { loggedOut } from '@app/session/sessionSlice';
 import type { Bootstrap } from '@app/session/sessionApi';
 import type { MenuEntry } from '@app/session/sessionSlice';
 import { ThemeToggle } from '@shared/ui/ThemeToggle';
+import { WriteGate } from '@shared/ui/writeGate';
 
 import { activeMenuRoute } from './activeMenu';
 import { BackButton } from './BackButton';
 import { BrandLogo } from './BrandLogo';
+import { LicenceNotice } from './LicenceNotice';
 import { PlanNotice } from './PlanNotice';
 
 interface Props {
@@ -46,7 +49,15 @@ export function AppShell({ menu, user, companies }: Props) {
   const shownSettings = settings.filter(matches);
   const current = menu.find((item) => item.route === active);
 
+  // Every save button reads this; a 402 anywhere refreshes it at once.
+  const { data: licence } = useLicenceStatusQuery(undefined, { pollingInterval: 300_000 });
+  const gate = useMemo(
+    () => ({ readOnly: licence?.read_only ?? false, lapsed: licence?.lapsed ?? false, reason: licence?.reason ?? '' }),
+    [licence],
+  );
+
   return (
+    <WriteGate.Provider value={gate}>
     <div className="flex h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       {open && (
         <div
@@ -135,6 +146,7 @@ export function AppShell({ menu, user, companies }: Props) {
         </div>
         {/* Same frame as <Page>, so the button lines up with the title below. */}
         <div className="mx-auto max-w-7xl px-4 pt-4 empty:hidden sm:px-6 lg:px-8">
+          <LicenceNotice />
           <PlanNotice />
           <BackButton menuRoutes={menu.map((item) => item.route)} />
         </div>
@@ -142,6 +154,7 @@ export function AppShell({ menu, user, companies }: Props) {
       </main>
       <SessionGuard />
     </div>
+    </WriteGate.Provider>
   );
 }
 

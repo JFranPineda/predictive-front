@@ -50,6 +50,11 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
   }
 
   let result = await rawBaseQuery(args, api, extraOptions);
+  if (result.error?.status === 402) {
+    // The licence changed under the screen (it lapsed, or went read-only):
+    // refresh it, so buttons and the notice follow at once.
+    api.dispatch(baseApi.util.invalidateTags(['License']));
+  }
   if (result.error?.status !== 401) return result;
 
   const renewed = await renewTokens(api.dispatch, (api.getState() as RootState).session.refreshToken);

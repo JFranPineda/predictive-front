@@ -1,5 +1,7 @@
 import clsx from 'clsx';
-import type { ButtonHTMLAttributes } from 'react';
+import { type ButtonHTMLAttributes, useContext } from 'react';
+
+import { WriteGate } from './writeGate';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
@@ -12,14 +14,30 @@ const VARIANT: Record<Variant, string> = {
   ghost: 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800',
 };
 
+/**
+ * What the licence may stop: `write` (saving, deleting — the default for
+ * primary and danger buttons), `report` (issuing a work report, stopped only
+ * once the subscription lapses) or `none` (anything that does not change data
+ * and must keep working: retry, stay signed in, load a licence).
+ */
+type Gate = 'write' | 'report' | 'none';
+
 export function Button({
   variant = 'secondary',
+  gate,
   className,
+  disabled,
+  title,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; gate?: Gate }) {
+  const licence = useContext(WriteGate);
+  const kind = gate ?? (variant === 'primary' || variant === 'danger' ? 'write' : 'none');
+  const refused = (kind === 'write' && licence.readOnly) || (kind === 'report' && licence.lapsed);
   return (
     <button
       {...props}
+      disabled={disabled || refused}
+      title={refused ? licence.reason : title}
       className={clsx(
         'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-40',
         VARIANT[variant],

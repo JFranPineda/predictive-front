@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useAppSelector } from '@app/hooks';
 import { currentLanguage } from '@app/i18n';
+import { previewError } from '../domain/previewError';
 
 /**
  * The report's own HTML, for the preview frame.
@@ -37,7 +38,7 @@ export function useReportPreview(path: string | null): {
         const body = await response.text();
         if (!response.ok) {
           setHtml(null);
-          setError(readError(body));
+          setError(previewError(body));
           return;
         }
         setHtml(body);
@@ -50,15 +51,4 @@ export function useReportPreview(path: string | null): {
   }, [path, token, companyId]);
 
   return { html, isLoading, error };
-}
-
-function readError(body: string): string {
-  try {
-    const data = JSON.parse(body) as unknown;
-    if (Array.isArray(data)) return String(data[0]);
-    if (data && typeof data === 'object' && 'detail' in data) return String(data.detail);
-  } catch {
-    // Not JSON: fall through to the generic message.
-  }
-  return 'failed';
 }

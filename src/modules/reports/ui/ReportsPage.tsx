@@ -186,10 +186,10 @@ function Preview({ path, name }: { path: string | null; name: string }) {
   return (
     <section className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Button variant="primary" disabled={!html || isDownloading} onClick={() => void download(`${path}&output=pdf`, `${name}.pdf`)}>
+        <Button variant="primary" gate="report" disabled={!html || isDownloading} onClick={() => void download(`${path}&output=pdf`, `${name}.pdf`)}>
           {t('download.pdf')}
         </Button>
-        <Button disabled={!html || isDownloading} onClick={() => void download(`${path}&output=xlsx`, `${name}.xlsx`)}>
+        <Button gate="report" disabled={!html || isDownloading} onClick={() => void download(`${path}&output=xlsx`, `${name}.xlsx`)}>
           {t('download.xlsx')}
         </Button>
       </div>

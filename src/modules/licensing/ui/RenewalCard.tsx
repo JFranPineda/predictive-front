@@ -81,7 +81,7 @@ export function RenewalCard({ validUntil, onRenewed }: { validUntil: string | nu
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <input ref={file} type="file" accept=".lic,text/plain" className="text-sm" />
-        <Button variant="primary" onClick={() => void upload()} disabled={isLoading}>
+        <Button variant="primary" gate="none" onClick={() => void upload()} disabled={isLoading}>
           {isLoading ? t('renewal.uploading') : t('renewal.upload')}
         </Button>
       </div>

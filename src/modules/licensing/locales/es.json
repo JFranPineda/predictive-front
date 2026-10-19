@@ -57,5 +57,15 @@
     "renewed": "Licencia {{id}} cargada: vigente hasta {{until}}.",
     "already": "La licencia {{id}} ya estaba cargada (vigente hasta {{until}}).",
     "failed": "No se pudo cargar la licencia."
+  },
+  "export": {
+    "title": "Exportar todos los datos",
+    "hint": "Todo lo de este cliente en un ZIP: cada tabla en Excel, un script SQL que lo restaura y las fotos, termogramas y espectros originales. Funciona siempre, también con la suscripción vencida. Las contraseñas no viajan.",
+    "start": "Preparar exportación completa",
+    "preparing": "Preparando la exportación… puede tardar unos minutos.",
+    "ready": "Lista el {{date}} · filas: {{rows}} · archivos: {{files}} · {{size}} MB",
+    "download": "Descargar ZIP",
+    "failed": "La exportación falló: {{error}}",
+    "downloadFailed": "No se pudo descargar la exportación."
   }
 }

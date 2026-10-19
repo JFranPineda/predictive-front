@@ -127,5 +127,11 @@
     "body": "The rest of the system still works. Try again; if it happens again, reload the page or tell the administrator.",
     "retry": "Try again",
     "reload": "Reload the page"
+  },
+  "licence": {
+    "readOnly": "Read-only: {{reason}}",
+    "lapsed": "Subscription lapsed: {{reason}}",
+    "export": "Export all data",
+    "see": "See licence"
   }
 }

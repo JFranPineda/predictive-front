@@ -38,7 +38,7 @@ function Crashed({ onRetry }: { onRetry: () => void }) {
       <p className="mt-2 text-sm text-slate-500">{t('crash.body')}</p>
       <div className="mt-5 flex justify-center gap-2">
         <Button onClick={onRetry}>{t('crash.retry')}</Button>
-        <Button variant="primary" onClick={() => window.location.reload()}>
+        <Button variant="primary" gate="none" onClick={() => window.location.reload()}>
           {t('crash.reload')}
         </Button>
       </div>

@@ -1,31 +1,30 @@
 import { baseApi } from '@app/api/baseApi';
 
-import type { LicenseStatusCode } from '../domain/status';
-
-export interface LicenseStatus {
-  tenant: string;
-  tenant_name: string;
-  deployment: 'hosted' | 'on_premise';
-  status: LicenseStatusCode;
-  read_only: boolean;
-  days_left: number;
-  reason: string;
-  should_warn: boolean;
-  valid_until: string | null;
-  /** On-premise renews by file or online (v4 Phase 3); hosted we renew ourselves. */
-  renewable: boolean;
-}
-
 export interface RenewOutcome {
   status: 'renewed' | 'already';
   license_id: string;
   valid_until: string;
 }
 
+export interface TenantExport {
+  id?: number;
+  status: 'none' | 'pending' | 'running' | 'done' | 'failed';
+  size?: number;
+  rows?: number;
+  files?: number;
+  error?: string;
+  created_at?: string;
+  finished_at?: string | null;
+  downloadable?: boolean;
+}
+
 export const licensingApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    licenseStatus: build.query<LicenseStatus, void>({
-      query: () => 'license/status/',
+    exportStatus: build.query<TenantExport, void>({
+      query: () => 'license/export/',
+    }),
+    startExport: build.mutation<TenantExport, void>({
+      query: () => ({ url: 'license/export/', method: 'POST' }),
     }),
     renewalRequest: build.query<{ text: string }, void>({
       query: () => 'license/renewal/request/',
@@ -36,4 +35,5 @@ export const licensingApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useLicenseStatusQuery, useLazyRenewalRequestQuery, useRenewLicenceMutation } = licensingApi;
+export const { useExportStatusQuery, useStartExportMutation, useLazyRenewalRequestQuery, useRenewLicenceMutation } =
+  licensingApi;

@@ -58,7 +58,7 @@ export function SessionGuard() {
       title={t('session.idleTitle')}
       onClose={stay}
       footer={
-        <Button variant="primary" onClick={stay}>
+        <Button variant="primary" gate="none" onClick={stay}>
           {t('session.stay')}
         </Button>
       }
