@@ -1,10 +1,12 @@
 import { baseApi } from '@app/api/baseApi';
 
+import type { LicenseStatusCode } from '../domain/status';
+
 export interface LicenseStatus {
   tenant: string;
   tenant_name: string;
   deployment: 'hosted' | 'on_premise';
-  status: 'active' | 'grace' | 'expired' | 'revoked' | 'suspended' | 'invalid';
+  status: LicenseStatusCode;
   read_only: boolean;
   days_left: number;
   reason: string;

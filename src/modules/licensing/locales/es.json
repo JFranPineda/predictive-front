@@ -21,7 +21,9 @@
     "expired": "Vencida",
     "revoked": "Revocada",
     "suspended": "Suspendida",
-    "invalid": "No válida"
+    "invalid": "No válida",
+    "other_installation": "De otra instalación",
+    "clock_behind": "Fecha del servidor atrasada"
   },
   "days": "{{count}} días restantes",
   "overdue": "vencida hace {{count}} días",

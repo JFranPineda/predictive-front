@@ -21,7 +21,9 @@
     "expired": "Expired",
     "revoked": "Revoked",
     "suspended": "Suspended",
-    "invalid": "Invalid"
+    "invalid": "Invalid",
+    "other_installation": "Another installation",
+    "clock_behind": "Server clock behind"
   },
   "days": "{{count}} days left",
   "overdue": "expired {{count}} days ago",

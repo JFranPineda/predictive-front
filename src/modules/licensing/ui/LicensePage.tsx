@@ -9,15 +9,7 @@ import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
 import { useLicenseStatusQuery } from '../infrastructure/endpoints';
-
-const TONE: Record<string, string> = {
-  active: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
-  grace: 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300',
-  expired: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300',
-  revoked: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300',
-  suspended: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300',
-  invalid: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300',
-};
+import { STATUS_TONE } from '../domain/presentation';
 
 export default function LicensePage() {
   const { t } = useTranslation(['licensing', 'common']);
@@ -57,7 +49,7 @@ export default function LicensePage() {
         <Metric
           label={t('field.status')}
           value={
-            <span className={`rounded px-2 py-0.5 text-base ${TONE[data.status] ?? ''}`}>
+            <span className={`rounded px-2 py-0.5 text-base ${STATUS_TONE[data.status] ?? ''}`}>
               {t(`status.${data.status}`)}
             </span>
           }
