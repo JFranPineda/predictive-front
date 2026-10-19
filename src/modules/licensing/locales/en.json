@@ -42,5 +42,20 @@
     "title": "Plan usage",
     "hint": "Machines that are not retired count. At the ceiling, adding machines is blocked; readings never are.",
     "unlimited": "{{used}} · no ceiling"
+  },
+  "renewal": {
+    "title": "Renew licence",
+    "hint": "Each paid quarter is a new licence. If this server has no internet access, request it with the request code and upload the .lic file we send you.",
+    "validUntil": "Valid until",
+    "request": "Generate request code",
+    "requestHint": "Email it to 1A-MIG or photograph the QR code. It holds only what you see: no maintenance data.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "qr": "Request QR code",
+    "upload": "Upload licence (.lic)",
+    "uploading": "Uploading…",
+    "renewed": "Licence {{id}} loaded: valid until {{until}}.",
+    "already": "Licence {{id}} was already loaded (valid until {{until}}).",
+    "failed": "The licence could not be loaded."
   }
 }

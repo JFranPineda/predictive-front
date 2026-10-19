@@ -11,6 +11,15 @@ export interface LicenseStatus {
   days_left: number;
   reason: string;
   should_warn: boolean;
+  valid_until: string | null;
+  /** On-premise renews by file or online (v4 Phase 3); hosted we renew ourselves. */
+  renewable: boolean;
+}
+
+export interface RenewOutcome {
+  status: 'renewed' | 'already';
+  license_id: string;
+  valid_until: string;
 }
 
 export const licensingApi = baseApi.injectEndpoints({
@@ -18,7 +27,13 @@ export const licensingApi = baseApi.injectEndpoints({
     licenseStatus: build.query<LicenseStatus, void>({
       query: () => 'license/status/',
     }),
+    renewalRequest: build.query<{ text: string }, void>({
+      query: () => 'license/renewal/request/',
+    }),
+    renewLicence: build.mutation<RenewOutcome, FormData>({
+      query: (body) => ({ url: 'license/renew/', method: 'POST', body }),
+    }),
   }),
 });
 
-export const { useLicenseStatusQuery } = licensingApi;
+export const { useLicenseStatusQuery, useLazyRenewalRequestQuery, useRenewLicenceMutation } = licensingApi;

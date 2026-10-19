@@ -9,6 +9,7 @@ import { PageHeader } from '@shared/ui/PageHeader';
 import { Spinner } from '@shared/ui/Spinner';
 
 import { useLicenseStatusQuery } from '../infrastructure/endpoints';
+import { RenewalCard } from './RenewalCard';
 import { STATUS_TONE } from '../domain/presentation';
 
 export default function LicensePage() {
@@ -75,6 +76,8 @@ export default function LicensePage() {
           {data.reason && <Field label={t('field.reason')}>{data.reason}</Field>}
         </dl>
       </Card>
+
+      {data.renewable && <RenewalCard validUntil={data.valid_until} onRenewed={() => void refetch()} />}
 
       <PlanUsageCard />
 
