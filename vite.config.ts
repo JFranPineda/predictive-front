@@ -9,6 +9,10 @@ export default defineConfig(({ mode }) => {
   // set on the command line still wins over the file.
   const env = loadEnv(mode, process.cwd(), '');
   const apiTarget = env.VITE_API_PROXY ?? 'http://localhost:8000';
+  // A sealed image runs production settings and trusts HTTPS only from its TLS
+  // proxy (v4 Phase 5). VITE_API_PROXY_HTTPS=1 plays that proxy, so the front
+  // can run against a compiled image during development.
+  const tlsProxy = env.VITE_API_PROXY_HTTPS === '1' ? { 'X-Forwarded-Proto': 'https' } : undefined;
 
   return {
     plugins: [react(), tailwindcss()],
@@ -31,11 +35,14 @@ export default defineConfig(({ mode }) => {
       // API shares the app's host. The string shorthand rewrote it to the
       // target's, and every subdomain landed on the default tenant.
       proxy: {
-        '/api': { target: apiTarget, changeOrigin: false },
-        '/media': { target: apiTarget, changeOrigin: false },
+        '/api': { target: apiTarget, changeOrigin: false, headers: tlsProxy },
+        '/media': { target: apiTarget, changeOrigin: false, headers: tlsProxy },
       },
     },
     build: {
+      // No source maps in the delivered build: it ships compiled, not readable
+      // (v4 Phase 5). This is Vite's default; pinned so it cannot regress.
+      sourcemap: false,
       // Each module is its own chunk: an uninstalled module ships zero bytes.
       // Libraries stay in one vendor chunk so they are not duplicated into — or
       // attributed to — whichever module happened to import them first.
