@@ -48,7 +48,7 @@
     "hint": "Cada trimestre pagado es una licencia nueva. Si este servidor no sale a internet, pídela con el código de solicitud y carga el archivo .lic que te enviemos.",
     "validUntil": "Vigente hasta",
     "request": "Generar código de solicitud",
-    "requestHint": "Envíalo a 1A-MIG por correo o fotografía el QR. Contiene solo lo que ves: ningún dato de mantenimiento.",
+    "requestHint": "Envíalo a Industrie Ampel por correo o fotografía el QR. Contiene solo lo que ves: ningún dato de mantenimiento.",
     "copy": "Copiar",
     "copied": "Copiado",
     "qr": "Código QR de la solicitud",

@@ -48,7 +48,7 @@
     "hint": "Each paid quarter is a new licence. If this server has no internet access, request it with the request code and upload the .lic file we send you.",
     "validUntil": "Valid until",
     "request": "Generate request code",
-    "requestHint": "Email it to 1A-MIG or photograph the QR code. It holds only what you see: no maintenance data.",
+    "requestHint": "Email it to Industrie Ampel or photograph the QR code. It holds only what you see: no maintenance data.",
     "copy": "Copy",
     "copied": "Copied",
     "qr": "Request QR code",
