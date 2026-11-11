@@ -7,12 +7,14 @@ import { AppShell } from '@app/layout/AppShell';
 import { ScreenErrorBoundary } from '@app/layout/ScreenErrorBoundary';
 import type { ModuleDefinition } from '@app/moduleDefinition';
 import { loadModules, renderableMenu, routesFor } from '@app/moduleRegistry';
+import { bootstrapView } from '@app/session/bootstrapGate';
 import { useBootstrapQuery } from '@app/session/sessionApi';
-import { identityLoaded } from '@app/session/sessionSlice';
+import { identityLoaded, loggedOut } from '@app/session/sessionSlice';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { registerTranslations } from '@app/i18n';
 import { injectModuleReducer } from '@app/store';
 import { LoginPage } from '@app/session/LoginPage';
+import { Button } from '@shared/ui/Button';
 import { Spinner } from '@shared/ui/Spinner';
 
 export function AppRoutes() {
@@ -24,7 +26,7 @@ export function AppRoutes() {
   // 'Bootstrap' therefore never refetched it. The app stayed on the login
   // screen with a perfectly valid token in the store.
   const accessToken = useAppSelector((state) => state.session.accessToken);
-  const { data, isLoading, isError } = useBootstrapQuery(undefined, { skip: !accessToken });
+  const { data, error, refetch } = useBootstrapQuery(undefined, { skip: !accessToken });
   const [definitions, setDefinitions] = useState<ModuleDefinition[] | null>(null);
 
   useEffect(() => {
@@ -55,8 +57,32 @@ export function AppRoutes() {
     };
   }, [data, dispatch]);
 
-  if (!accessToken || isError) return <LoginPage />;
-  if (isLoading || !data || !definitions) return <Spinner label={t('state.loadingModules')} />;
+  const view = bootstrapView({
+    hasToken: Boolean(accessToken),
+    hasData: Boolean(data),
+    loading: !data && !error,
+    errorStatus: (error as { status?: number | string } | undefined)?.status,
+  });
+  if (view === 'login') return <LoginPage />;
+  if (view === 'retry') {
+    // The server did not answer; the session is still good. Signing out here
+    // is what used to happen on its own.
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-3 bg-slate-50 p-6 text-center dark:bg-slate-950">
+        <p className="font-medium">{t('state.failed')}</p>
+        <p className="max-w-sm text-sm text-slate-500">{t('session.unreachable')}</p>
+        <div className="flex gap-2">
+          <Button variant="primary" gate="none" onClick={() => void refetch()}>
+            {t('state.retry')}
+          </Button>
+          <Button gate="none" onClick={() => dispatch(loggedOut('signed_out'))}>
+            {t('auth.signOut')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  if (!data || !definitions) return <Spinner label={t('state.loadingModules')} />;
 
   const permissions = new Set(data.permissions);
   const moduleRoutes = routesFor(definitions, permissions);

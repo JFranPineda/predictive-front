@@ -2,6 +2,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { DRAFT_PREFIX } from '@shared/hooks/useDraft';
 
+import { readTokens, TOKEN_KEYS, type TokenPair, writeTokens } from './tokenStore';
+
 export interface MenuEntry {
   label: string;
   route: string;
@@ -30,7 +32,7 @@ export interface ModuleSummary {
 /** Why the last session ended: the login screen says so when it was inactivity. */
 export type LogoutReason = 'signed_out' | 'idle' | 'expired';
 
-const SESSION_KEYS = ['access', 'refresh', 'company', 'session.lastActivity'];
+const SESSION_KEYS = [...TOKEN_KEYS, 'company', 'session.lastActivity'];
 
 interface SessionState {
   accessToken: string | null;
@@ -46,9 +48,11 @@ interface SessionState {
   endedBy: LogoutReason | null;
 }
 
+const stored = readTokens();
+
 const initialState: SessionState = {
-  accessToken: localStorage.getItem('access'),
-  refreshToken: localStorage.getItem('refresh'),
+  accessToken: stored?.access ?? null,
+  refreshToken: stored?.refresh ?? null,
   companyId: Number(localStorage.getItem('company')) || null,
   userId: null,
   permissions: [],
@@ -60,12 +64,19 @@ const sessionSlice = createSlice({
   name: 'session',
   initialState,
   reducers: {
-    tokensReceived(state, action: PayloadAction<{ access: string; refresh: string }>) {
+    /** This tab signed in or renewed: the pair is new, and every tab gets it. */
+    tokensReceived(state, action: PayloadAction<TokenPair>) {
       state.accessToken = action.payload.access;
       state.refreshToken = action.payload.refresh;
       state.endedBy = null;
-      localStorage.setItem('access', action.payload.access);
-      localStorage.setItem('refresh', action.payload.refresh);
+      writeTokens(action.payload);
+    },
+    /** Another tab signed in or renewed. Taken as is and never written back:
+     * a tab writing back what it read could overwrite a newer pair. */
+    tokensAdopted(state, action: PayloadAction<TokenPair>) {
+      state.accessToken = action.payload.access;
+      state.refreshToken = action.payload.refresh;
+      state.endedBy = null;
     },
     companySwitched(state, action: PayloadAction<number>) {
       state.companyId = action.payload;
@@ -94,6 +105,6 @@ const sessionSlice = createSlice({
   },
 });
 
-export const { tokensReceived, companySwitched, identityLoaded, loggedOut } =
+export const { tokensReceived, tokensAdopted, companySwitched, identityLoaded, loggedOut } =
   sessionSlice.actions;
 export default sessionSlice;

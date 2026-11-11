@@ -2,6 +2,7 @@ import { combineSlices, configureStore, type Reducer } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import { baseApi } from './api/baseApi';
+import { followOtherTabs } from './session/crossTab';
 import sessionSlice from './session/sessionSlice';
 
 const rootReducer = combineSlices(sessionSlice, baseApi).withLazyLoadedSlices<
@@ -14,6 +15,7 @@ export const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+followOtherTabs(store.dispatch, () => Boolean(store.getState().session.accessToken));
 
 /** Modules bring their own state; it is injected when the module mounts and
  * never bundled into the shell. */

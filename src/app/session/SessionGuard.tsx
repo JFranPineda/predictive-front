@@ -7,15 +7,15 @@ import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/Modal';
 
 import { lastActivity, markActivity, trackActivity } from './activity';
-import { idleState, shouldRenew, tokenTimes } from './idlePolicy';
+import { idleLimitOf, idleState, shouldRenew, tokenTimes } from './idlePolicy';
 import { loggedOut } from './sessionSlice';
 
 const TICK_MS = 10_000;
 
 /**
- * Ends the session after ten minutes without activity, and keeps it alive —
- * renewing ahead of expiry — while there is activity, even if the user is
- * typing a long round without sending anything.
+ * Ends the session after the server's inactivity window (thirty minutes), and
+ * keeps it alive — renewing ahead of expiry — while there is activity, even if
+ * the user is typing a long round without sending anything.
  */
 export function SessionGuard() {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ export function SessionGuard() {
   useEffect(() => {
     const check = () => {
       const now = Date.now();
-      const state = idleState(now, lastActivity());
+      const state = idleState(now, lastActivity(), idleLimitOf(refreshToken));
       if (state === 'expired') {
         dispatch(loggedOut('idle'));
         return;
@@ -63,7 +63,9 @@ export function SessionGuard() {
         </Button>
       }
     >
-      <p className="text-sm">{t('session.idleBody')}</p>
+      <p className="text-sm">
+        {t('session.idleBody', { minutes: Math.round(idleLimitOf(refreshToken) / 60_000) })}
+      </p>
     </Modal>
   );
 }

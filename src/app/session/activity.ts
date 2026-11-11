@@ -5,7 +5,10 @@
  * session of the tab the technician is typing in.
  */
 const KEY = 'session.lastActivity';
-const EVENTS = ['keydown', 'pointerdown', 'wheel', 'touchstart'] as const;
+// Moving the mouse over a chart and scrolling a long table count: someone
+// reading the plant's trends for half an hour is working, and with only
+// clicks and keys they were signed out while doing it.
+const EVENTS = ['keydown', 'pointerdown', 'pointermove', 'mousemove', 'wheel', 'touchstart', 'scroll'] as const;
 const THROTTLE_MS = 5_000;
 
 export function lastActivity(): number {
@@ -25,6 +28,8 @@ export function trackActivity(): () => void {
     last = now;
     markActivity(now);
   };
-  EVENTS.forEach((name) => window.addEventListener(name, onInput, { passive: true }));
-  return () => EVENTS.forEach((name) => window.removeEventListener(name, onInput));
+  // Capture, so a scroll inside a table (which does not bubble) is heard too.
+  const options = { passive: true, capture: true };
+  EVENTS.forEach((name) => window.addEventListener(name, onInput, options));
+  return () => EVENTS.forEach((name) => window.removeEventListener(name, onInput, options));
 }

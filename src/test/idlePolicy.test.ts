@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { IDLE_LIMIT_MS, idleState, shouldRenew, tokenTimes } from '@app/session/idlePolicy';
+import {
+  DEFAULT_IDLE_LIMIT_MS,
+  idleLimitOf,
+  idleState,
+  shouldRenew,
+  tokenTimes,
+} from '@app/session/idlePolicy';
 
 const MINUTE = 60_000;
 
@@ -12,13 +18,34 @@ function jwt(iat: number, exp: number): string {
   return `header.${payload}.signature`;
 }
 
-describe('idle session (V3-35)', () => {
+describe('idle session', () => {
   const start = 1_800_000_000_000;
 
-  it('warns at nine minutes and ends at ten', () => {
-    expect(idleState(start + 8 * MINUTE, start)).toBe('active');
-    expect(idleState(start + 9 * MINUTE, start)).toBe('warning');
-    expect(idleState(start + IDLE_LIMIT_MS, start)).toBe('expired');
+  it('warns at twenty-nine minutes and ends at thirty', () => {
+    expect(DEFAULT_IDLE_LIMIT_MS).toBe(30 * MINUTE);
+    expect(idleState(start + 28 * MINUTE, start)).toBe('active');
+    expect(idleState(start + 29 * MINUTE, start)).toBe('warning');
+    expect(idleState(start + 30 * MINUTE, start)).toBe('expired');
+  });
+
+  it('takes the window from the refresh token the server issued, not from a second constant', () => {
+    // The window was written twice, in the settings and here, and changing
+    // one of them never changed what the user lived through.
+    const iat = 1_800_000_000;
+    expect(idleLimitOf(jwt(iat, iat + 30 * 60))).toBe(30 * MINUTE);
+    expect(idleLimitOf(jwt(iat, iat + 45 * 60))).toBe(45 * MINUTE);
+  });
+
+  it('falls back to thirty minutes when the token cannot be read', () => {
+    expect(idleLimitOf(null)).toBe(DEFAULT_IDLE_LIMIT_MS);
+    expect(idleLimitOf('not-a-token')).toBe(DEFAULT_IDLE_LIMIT_MS);
+  });
+
+  it('never closes a session faster than the warning that announces it', () => {
+    // A misconfigured server with a one-minute refresh would warn and close
+    // at once; the window is never shorter than five minutes.
+    const iat = 1_800_000_000;
+    expect(idleLimitOf(jwt(iat, iat + 60))).toBe(5 * MINUTE);
   });
 
   it('reads iat and exp from a JWT', () => {
@@ -43,15 +70,19 @@ describe('idle session (V3-35)', () => {
     expect(shouldRenew(start + MINUTE, token, start + 30_000)).toBe(false);
   });
 
-  it('keeps a user who clicks every two minutes for half an hour', () => {
-    // Simulates the guard: every 10 s, renew if due; activity every 2 minutes.
+  it('keeps a user who works every few minutes for two hours', () => {
+    // Simulates the guard: every 10 s, renew if due; activity every 7 minutes.
     let token = { issuedAt: start, expiresAt: start + 5 * MINUTE };
+    let refreshExpires = start + 30 * MINUTE;
     let activity = start;
-    for (let now = start; now <= start + 30 * MINUTE; now += 10_000) {
-      if ((now - start) % (2 * MINUTE) === 0) activity = now;
+    for (let now = start; now <= start + 120 * MINUTE; now += 10_000) {
+      if ((now - start) % (7 * MINUTE) === 0) activity = now;
       expect(idleState(now, activity)).not.toBe('expired');
-      expect(now).toBeLessThan(token.expiresAt);
-      if (shouldRenew(now, token, activity)) token = { issuedAt: now, expiresAt: now + 5 * MINUTE };
+      expect(now).toBeLessThan(refreshExpires);
+      if (shouldRenew(now, token, activity)) {
+        token = { issuedAt: now, expiresAt: now + 5 * MINUTE };
+        refreshExpires = now + 30 * MINUTE;
+      }
     }
   });
 });
