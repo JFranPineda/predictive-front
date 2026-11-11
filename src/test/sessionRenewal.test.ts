@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { renewTokens } from '@app/api/tokenRefresh';
-import { lastActivity, trackActivity } from '@app/session/activity';
 import { bootstrapView } from '@app/session/bootstrapGate';
 import { actionForStorageChange } from '@app/session/crossTab';
 import sessionSlice, { loggedOut, tokensAdopted, tokensReceived } from '@app/session/sessionSlice';
@@ -84,26 +83,6 @@ describe('the pair in the browser', () => {
   });
 });
 
-describe('what counts as activity', () => {
-  let stop: () => void;
-  beforeEach(() => {
-    localStorage.setItem('session.lastActivity', '1');
-    stop = trackActivity();
-  });
-  afterEach(() => stop());
-
-  it('moving the mouse over a chart or a table is someone working', () => {
-    window.dispatchEvent(new MouseEvent('mousemove'));
-    expect(lastActivity()).toBeGreaterThan(1);
-  });
-
-  it('scrolling a long table is someone working', () => {
-    const table = document.createElement('div');
-    document.body.appendChild(table);
-    table.dispatchEvent(new Event('scroll'));
-    expect(lastActivity()).toBeGreaterThan(1);
-  });
-});
 
 describe('every tab, one session', () => {
   it('adopts the pair another tab renewed, from the value it wrote', () => {

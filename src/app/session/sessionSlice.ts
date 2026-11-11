@@ -29,10 +29,10 @@ export interface ModuleSummary {
   permissions: [string, string][];
 }
 
-/** Why the last session ended: the login screen says so when it was inactivity. */
-export type LogoutReason = 'signed_out' | 'idle' | 'expired';
+/** Why the last session ended. */
+export type LogoutReason = 'signed_out' | 'expired';
 
-const SESSION_KEYS = [...TOKEN_KEYS, 'company', 'session.lastActivity'];
+const SESSION_KEYS = [...TOKEN_KEYS, 'company'];
 
 interface SessionState {
   accessToken: string | null;
@@ -95,7 +95,7 @@ const sessionSlice = createSlice({
       state.permissions = [];
       state.endedBy = reason;
       SESSION_KEYS.forEach((key) => localStorage.removeItem(key));
-      // Unsent field work survives an idle logout, not a deliberate sign-out.
+      // Unsent field work survives an expired session, not a deliberate sign-out.
       if (reason === 'signed_out') {
         Object.keys(localStorage)
           .filter((key) => key.startsWith(DRAFT_PREFIX))

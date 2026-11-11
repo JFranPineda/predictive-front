@@ -7,8 +7,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 
 import { currentLanguage } from '@app/i18n';
-import { lastActivity } from '@app/session/activity';
-import { idleLimitOf, idleState, shouldRenew, tokenTimes } from '@app/session/idlePolicy';
+import { shouldRenew, tokenTimes } from '@app/session/tokenPolicy';
 import { loggedOut } from '@app/session/sessionSlice';
 import type { RootState } from '@app/store';
 
@@ -32,14 +31,14 @@ const rawBaseQuery = fetchBaseQuery({
 });
 
 /**
- * Renews ahead of expiry while the user is working, and once more on a 401;
+ * Renews ahead of expiry, and once more on a 401;
  * only a renewal the server refuses ends the session. One it could not reach
  * (a restart, the tunnel, the Wi-Fi) leaves the request failed and the user
  * signed in.
  *
  * Renewing only on a 401 let the access and the refresh token expire at the
  * same instant, which logged out people mid-form exactly like people who had
- * walked away. Inactivity itself is the session guard's call, not this one's.
+ * walked away.
  */
 const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
@@ -47,7 +46,7 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
   extraOptions,
 ) => {
   const before = (api.getState() as RootState).session;
-  if (shouldRenew(Date.now(), tokenTimes(before.accessToken), lastActivity())) {
+  if (shouldRenew(Date.now(), tokenTimes(before.accessToken))) {
     await renewTokens(api.dispatch, before.refreshToken);
   }
 
@@ -61,10 +60,7 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
 
   const renewal = await renewTokens(api.dispatch, (api.getState() as RootState).session.refreshToken);
   if (renewal === 'refused') {
-    // The refresh expires with the inactivity window, so a refusal after a
-    // quiet spell is inactivity, and the login says so.
-    const quiet = idleState(Date.now(), lastActivity(), idleLimitOf(before.refreshToken)) !== 'active';
-    api.dispatch(loggedOut(quiet ? 'idle' : 'expired'));
+    api.dispatch(loggedOut('expired'));
     return result;
   }
   if (renewal === 'unreachable') return result;

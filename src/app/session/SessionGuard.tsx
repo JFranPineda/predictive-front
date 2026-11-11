@@ -1,71 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 import { renewTokens } from '@app/api/tokenRefresh';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { Button } from '@shared/ui/Button';
-import { Modal } from '@shared/ui/Modal';
 
-import { lastActivity, markActivity, trackActivity } from './activity';
-import { idleLimitOf, idleState, shouldRenew, tokenTimes } from './idlePolicy';
-import { loggedOut } from './sessionSlice';
+import { shouldRenew, tokenTimes } from './tokenPolicy';
 
 const TICK_MS = 10_000;
 
 /**
- * Ends the session after the server's inactivity window (thirty minutes), and
- * keeps it alive — renewing ahead of expiry — while there is activity, even if
- * the user is typing a long round without sending anything.
+ * Keeps the session's access token fresh, renewing it ahead of expiry, so an
+ * open screen never finds it expired. It never signs anyone out: there is no
+ * inactivity logout (2026-11-11).
  */
 export function SessionGuard() {
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { accessToken, refreshToken } = useAppSelector((state) => state.session);
-  const [warning, setWarning] = useState(false);
-
-  useEffect(() => {
-    markActivity();
-    return trackActivity();
-  }, []);
 
   useEffect(() => {
     const check = () => {
-      const now = Date.now();
-      const state = idleState(now, lastActivity(), idleLimitOf(refreshToken));
-      if (state === 'expired') {
-        dispatch(loggedOut('idle'));
-        return;
-      }
-      setWarning(state === 'warning');
-      if (shouldRenew(now, tokenTimes(accessToken), lastActivity())) {
-        void renewTokens(dispatch, refreshToken);
-      }
+      if (shouldRenew(Date.now(), tokenTimes(accessToken))) void renewTokens(dispatch, refreshToken);
     };
     const timer = window.setInterval(check, TICK_MS);
     return () => window.clearInterval(timer);
   }, [dispatch, accessToken, refreshToken]);
 
-  if (!warning) return null;
-
-  const stay = () => {
-    markActivity();
-    setWarning(false);
-    void renewTokens(dispatch, refreshToken);
-  };
-
-  return (
-    <Modal
-      title={t('session.idleTitle')}
-      onClose={stay}
-      footer={
-        <Button variant="primary" gate="none" onClick={stay}>
-          {t('session.stay')}
-        </Button>
-      }
-    >
-      <p className="text-sm">
-        {t('session.idleBody', { minutes: Math.round(idleLimitOf(refreshToken) / 60_000) })}
-      </p>
-    </Modal>
-  );
+  return null;
 }
